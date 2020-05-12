@@ -1,0 +1,43 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+      xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:be.container pageTitle="backend_roles">
+
+    <div class="module">
+        <div class="module-docheader">
+            <div class="typo3-docheader-functions">
+                <div class="module-docheader-bar module-docheader-bar-navigation">
+                    <div class="module-docheader-bar-column-left">
+                        &nbsp;
+                    </div>
+                    <div class="module-docheader-bar-column-right">
+                        <f:be.pagePath />
+                        <f:be.pageInfo />
+                    </div>
+                </div>
+            </div>
+            <div class="module-docheader-bar module-docheader-bar-buttons">
+                <div class="module-docheader-bar-column-left">
+                    
+                </div>
+                <div class="module-docheader-bar-column-right">
+                    <f:be.buttons.shortcut />
+                    <f:link.action class="btn btn-default btn-sm"><core:icon identifier="actions-refresh" /></f:link.action>
+                </div>
+            </div>
+        </div>
+        <div class="module-body">
+            <f:flashMessages />
+
+            <f:render section="content" />
+        </div>
+    </div>
+
+</f:be.container>
+
+
+
+
+</html>

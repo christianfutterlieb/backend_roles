@@ -1,0 +1,17 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  AawTeam\BackendRoles\:
+    resource: '../Classes/*'
+    
+  cache.backend_roles:
+    class: TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
+    factory: ['@TYPO3\CMS\Core\Cache\CacheManager', 'getCache']
+    arguments: ['backend_roles']
+
+  AawTeam\BackendRoles\Role\Definition\Loader:
+    arguments:
+      $cache: '@cache.backend_roles'

@@ -1,0 +1,56 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+      xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+      xmlns:backendroles="http://typo3.org/ns/AawTeam/BackendRoles/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:layout name="Backend" />
+
+<f:section name="content">
+    <f:be.pageRenderer includeRequireJsModules="{0:'TYPO3/CMS/Backend/Modal'}" />
+
+    <h1>Backend Roles Management</h1>
+
+    <f:if condition="{backendUserGroups}">
+        <f:then>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="col-icon">#</th>
+                        <th class="col-title nowrap">Title</th>
+                        <th class="nowrap">Managed Role</th>
+                        <th class="col-control"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <f:for each="{backendUserGroups}" as="backendUserGroup">
+                        <tr>
+                            <td class="col-icon"><core:iconForRecord row="{backendUserGroup}" table="be_groups" /></td>
+                            <td class="col-title nowrap">
+                                <be:link.editRecord uid="{backendUserGroup.uid}" table="be_groups">{backendUserGroup.title}</be:link.editRecord>
+                            </td>
+                            <td class="nowrap"><backendroles:format.roleTitle backendUserGroup="{backendUserGroup}" /></td>
+                            <td class="col-control">
+                                <be:link.editRecord uid="{backendUserGroup.uid}" table="be_groups" class="btn btn-sm btn-default">
+                                    <core:icon identifier="actions-open" />
+                                </be:link.editRecord>
+                                <f:link.action action="resetBackendUserGroupToDefaults" arguments="{backendUserGroupUid:backendUserGroup.uid}" class="btn btn-sm btn-warning t3js-modal-trigger" data="{title:'BackendUserGroup reset', severity:'warning', content:'Do you really want to reset the management-related fields of BackendUserGroup \"{backendUserGroup.title}\"? This cannot be undone.'}">
+                                    Reset
+                                </f:link.action>
+                            </td>
+                        </tr>
+                    </f:for>
+                </tbody>
+            </table>
+            <div>
+                <f:link.action action="synchronizeAllBackendUserGroupRoles" class="btn btn-default">Synchronize Roles</f:link.action>
+            </div>
+        </f:then>
+        <f:else>
+            <p>No be_groups records found!</p>
+        </f:else>
+    </f:if>
+
+</f:section>
+
+</html>
