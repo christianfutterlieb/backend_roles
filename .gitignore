@@ -1,0 +1,6 @@
+.project
+.settings
+.buildpath
+.cache
+.DS_Store
+.sass-cache
