@@ -11,12 +11,15 @@ namespace AawTeam\BackendRoles\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AawTeam\BackendRoles\Role\Definition\Formatter;
 use AawTeam\BackendRoles\Role\Synchronizer;
 use AawTeam\BackendRoles\Domain\Repository\BackendUserGroupRepository;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 
 /**
  * AbstractController
@@ -102,6 +105,30 @@ class ManagementController extends ActionController
             $this->addFlashMessage('Apparently, everything is already synchronized.', 'Nothing was updated', AbstractMessage::INFO);
         }
         $this->redirect('index');
+    }
+
+    /**
+     * @param int $backendUserGroupUid
+     */
+    protected function exportAsRoleAction(int $backendUserGroupUid)
+    {
+        $backendUserGroup = BackendUtility::getRecord('be_groups', $backendUserGroupUid);
+        if (!is_array($backendUserGroup)) {
+            $this->addFlashMessage('Invalid backendUserGroup UID received', 'Error', AbstractMessage::ERROR);
+            $this->redirect('index');
+        } elseif ($backendUserGroup['tx_backendroles_role_identifier']) {
+            $this->addFlashMessage('This BackendUserGroup is a managed group', 'Error', AbstractMessage::ERROR);
+            $this->redirect('index');
+        }
+
+        $formatter = new Formatter();
+        $configToExport = $formatter->formatFromDbToArray($backendUserGroup);
+        $configAsString = 'return ' . ArrayUtility::arrayExport($configToExport) . ';';
+
+        $this->view->assignMultiple([
+            'backendUserGroup' => $backendUserGroup,
+            'configAsString' => $configAsString,
+        ]);
     }
 
     /**

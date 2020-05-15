@@ -101,41 +101,84 @@ class FormatterTest extends UnitTestCase
 
     /**
      * @test
+     * @dataProvider formatForDatabaseSimpleArrayValuesTestDataProvider
+     * @param string $optionName
+     * @param array $optionValue
+     * @param string $expectedFormattedValue
      */
-    public function formatForDatabaseSimpleArrayValuesTest()
+    public function formatForDatabaseSimpleArrayValuesTest(string $optionName, array $optionValue, string $expectedFormattedValue)
     {
         $identifier = 'test';
         $options = [
-            'pagetypes_select' => ['My', 'pagetypes', 'select'],
-            'tables_select' => ['My', 'tables', 'select'],
-            'tables_modify' => ['My', 'tables', 'modify'],
-            'groupMods' => ['My', 'group', 'Mods'],
-            'file_permissions' => ['My', 'file', 'permissions'],
+            $optionName => $optionValue,
         ];
-
         $definition = new Definition($identifier, $options);
         $formatter = new Formatter();
         $result = $formatter->formatForDatabase($definition);
 
-        $this->assertArrayHasKey('pagetypes_select', $result);
-        $this->assertSame('My,pagetypes,select', $result['pagetypes_select']);
-
-        $this->assertArrayHasKey('tables_select', $result);
-        $this->assertSame('My,tables,select', $result['tables_select']);
-
-        $this->assertArrayHasKey('tables_modify', $result);
-        $this->assertSame('My,tables,modify', $result['tables_modify']);
-
-        $this->assertArrayHasKey('groupMods', $result);
-        $this->assertSame('My,group,Mods', $result['groupMods']);
-
-        $this->assertArrayHasKey('file_permissions', $result);
-        $this->assertSame('My,file,permissions', $result['file_permissions']);
+        $this->assertArrayHasKey($optionName, $result);
+        $this->assertSame($expectedFormattedValue, $result[$optionName]);
     }
 
     /**
      * @test
      * @dataProvider formatForDatabaseComplexArrayValuesTestDataProvider
+     * @param string $option
+     * @param array $asArray
+     * @param string $asString
+     */
+    public function formatFromDbToArrayComplexArrayValuesTest(string $option, array $asArray, string $asString)
+    {
+        $input = [
+            $option => $asString,
+        ];
+        $formatter = new Formatter();
+        $result = $formatter->formatFromDbToArray($input);
+        $this->assertSame($asArray, $result[$option]);
+    }
+
+    /**
+     * Caution: this dataProvider is used by two tests!
+     *
+     * @return array
+     */
+    public function formatForDatabaseSimpleArrayValuesTestDataProvider(): array
+    {
+        return [
+            'pagetypes_select' => [
+                'pagetypes_select',
+                [1, 2, 3],
+                '1,2,3'
+            ],
+            'tables_select' => [
+                'tables_select',
+                ['My', 'tables', 'select'],
+                'My,tables,select'
+            ],
+            'tables_modify' => [
+                'tables_modify',
+                ['My', 'tables', 'modify'],
+                'My,tables,modify'
+            ],
+            'groupMods' => [
+                'groupMods',
+                ['My', 'group', 'Mods'],
+                'My,group,Mods'
+            ],
+            'file_permissions' => [
+                'file_permissions',
+                ['My', 'file', 'permissions'],
+                'My,file,permissions'
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider formatForDatabaseComplexArrayValuesTestDataProvider
+     * @param string $optionName
+     * @param array $optionValue
+     * @param string $expectedFormattedValue
      */
     public function formatForDatabaseComplexArrayValuesTest(string $optionName, array $optionValue, string $expectedFormattedValue)
     {
@@ -153,6 +196,26 @@ class FormatterTest extends UnitTestCase
     }
 
     /**
+     * @test
+     * @dataProvider formatForDatabaseSimpleArrayValuesTestDataProvider
+     * @param string $optionName
+     * @param array $asArray
+     * @param string $asString
+     */
+    public function formatFromDbToArraySimpleArrayValuesTest(string $optionName, array $asArray, string $asString)
+    {
+        $input = [
+            $optionName => $asString,
+        ];
+        $formatter = new Formatter();
+        $result = $formatter->formatFromDbToArray($input);
+        $this->assertArrayHasKey($optionName, $result);
+        $this->assertSame($asArray, $result[$optionName]);
+    }
+
+    /**
+     * Caution: this dataProvider is used by two tests!
+     *
      * @return array
      */
     public function formatForDatabaseComplexArrayValuesTestDataProvider(): array

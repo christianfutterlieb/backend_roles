@@ -34,6 +34,11 @@
                                 <be:link.editRecord uid="{backendUserGroup.uid}" table="be_groups" class="btn btn-sm btn-default">
                                     <core:icon identifier="actions-open" />
                                 </be:link.editRecord>
+                                <f:if condition="!{backendUserGroup.tx_backendroles_role_identifier}">
+                                    <f:link.action action="exportAsRole" arguments="{backendUserGroupUid:backendUserGroup.uid}" class="btn btn-default btn-sm">
+                                        Export
+                                    </f:link.action>
+                                </f:if>
                                 <f:link.action action="resetBackendUserGroupToDefaults" arguments="{backendUserGroupUid:backendUserGroup.uid}" class="btn btn-sm btn-warning t3js-modal-trigger" data="{title:'BackendUserGroup reset', severity:'warning', content:'Do you really want to reset the management-related fields of BackendUserGroup \"{backendUserGroup.title}\"? This cannot be undone.'}">
                                     Reset
                                 </f:link.action>

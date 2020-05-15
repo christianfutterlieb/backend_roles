@@ -15,7 +15,7 @@ $bootstrap = function () {
     // Register the backend module
     $extensionName = 'BackendRoles';
     $controllerActions = [
-        \AawTeam\BackendRoles\Controller\ManagementController::class => 'index, synchronizeAllBackendUserGroupRoles, resetBackendUserGroupToDefaults',
+        \AawTeam\BackendRoles\Controller\ManagementController::class => 'index, synchronizeAllBackendUserGroupRoles, resetBackendUserGroupToDefaults, exportAsRole',
     ];
     // Old-style for TYPO3 versions below 10
     if (version_compare(TYPO3_version, '10', '<')) {

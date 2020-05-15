@@ -1,0 +1,24 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+      xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+      xmlns:backendroles="http://typo3.org/ns/AawTeam/BackendRoles/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:layout name="Backend" />
+
+<f:section name="content">
+    <f:be.pageRenderer includeRequireJsModules="{0:'TYPO3/CMS/Backend/Modal'}" />
+
+    <h1>Backend Role Export</h1>
+
+    <p>Following code represents the role definition configuration for the backend group <b>{backendUserGroup.title}</b>:</p>
+
+    <pre>{configAsString}</pre>
+
+</f:section>
+
+<f:section name="docheader-left">
+    <f:link.action class="btn btn-default btn-sm"><core:icon identifier="actions-close" /> Close</f:link.action>
+</f:section>
+
+</html>

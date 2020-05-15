@@ -12,6 +12,7 @@ namespace AawTeam\BackendRoles\Role\Definition;
  */
 
 use AawTeam\BackendRoles\Role\Definition;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 
 /**
  * Formatter
@@ -151,6 +152,83 @@ class Formatter
                 $return = array_merge($return, $this->flattenFlexFormSubDefinitions($v, $newPrefix . $k));
             }
         }
+        return $return;
+    }
+
+    /**
+     * @param array $backendUserGroup
+     * @return array
+     * @todo Should we use the input data filtering here?
+     */
+    public function formatFromDbToArray(array $backendUserGroup): array
+    {
+//         $defaultValues = $this->getManagedColumnsWithDefaultValues();
+//         $dataToProcess = array_filter($backendUserGroup, function ($v, $k) use ($defaultValues) {
+//             if (array_key_exists($k, $defaultValues)) {
+//                 return $defaultValues[$k] !== $v;
+//             }
+//             return false;
+//         }, ARRAY_FILTER_USE_BOTH);
+        $dataToProcess = $backendUserGroup;
+
+        $return = [];
+
+        // Strings
+        if (array_key_exists('TSconfig', $dataToProcess)) {
+            $return['TSconfig'] = $dataToProcess['TSconfig'];
+        }
+
+        // Comma-separated to array
+        if (array_key_exists('pagetypes_select', $dataToProcess)) {
+            $return['pagetypes_select'] = explode(',', $dataToProcess['pagetypes_select']);
+            array_walk($return['pagetypes_select'], function (&$v) {
+                $v = (int)$v;
+            });
+        }
+        if (array_key_exists('tables_select', $dataToProcess)) {
+            $return['tables_select'] = explode(',', $dataToProcess['tables_select']);
+        }
+        if (array_key_exists('tables_modify', $dataToProcess)) {
+            $return['tables_modify'] = explode(',', $dataToProcess['tables_modify']);
+        }
+        if (array_key_exists('groupMods', $dataToProcess)) {
+            $return['groupMods'] = explode(',', $dataToProcess['groupMods']);
+        }
+        if (array_key_exists('file_permissions', $dataToProcess)) {
+            $return['file_permissions'] = explode(',', $dataToProcess['file_permissions']);
+        }
+
+        // Comma-separated to multi-array
+        foreach (['explicit_allowdeny', 'non_exclude_fields'] as $option) {
+            if (array_key_exists($option, $dataToProcess)) {
+                $final = [];
+                foreach (explode(',', $dataToProcess[$option]) as $entry) {
+                    if (trim($entry) === '') {
+                        continue;
+                    } elseif (strpos($entry, ';') !== false) {
+                        list($path, $ffPath) = explode(';', $entry, 2);
+                        $parts = explode(';', $ffPath);
+                        $value = array_pop($parts);
+                        array_unshift($parts, $path);
+                    } else {
+                        $parts = explode(':', $entry, 2);
+                        $value = array_pop($parts);
+                    }
+
+                    $finalPath = implode(':', $parts);
+
+                    if (ArrayUtility::isValidPath($final, $finalPath, ':')) {
+                        $previous = ArrayUtility::getValueByPath($final, $finalPath, ':');
+                        $previous[] = $value;
+                        $final = ArrayUtility::setValueByPath($final, $finalPath, $previous, ':');
+                    } else {
+                        $final = ArrayUtility::setValueByPath($final, $finalPath, [$value], ':');
+                    }
+                }
+                $return[$option] = $final;
+            }
+        }
+
         return $return;
     }
 }
