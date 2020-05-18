@@ -15,3 +15,9 @@ services:
   AawTeam\BackendRoles\Role\Definition\Loader:
     arguments:
       $cache: '@cache.backend_roles'
+
+  AawTeam\BackendRoles\Command\SynchronizeCommand:
+    tags:
+      - name: 'console.command'
+        command: 'backendroles:synchronize'
+        schedulable: false
