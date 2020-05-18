@@ -39,8 +39,7 @@ $bootstrap = function () {
         $controllerActions,
         [
             'access' => 'admin',
-            // @todo add icon
-            //'iconIdentifier' => '',
+            'iconIdentifier' => 'backend_roles-module-management',
             'labels' => 'LLL:EXT:backend_roles/Resources/Private/Language/ModuleLabels.xlf',
         ]
     );
