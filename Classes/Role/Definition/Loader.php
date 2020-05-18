@@ -90,32 +90,24 @@ class Loader
                 continue;
             }
 
-            $configFile = rtrim($this->extensionInformationProvider->extPath($loadedExtKey), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'Configuration' . DIRECTORY_SEPARATOR . 'BackendUserGroupRoles.php';
-            if (is_file($configFile) && is_readable($configFile)) {
-                $roleDefinitionFiles = require $configFile;
-                if (!is_array($roleDefinitionFiles)) {
-                    throw new RoleDefinitionException('The config file "' . $configFile . '" must return an array. Got ' . gettype($roleDefinitionFiles) . ' instead.', 1589311592);
+            $roleDefinitionsFile = rtrim($this->extensionInformationProvider->extPath($loadedExtKey), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'Configuration' . DIRECTORY_SEPARATOR . 'RoleDefinitions.php';
+            if (is_file($roleDefinitionsFile) && is_readable($roleDefinitionsFile)) {
+                $configRoleDefinitions = require $roleDefinitionsFile;
+                if (!is_array($configRoleDefinitions)) {
+                    throw new RoleDefinitionException('The role definition file "' . $roleDefinitionsFile . '" must return an array. Got ' . gettype($configRoleDefinitions) . ' instead', 1589311592);
                 }
-                foreach ($roleDefinitionFiles as $roleDefinitionFile) {
-                    if (!GeneralUtility::isAllowedAbsPath($roleDefinitionFile)) {
-                        $roleDefinitionFile = GeneralUtility::getFileAbsFileName($roleDefinitionFile);
-                    }
-                    if (!is_file($roleDefinitionFile)) {
-                        throw new RoleDefinitionException('The role definition file "' . $roleDefinitionFile . '" is not a regular file.', 1589390415);
-                    } elseif (!is_readable($roleDefinitionFile)) {
-                        throw new RoleDefinitionException('The role definition file "' . $roleDefinitionFile . '" is not accessible.', 1589391102);
+
+                foreach ($configRoleDefinitions as $configRoleDefinition) {
+                    if (!is_array($configRoleDefinition)) {
+                        throw new RoleDefinitionException('Invalid role definition found in "' . $roleDefinitionsFile . '": a role definition must be array', 1589386642);
                     }
 
-                    $roleDefinition = require $roleDefinitionFile;
-                    if (!is_array($roleDefinition)) {
-                        throw new RoleDefinitionException('The role definition file "' . $roleDefinitionFile . '" must return an array. Got ' . gettype($roleDefinition) . ' instead.', 1589386642);
+                    if (!is_string($configRoleDefinition['identifier']) || empty($configRoleDefinition['identifier']) || trim($configRoleDefinition['identifier']) === '') {
+                        throw new RoleDefinitionException('Invalid role definition found in "' . $roleDefinitionsFile . '": no or invalid identifier', 1589387779);
+                    } elseif (array_key_exists($configRoleDefinition['identifier'], $roleDefinitions)) {
+                        throw new RoleDefinitionException('Invalid role definition found in "' . $roleDefinitionsFile . '": the role definition identifier "' . htmlspecialchars($configRoleDefinition['identifier']) . '" already exists', 1589387862);
                     }
-                    if (!is_string($roleDefinition['identifier']) || empty($roleDefinition['identifier']) || trim($roleDefinition['identifier']) === '') {
-                        throw new RoleDefinitionException('The role definition file "' . $roleDefinitionFile . '" must return an array containing a not empty string offset "identifier".', 1589387779);
-                    } elseif (array_key_exists($roleDefinition['identifier'], $roleDefinitions)) {
-                        throw new RoleDefinitionException('The role definition identifier from file "' . $roleDefinitionFile . '" already exists.', 1589387862);
-                    }
-                    $roleDefinitions[$roleDefinition['identifier']] = new Definition($roleDefinition['identifier'], $roleDefinition);
+                    $roleDefinitions[$configRoleDefinition['identifier']] = new Definition($configRoleDefinition['identifier'], $configRoleDefinition);
                 }
             }
         }

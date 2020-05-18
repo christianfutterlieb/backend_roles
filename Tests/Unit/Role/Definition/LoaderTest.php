@@ -57,23 +57,13 @@ class LoaderTest extends UnitTestCase
      */
     public function invalidConfigurationFileThrowsException(string $configurationFileContents, int $expectedExceptionCode)
     {
-        $root = vfsStream::setup('root', null, [
+        vfsStream::setup('root', null, [
             'myext' => [
                 'Configuration' => [
-                    'BackendUserGroupRoles.php' => $configurationFileContents
+                    'RoleDefinitions.php' => $configurationFileContents,
                 ],
             ],
         ]);
-
-        // Create /etc/shadow file (inaccessible to the application)
-        $etc = vfsStream::newDirectory('etc', 0775);
-        $etc->chown(vfsStream::OWNER_ROOT);
-        $etc->chgrp(vfsStream::GROUP_ROOT);
-        $shadow = vfsStream::newFile('shadow', 0640);
-        $shadow->chown(vfsStream::OWNER_ROOT);
-        $shadow->chgrp(vfsStream::GROUP_ROOT);
-        $etc->addChild($shadow);
-        $root->addChild($etc);
 
         $extensionInformationProviderMock = $this->createMock(ExtensionInformationProvider::class);
         $extensionInformationProviderMock->method('getLoadedExtensionListArray')->willReturn(['myext']);
@@ -102,15 +92,15 @@ class LoaderTest extends UnitTestCase
                 1589311592,
             ],
             'configuration-file-returns-int' => [
-                '<?php return 0;',
+                '<?php return 1;',
                 1589311592,
             ],
             'configuration-file-returns-float' => [
-                '<?php return .0;',
+                '<?php return 1.0;',
                 1589311592,
             ],
             'configuration-file-returns-string' => [
-                '<?php return "";',
+                '<?php return "1";',
                 1589311592,
             ],
             'configuration-file-returns-object' => [
@@ -118,32 +108,46 @@ class LoaderTest extends UnitTestCase
                 1589311592,
             ],
             // Invalid configurations
-            'configuration-array-contains-not-existing-file' => [
-                '<?php return ["vfs://root/some-silly-string"];',
-                1589390415,
+            'role-definition-is-null' => [
+                '<?php return [ null ];',
+                1589386642
             ],
-            'configuration-array-contains-dir' => [
-                '<?php return ["vfs://root/etc"];',
-                1589390415,
+            'role-definition-is-bool' => [
+                '<?php return [ true ];',
+                1589386642
             ],
-            'configuration-array-contains-inaccessible-file' => [
-                '<?php return ["vfs://root/etc/shadow"];',
-                1589391102,
+            'role-definition-is-int' => [
+                '<?php return [ 1 ];',
+                1589386642
+            ],
+            'role-definition-is-float' => [
+                '<?php return [ 1.0 ];',
+                1589386642
+            ],
+            'role-definition-is-string' => [
+                '<?php return [ "1" ];',
+                1589386642
+            ],
+            'role-definition-is-object' => [
+                '<?php return [ new \\stdClass() ];',
+                1589386642
             ],
         ];
     }
 
     /**
      * @test
-     * @dataProvider invalidDefinitionFileThrowsExceptionDataProvider
+     * @dataProvider invalidRoleDefinitionThrowsExceptionDataProvider
      * @param array $configurationDir
      * @param int $expectedExceptionCode
      */
-    public function invalidDefinitionFileThrowsException(array $configurationDir, int $expectedExceptionCode)
+    public function invalidRoleDefinitionThrowsException(array $roleDefinitions, int $expectedExceptionCode)
     {
         vfsStream::setup('root', null, [
             'myext' => [
-                'Configuration' => $configurationDir,
+                'Configuration' => [
+                    'RoleDefinitions.php' => '<?php return ' . var_export($roleDefinitions, true) . ';',
+                ],
             ],
         ]);
 
@@ -161,86 +165,61 @@ class LoaderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function invalidDefinitionFileThrowsExceptionDataProvider(): array
+    public function invalidRoleDefinitionThrowsExceptionDataProvider(): array
     {
         return [
-            // Invalid file contents (no array)
-            'definition-file-returns-null' => [
+            'array-without-identifier' => [
                 [
-                    'BackendUserGroupRoles.php' => '<?php return ["vfs://root/myext/Configuration/role.php"];',
-                    'role.php' => '<?php return null;'
-                ],
-                1589386642,
-            ],
-            'definition-file-returns-bool' => [
-                [
-                    'BackendUserGroupRoles.php' => '<?php return ["vfs://root/myext/Configuration/role.php"];',
-                    'role.php' => '<?php return true;'
-                ],
-                1589386642,
-            ],
-            'definition-file-returns-int' => [
-                [
-                    'BackendUserGroupRoles.php' => '<?php return ["vfs://root/myext/Configuration/role.php"];',
-                    'role.php' => '<?php return 0;'
-                ],
-                1589386642,
-            ],
-            'definition-file-returns-float' => [
-                [
-                    'BackendUserGroupRoles.php' => '<?php return ["vfs://root/myext/Configuration/role.php"];',
-                    'role.php' => '<?php return .0;'
-                ],
-                1589386642,
-            ],
-            'definition-file-returns-string' => [
-                [
-                    'BackendUserGroupRoles.php' => '<?php return ["vfs://root/myext/Configuration/role.php"];',
-                    'role.php' => '<?php return "";'
-                ],
-                1589386642,
-            ],
-            'definition-file-returns-object' => [
-                [
-                    'BackendUserGroupRoles.php' => '<?php return ["vfs://root/myext/Configuration/role.php"];',
-                    'role.php' => '<?php return new \\stdClass();'
-                ],
-                1589386642,
-            ],
-            // Invalid role definition array
-            'definition-file-returns-array-without-identifier' => [
-                [
-                    'BackendUserGroupRoles.php' => '<?php return ["vfs://root/myext/Configuration/role.php"];',
-                    'role.php' => '<?php return [];'
+                    [],
                 ],
                 1589387779,
             ],
-            'definition-identifier-is-not-string' => [
+            'identifier-is-null' => [
                 [
-                    'BackendUserGroupRoles.php' => '<?php return ["vfs://root/myext/Configuration/role.php"];',
-                    'role.php' => '<?php return ["identifier" => 123456789];'
+                    ['identifier' => null],
                 ],
                 1589387779,
             ],
-            'definition-identifier-is-empty-string' => [
+            'identifier-is-bool' => [
                 [
-                    'BackendUserGroupRoles.php' => '<?php return ["vfs://root/myext/Configuration/role.php"];',
-                    'role.php' => '<?php return ["identifier" => ""];'
+                    ['identifier' => true],
                 ],
                 1589387779,
             ],
-            'definition-identifier-contains-only-whitespaces' => [
+            'identifier-is-int' => [
                 [
-                    'BackendUserGroupRoles.php' => '<?php return ["vfs://root/myext/Configuration/role.php"];',
-                    'role.php' => '<?php return ["identifier" => " \\n\\t "];'
+                    ['identifier' => 1],
                 ],
                 1589387779,
             ],
-            'definition-identifier-duplicate' => [
+            'identifier-is-float' => [
                 [
-                    'BackendUserGroupRoles.php' => '<?php return ["vfs://root/myext/Configuration/role1.php", "vfs://root/myext/Configuration/role2.php"];',
-                    'role1.php' => '<?php return ["identifier" => "id"];',
-                    'role2.php' => '<?php return ["identifier" => "id"];'
+                    ['identifier' => 1.0],
+                ],
+                1589387779,
+            ],
+            'identifier-is-object' => [
+                [
+                    ['identifier' => new \stdClass()],
+                ],
+                1589387779,
+            ],
+            'identifier-is-empty-string' => [
+                [
+                    ['identifier' => ''],
+                ],
+                1589387779,
+            ],
+            'identifier-contains-only-whitespaces' => [
+                [
+                    ['identifier' => " \n\t "],
+                ],
+                1589387779,
+            ],
+            'identifier-duplicates' => [
+                [
+                    ['identifier' => 'id'],
+                    ['identifier' => 'id'],
                 ],
                 1589387862,
             ],
@@ -285,8 +264,7 @@ class LoaderTest extends UnitTestCase
         vfsStream::setup('root', null, [
             'myext' => [
                 'Configuration' => [
-                    'BackendUserGroupRoles.php' => '<?php return ["vfs://root/myext/Configuration/role.php"];',
-                    'role.php' => '<?php return ["identifier" => "' . $identifier . '"];',
+                    'RoleDefinitions.php' => '<?php return [ ["identifier" => "' . $identifier . '"] ];',
                 ],
             ],
         ]);
@@ -302,7 +280,7 @@ class LoaderTest extends UnitTestCase
     /**
      * @test
      */
-    public function correctlyProcessAConfigurationAndRoleDefinition()
+    public function correctlyProcessARoleDefinition()
     {
         $identifier = 'id';
         $roleDefinitionArray = [
@@ -312,8 +290,7 @@ class LoaderTest extends UnitTestCase
         vfsStream::setup('root', null, [
             'myext' => [
                 'Configuration' => [
-                    'BackendUserGroupRoles.php' => '<?php return ["vfs://root/myext/Configuration/role.php"];',
-                    'role.php' => '<?php return ' . var_export($roleDefinitionArray, true) . ';',
+                    'RoleDefinitions.php' => '<?php return [ ' . var_export($roleDefinitionArray, true) . ' ];',
                 ],
             ],
         ]);
