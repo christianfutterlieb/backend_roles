@@ -143,10 +143,16 @@ class LoaderTest extends UnitTestCase
      */
     public function invalidRoleDefinitionThrowsException(array $roleDefinitions, int $expectedExceptionCode)
     {
+        $roleDefinitionsCode = var_export($roleDefinitions, true);
+        // php < 7.3 workaround
+        if (version_compare(PHP_VERSION, '7.3', '<')) {
+            $roleDefinitionsCode = str_replace('stdClass::__set_state', '(object)', $roleDefinitionsCode);
+        }
+
         vfsStream::setup('root', null, [
             'myext' => [
                 'Configuration' => [
-                    'RoleDefinitions.php' => '<?php return ' . var_export($roleDefinitions, true) . ';',
+                    'RoleDefinitions.php' => '<?php return ' . $roleDefinitionsCode . ';',
                 ],
             ],
         ]);
