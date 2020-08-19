@@ -46,6 +46,7 @@ class DefinitionTest extends UnitTestCase
         $this->assertNull($definition->getTablesModify());
         $this->assertNull($definition->getGroupMods());
         $this->assertNull($definition->getFilePermissions());
+        $this->assertNull($definition->getAllowedLanguages());
         $this->assertNull($definition->getExplicitAllowdeny());
         $this->assertNull($definition->getNonExcludeFields());
     }
@@ -65,6 +66,7 @@ class DefinitionTest extends UnitTestCase
             'tables_modify' => ['tablesModify'],
             'groupMods' => ['groupMods'],
             'file_permissions' => ['filePermissions'],
+            'allowed_languages' => ['nonExcludeFields'],
             'explicit_allowdeny' => ['explicitAllowdeny'],
             'non_exclude_fields' => ['nonExcludeFields'],
         ];
@@ -79,6 +81,7 @@ class DefinitionTest extends UnitTestCase
         $this->assertSame($definition->getTablesModify(), $options['tables_modify']);
         $this->assertSame($definition->getGroupMods(), $options['groupMods']);
         $this->assertSame($definition->getFilePermissions(), $options['file_permissions']);
+        $this->assertSame($definition->getAllowedLanguages(), $options['allowed_languages']);
         $this->assertSame($definition->getExplicitAllowdeny(), $options['explicit_allowdeny']);
         $this->assertSame($definition->getNonExcludeFields(), $options['non_exclude_fields']);
     }
@@ -114,6 +117,7 @@ class DefinitionTest extends UnitTestCase
             'tables_modify' => ['tablesModify'],
             'groupMods' => ['groupMods'],
             'file_permissions' => ['filePermissions'],
+            'allowed_languages' => ['allowedLanguages'],
             'explicit_allowdeny' => ['explicitAllowdeny'],
             'non_exclude_fields' => ['nonExcludeFields'],
         ];
@@ -186,7 +190,7 @@ class DefinitionTest extends UnitTestCase
             ];
         }
         $testForArrayOptions = [
-            'pagetypes_select', 'tables_select', 'tables_modify', 'groupMods', 'file_permissions', 'explicit_allowdeny', 'non_exclude_fields'
+            'pagetypes_select', 'tables_select', 'tables_modify', 'groupMods', 'file_permissions', 'allowed_languages', 'explicit_allowdeny', 'non_exclude_fields'
         ];
         foreach ($testForArrayOptions as $optionName) {
             $dataSet[$optionName . '-is-null'] = [

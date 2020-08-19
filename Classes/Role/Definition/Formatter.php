@@ -29,6 +29,7 @@ class Formatter
         'tables_modify',
         'groupMods',
         'file_permissions',
+        'allowed_languages',
         'explicit_allowdeny',
         'non_exclude_fields',
     ];
@@ -94,6 +95,9 @@ class Formatter
         }
         if (($value = $definition->getFilePermissions()) !== null) {
             $formatted['file_permissions'] = implode(',', $value);
+        }
+        if (($value = $definition->getAllowedLanguages()) !== null) {
+            $formatted['allowed_languages'] = implode(',', $value);
         }
 
         // Multi-array to comma-separated
@@ -196,6 +200,12 @@ class Formatter
         }
         if (array_key_exists('file_permissions', $dataToProcess)) {
             $return['file_permissions'] = explode(',', $dataToProcess['file_permissions']);
+        }
+        if (array_key_exists('allowed_languages', $dataToProcess)) {
+            $return['allowed_languages'] = explode(',', $dataToProcess['allowed_languages']);
+            array_walk($return['allowed_languages'], function (&$v) {
+                $v = (int)$v;
+            });
         }
 
         // Comma-separated to multi-array

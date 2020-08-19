@@ -170,6 +170,11 @@ class FormatterTest extends UnitTestCase
                 ['My', 'file', 'permissions'],
                 'My,file,permissions'
             ],
+            'allowed_languages' => [
+                'allowed_languages',
+                [0, 1, 2],
+                '0,1,2'
+            ],
         ];
     }
 

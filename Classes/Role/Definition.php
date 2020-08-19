@@ -26,6 +26,7 @@ class Definition
     protected $tablesModify;
     protected $groupMods;
     protected $filePermissions;
+    protected $allowedLanguages;
     protected $explicitAllowdeny;
     protected $nonExcludeFields;
 
@@ -79,6 +80,12 @@ class Definition
                 }
                 $this->filePermissions = $array['file_permissions'];
             }
+            if (array_key_exists('allowed_languages', $array)) {
+                if (!is_array($array['allowed_languages'])) {
+                    throw new RoleDefinitionException('Role option "allowed_languages" must be array');
+                }
+                $this->allowedLanguages = $array['allowed_languages'];
+            }
             if (array_key_exists('explicit_allowdeny', $array)) {
                 if (!is_array($array['explicit_allowdeny'])) {
                     throw new RoleDefinitionException('Role option "explicit_allowdeny" must be array');
@@ -105,6 +112,7 @@ class Definition
             'tables_modify' => $this->tablesModify,
             'groupMods' => $this->groupMods,
             'file_permissions' => $this->filePermissions,
+            'allowed_languages' => $this->allowedLanguages,
             'explicit_allowdeny' => $this->explicitAllowdeny,
             'non_exclude_fields' => $this->nonExcludeFields,
         ];
@@ -161,5 +169,10 @@ class Definition
     public function getNonExcludeFields(): ?array
     {
         return $this->nonExcludeFields;
+    }
+
+    public function getAllowedLanguages(): ?array
+    {
+        return $this->allowedLanguages;
     }
 }
