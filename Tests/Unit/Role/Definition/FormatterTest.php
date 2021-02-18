@@ -150,30 +150,65 @@ class FormatterTest extends UnitTestCase
                 [1, 2, 3],
                 '1,2,3'
             ],
+            'pagetypes_select (empty)' => [
+                'pagetypes_select',
+                [],
+                ''
+            ],
             'tables_select' => [
                 'tables_select',
                 ['My', 'select', 'tables'],
                 'My,select,tables'
+            ],
+            'tables_select (empty)' => [
+                'tables_select',
+                [],
+                ''
             ],
             'tables_modify' => [
                 'tables_modify',
                 ['My', 'modify', 'tables'],
                 'My,modify,tables'
             ],
+            'tables_modify (empty)' => [
+                'tables_modify',
+                [],
+                ''
+            ],
             'groupMods' => [
                 'groupMods',
                 ['Mods', 'My', 'group'],
                 'Mods,My,group'
+            ],
+            'groupMods (empty)' => [
+                'groupMods',
+                [],
+                ''
             ],
             'file_permissions' => [
                 'file_permissions',
                 ['My', 'file', 'permissions'],
                 'My,file,permissions'
             ],
+            'file_permissions (empty)' => [
+                'file_permissions',
+                [],
+                ''
+            ],
             'allowed_languages' => [
                 'allowed_languages',
                 [0, 1, 2],
                 '0,1,2'
+            ],
+            'allowed_languages (empty)' => [
+                'allowed_languages',
+                [],
+                ''
+            ],
+            'allowed_languages (default language)' => [
+                'allowed_languages',
+                [0],
+                '0'
             ],
         ];
     }

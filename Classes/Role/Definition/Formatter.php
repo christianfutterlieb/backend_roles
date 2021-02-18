@@ -13,6 +13,7 @@ namespace AawTeam\BackendRoles\Role\Definition;
 
 use AawTeam\BackendRoles\Role\Definition;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
 
 /**
  * Formatter
@@ -184,7 +185,9 @@ class Formatter
 
         // Comma-separated to array
         if (array_key_exists('pagetypes_select', $dataToProcess)) {
-            $return['pagetypes_select'] = array_filter(explode(',', $dataToProcess['pagetypes_select']));
+            $return['pagetypes_select'] = array_filter(explode(',', $dataToProcess['pagetypes_select']), function ($value) {
+                return MathUtility::canBeInterpretedAsInteger($value);
+            });
             array_walk($return['pagetypes_select'], function (&$v) {
                 $v = (int)$v;
             });
@@ -202,7 +205,9 @@ class Formatter
             $return['file_permissions'] = array_filter(explode(',', $dataToProcess['file_permissions']));
         }
         if (array_key_exists('allowed_languages', $dataToProcess)) {
-            $return['allowed_languages'] = array_filter(explode(',', $dataToProcess['allowed_languages']));
+            $return['allowed_languages'] = array_filter(explode(',', $dataToProcess['allowed_languages']), function ($value) {
+                return MathUtility::canBeInterpretedAsInteger($value);
+            });
             array_walk($return['allowed_languages'], function (&$v) {
                 $v = (int)$v;
             });
