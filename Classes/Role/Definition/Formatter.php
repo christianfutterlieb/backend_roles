@@ -250,10 +250,19 @@ class Formatter
     }
 
     /**
+     * Sort algorithm:
+     *
+     *   1. Numerical indexed arrays: sort by value (natsort())
+     *   2. String indexed arrays: sort by key (strnatcmp())
+     *   3. Mixed indexed arrays:
+     *      a. Split in numeric and string indexed arrays
+     *      b. Perform above logic on either of the arrays
+     *      c. Merge the sorted arrays back together (numeric first)
+     *
      * @param array $array
      * @return array
      */
-    private static function sortArrayForFormatRecursive(array $array): array
+    public static function sortArrayForFormatRecursive(array $array): array
     {
         $allKeysAreNumeric = true;
         $allKeysAreString = true;

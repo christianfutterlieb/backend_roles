@@ -152,18 +152,18 @@ class FormatterTest extends UnitTestCase
             ],
             'tables_select' => [
                 'tables_select',
-                ['My', 'tables', 'select'],
-                'My,tables,select'
+                ['My', 'select', 'tables'],
+                'My,select,tables'
             ],
             'tables_modify' => [
                 'tables_modify',
-                ['My', 'tables', 'modify'],
-                'My,tables,modify'
+                ['My', 'modify', 'tables'],
+                'My,modify,tables'
             ],
             'groupMods' => [
                 'groupMods',
-                ['My', 'group', 'Mods'],
-                'My,group,Mods'
+                ['Mods', 'My', 'group'],
+                'Mods,My,group'
             ],
             'file_permissions' => [
                 'file_permissions',
@@ -333,6 +333,62 @@ class FormatterTest extends UnitTestCase
                 'tt_content:pi_flexform;teams_person;appearance;settings.centered,' .
                 'tt_content:pi_flexform;teams_person;appearance;settings.roundImage,' .
                 'tx_teams_person:options;sDEF;myoption'
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider sortArrayForFormatRecursiveTestDataProvider
+     * @param array $input
+     * @param array $expectedOutput
+     */
+    public function sortArrayForFormatRecursiveTest(array $input, array $expectedOutput)
+    {
+        $this->assertSame($expectedOutput, Formatter::sortArrayForFormatRecursive($input));
+    }
+
+    /**
+     * @return array
+     */
+    public function sortArrayForFormatRecursiveTestDataProvider(): array
+    {
+        return [
+            'numeric indexed strings' => [
+                ['c', 'b', 'a'],
+                [0 => 'a', 1 => 'b', 2 => 'c'],
+            ],
+            'numeric indexed numbers' => [
+                [3, 2, 1],
+                [0 => 1, 1 => 2, 2 => 3],
+            ],
+            'numeric indexed strings and numbers' => [
+                ['3', 'c', '2','b', 'a', '1'],
+                [0 => '1', 1 => '2', 2 => '3', 3 => 'a', 4 => 'b', 5 => 'c'],
+            ],
+            'string indexed strings' => [
+                ['c' => 'y', 'a' => 'x', 'b' => 'z'],
+                ['a' => 'x', 'b' => 'z', 'c' => 'y'],
+            ],
+            'string indexed numbers' => [
+                ['c' => 2, 'a' => 1, 'b' => 3],
+                ['a' => 1, 'b' => 3, 'c' => 2],
+            ],
+            'string indexed strings and numbers' => [
+                ['c' => 2, 'x' => 'q', 'a' => 1, 'b' => 3, 'z' => 'w', 'y' => 'e'],
+                ['a' => 1, 'b' => 3, 'c' => 2, 'x' => 'q', 'y' => 'e', 'z' => 'w'],
+            ],
+            'mixed indexed strings' => [
+                [0 => 'b', 'a' => 'z', 1 => 'a', 'b' => 'y'],
+                [0 => 'a', 1 => 'b', 'a' => 'z', 'b' => 'y'],
+            ],
+            'mixed indexed numbers' => [
+                [0 => 4, 'a' => 3, 1 => 2, 'b' => 1],
+                [0 => 2, 1 => 4, 'a' => 3, 'b' => 1],
+            ],
+            'mixed indexed strings and numbers' => [
+                [0 => 4, 'a' => 3, 'c' => 0, 1 => 'q', 10 => 1, 'b' => 'g', 9 => 'a'],
+                [0 => 1, 1 => 4, 2 => 'a', 3 => 'q', 'a' => 3, 'b' => 'g', 'c' => 0],
             ],
         ];
     }
