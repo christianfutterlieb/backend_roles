@@ -179,30 +179,30 @@ class Formatter
 
         // Strings
         if (array_key_exists('TSconfig', $dataToProcess)) {
-            $return['TSconfig'] = $dataToProcess['TSconfig'];
+            $return['TSconfig'] = trim((string)$dataToProcess['TSconfig']);
         }
 
         // Comma-separated to array
         if (array_key_exists('pagetypes_select', $dataToProcess)) {
-            $return['pagetypes_select'] = explode(',', $dataToProcess['pagetypes_select']);
+            $return['pagetypes_select'] = array_filter(explode(',', $dataToProcess['pagetypes_select']));
             array_walk($return['pagetypes_select'], function (&$v) {
                 $v = (int)$v;
             });
         }
         if (array_key_exists('tables_select', $dataToProcess)) {
-            $return['tables_select'] = explode(',', $dataToProcess['tables_select']);
+            $return['tables_select'] = array_filter(explode(',', $dataToProcess['tables_select']));
         }
         if (array_key_exists('tables_modify', $dataToProcess)) {
-            $return['tables_modify'] = explode(',', $dataToProcess['tables_modify']);
+            $return['tables_modify'] = array_filter(explode(',', $dataToProcess['tables_modify']));
         }
         if (array_key_exists('groupMods', $dataToProcess)) {
-            $return['groupMods'] = explode(',', $dataToProcess['groupMods']);
+            $return['groupMods'] = array_filter(explode(',', $dataToProcess['groupMods']));
         }
         if (array_key_exists('file_permissions', $dataToProcess)) {
-            $return['file_permissions'] = explode(',', $dataToProcess['file_permissions']);
+            $return['file_permissions'] = array_filter(explode(',', $dataToProcess['file_permissions']));
         }
         if (array_key_exists('allowed_languages', $dataToProcess)) {
-            $return['allowed_languages'] = explode(',', $dataToProcess['allowed_languages']);
+            $return['allowed_languages'] = array_filter(explode(',', $dataToProcess['allowed_languages']));
             array_walk($return['allowed_languages'], function (&$v) {
                 $v = (int)$v;
             });
