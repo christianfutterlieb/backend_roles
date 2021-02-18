@@ -239,6 +239,76 @@ class Formatter
             }
         }
 
+        // Sort the array to be returned
+        foreach ($return as $key => $value) {
+            if (is_array($value)) {
+                $return[$key] = self::sortArrayForFormatRecursive($value);
+            }
+        }
+
         return $return;
+    }
+
+    /**
+     * @param array $array
+     * @return array
+     */
+    private static function sortArrayForFormatRecursive(array $array): array
+    {
+        $allKeysAreNumeric = true;
+        $allKeysAreString = true;
+        foreach ($array as $key => $value) {
+            if ($allKeysAreNumeric && !is_int($key)) {
+                $allKeysAreNumeric = false;
+            }
+            if ($allKeysAreString && !is_string($key)) {
+                $allKeysAreString = false;
+            }
+            if (is_array($value)) {
+                $array[$key] = self::sortArrayForFormatRecursive($value);
+            }
+        }
+
+        if ($allKeysAreNumeric) {
+            $return = self::sortNumericIndexedArrayForFormat($array);
+        } elseif ($allKeysAreString) {
+            $return = self::sortStringIndexedArrayForFormat($array);
+        } else {
+            // Mixed indexing: split array in numeric- and string-indexed arrays
+            // and then merge numeric first
+            $tmp = [];
+            foreach ($array as $key => $value) {
+                if (!is_int($key)) {
+                    $tmp[$key] = $value;
+                    unset($array[$key]);
+                }
+            }
+            $return = array_merge(
+                self::sortNumericIndexedArrayForFormat($array),
+                self::sortStringIndexedArrayForFormat($tmp)
+            );
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param array $array
+     * @return array
+     */
+    private function sortNumericIndexedArrayForFormat(array $array): array
+    {
+        natsort($array);
+        return array_values($array);
+    }
+
+    /**
+     * @param array $array
+     * @return array
+     */
+    private function sortStringIndexedArrayForFormat(array $array): array
+    {
+        uksort($array, 'strnatcmp');
+        return $array;
     }
 }
