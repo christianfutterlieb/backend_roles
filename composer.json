@@ -49,7 +49,7 @@
     },
     "scripts": {
         "php-cs-fixer": [
-            "php-cs-fixer fix . --rules='@PSR1,@PSR2'"
+            "php-cs-fixer fix Classes --rules='@PSR1,@PSR2'"
         ],
         "run-tests": [
             "phpunit -c Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/"
