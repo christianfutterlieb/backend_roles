@@ -43,6 +43,7 @@
             "dev-master": "1.x-dev"
         },
         "typo3/cms": {
+            "extension-key": "backend_roles",
             "app-dir": "Build",
             "web-dir": "Build/public"
         }
