@@ -310,7 +310,7 @@ class Formatter
      * @param array $array
      * @return array
      */
-    private function sortNumericIndexedArrayForFormat(array $array): array
+    private static function sortNumericIndexedArrayForFormat(array $array): array
     {
         natsort($array);
         return array_values($array);
@@ -320,7 +320,7 @@ class Formatter
      * @param array $array
      * @return array
      */
-    private function sortStringIndexedArrayForFormat(array $array): array
+    private static function sortStringIndexedArrayForFormat(array $array): array
     {
         uksort($array, 'strnatcmp');
         return $array;
