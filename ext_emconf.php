@@ -16,11 +16,11 @@ $EM_CONF[$_EXTKEY] = [
     'author_email' => 'development@agenturamwasser.ch',
     'state' => 'stable',
     'clearCacheOnLoad' => true,
-    'version' => '1.1.4-dev',
+    'version' => '2.0.0-dev',
     'constraints' => [
         'depends' => [
-            'php' => '7.2',
-            'typo3' => '9.5.0-10.4.99',
+            'php' => '7.4-8.2.99',
+            'typo3' => '10.4.36-12.99.99',
         ],
         'conflicts' => [],
         'suggests' => [],
