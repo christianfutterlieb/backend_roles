@@ -11,45 +11,40 @@ namespace AawTeam\BackendRoles\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AawTeam\BackendRoles\Role\Definition\Formatter;
-use AawTeam\BackendRoles\Role\Synchronizer;
 use AawTeam\BackendRoles\Domain\Repository\BackendUserGroupRepository;
+use AawTeam\BackendRoles\Role\Synchronizer;
+use AawTeam\BackendRoles\Role\Definition\Formatter;
+use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 
 /**
  * AbstractController
  */
 class ManagementController extends ActionController
 {
-    /**
-     * @var BackendUserGroupRepository
-     */
-    protected $backendUserGroupRepository;
+    protected BackendUserGroupRepository $backendUserGroupRepository;
+    protected Synchronizer $synchronizer;
+    protected Typo3Version $typo3Version;
 
-    /**
-     * @var Synchronizer
-     */
-    protected $synchronizer;
-
-    /**
-     * @param BackendUserGroupRepository $backendUserGroupRepository
-     */
     public function injectBackendUserGroupRepository(BackendUserGroupRepository $backendUserGroupRepository)
     {
         $this->backendUserGroupRepository = $backendUserGroupRepository;
     }
 
-    /**
-     * @param Synchronizer $synchronizer
-     */
     public function injectSynchronizer(Synchronizer $synchronizer)
     {
         $this->synchronizer = $synchronizer;
+    }
+
+    public function injectTypo3Version(Typo3Version $typo3Version)
+    {
+        $this->typo3Version = $typo3Version;
     }
 
     /**
@@ -69,12 +64,18 @@ class ManagementController extends ActionController
     /**
      *
      */
-    protected function indexAction()
+    protected function indexAction(): ?ResponseInterface
     {
         $query = $this->backendUserGroupRepository->createQuery();
         $query->getQuerySettings()->setIgnoreEnableFields(true);
         $query->setOrderings(['title' => QueryInterface::ORDER_ASCENDING]);
         $this->view->assign('backendUserGroups', $query->execute(true));
+
+        // @todo: remove this construct when dropping support for TYPO3 < v11
+        //        and change the return type of the method to ResponseInterface
+        return $this->typo3Version->getMajorVersion() < 11
+            ? null
+            : $this->htmlResponse();
     }
 
     /**
@@ -110,7 +111,7 @@ class ManagementController extends ActionController
     /**
      * @param int $backendUserGroupUid
      */
-    protected function exportAsRoleAction(int $backendUserGroupUid)
+    protected function exportAsRoleAction(int $backendUserGroupUid): ?ResponseInterface
     {
         $backendUserGroup = BackendUtility::getRecord('be_groups', $backendUserGroupUid);
         if (!is_array($backendUserGroup)) {
@@ -129,6 +130,12 @@ class ManagementController extends ActionController
             'backendUserGroup' => $backendUserGroup,
             'configAsString' => $configAsString,
         ]);
+
+        // @todo: remove this construct when dropping support for TYPO3 < v11
+        //        and change the return type of the method to ResponseInterface
+        return $this->typo3Version->getMajorVersion() < 11
+            ? null
+            : $this->htmlResponse();
     }
 
     /**
