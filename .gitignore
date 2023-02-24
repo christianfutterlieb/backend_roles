@@ -4,6 +4,6 @@
 .cache
 .DS_Store
 .sass-cache
-/Build
+/.Build
 /composer.lock
-/.php_cs.cache
+/.php-cs-fixer.cache
