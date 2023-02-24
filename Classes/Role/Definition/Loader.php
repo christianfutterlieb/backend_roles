@@ -14,11 +14,12 @@ namespace AawTeam\BackendRoles\Role\Definition;
 use AawTeam\BackendRoles\Exception\RoleDefinitionException;
 use AawTeam\BackendRoles\Role\Definition;
 use AawTeam\BackendRoles\Role\ExtensionInformationProvider;
-use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Loader
@@ -102,7 +103,7 @@ class Loader
                         throw new RoleDefinitionException('Invalid role definition found in "' . $roleDefinitionsFile . '": a role definition must be array', 1589386642);
                     }
 
-                    if (!is_string($configRoleDefinition['identifier']) || empty($configRoleDefinition['identifier']) || trim($configRoleDefinition['identifier']) === '') {
+                    if (!is_string($configRoleDefinition['identifier'] ?? null) || empty($configRoleDefinition['identifier']) || trim($configRoleDefinition['identifier']) === '') {
                         throw new RoleDefinitionException('Invalid role definition found in "' . $roleDefinitionsFile . '": no or invalid identifier', 1589387779);
                     } elseif (array_key_exists($configRoleDefinition['identifier'], $roleDefinitions)) {
                         throw new RoleDefinitionException('Invalid role definition found in "' . $roleDefinitionsFile . '": the role definition identifier "' . htmlspecialchars($configRoleDefinition['identifier']) . '" already exists', 1589387862);
@@ -124,7 +125,7 @@ class Loader
         return 'roleDefinitions_' . hash_hmac(
             'sha1',
             implode('-', [
-                TYPO3_version,
+                GeneralUtility::makeInstance(Typo3Version::class)->getBranch(),
                 Environment::getProjectPath(),
                 serialize(ExtensionManagementUtility::getLoadedExtensionListArray()),
             ]),

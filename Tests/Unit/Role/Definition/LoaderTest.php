@@ -19,26 +19,12 @@ use AawTeam\BackendRoles\Role\Definition\Loader;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
-use TYPO3\CMS\Core\Information\Typo3Version;
 
 /**
  * LoaderTest
  */
 class LoaderTest extends UnitTestCase
 {
-    /**
-     * {@inheritDoc}
-     * @see \PHPUnit\Framework\TestCase::setUp()
-     */
-    protected function setUp()
-    {
-        if (class_exists(Typo3Version::class)) {
-            new Typo3Version();
-        } elseif (!defined('TYPO3_version')) {
-            define('TYPO3_version', '1.2.3');
-        }
-    }
-
     /**
      * @return PhpFrontend
      */
@@ -144,10 +130,6 @@ class LoaderTest extends UnitTestCase
     public function invalidRoleDefinitionThrowsException(array $roleDefinitions, int $expectedExceptionCode)
     {
         $roleDefinitionsCode = var_export($roleDefinitions, true);
-        // php < 7.3 workaround
-        if (version_compare(PHP_VERSION, '7.3', '<')) {
-            $roleDefinitionsCode = str_replace('stdClass::__set_state', '(object)', $roleDefinitionsCode);
-        }
 
         vfsStream::setup('root', null, [
             'myext' => [
