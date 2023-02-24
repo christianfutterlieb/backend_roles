@@ -3,13 +3,18 @@
     "type": "typo3-cms-extension",
     "description": "Backend user group role management for TYPO3",
     "keywords": ["typo3", "backend", "usergroup", "group", "role"],
-    "homepage": "https://redmine.agenturamwasser.ch/",
+    "homepage": "https://github.com/christianfutterlieb/backend_roles",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "Agentur am Wasser Team",
             "email": "development@agenturamwasser.ch",
             "homepage": "https://web.agenturamwasser.ch/",
+            "role": "Developer"
+        },
+        {
+            "name": "Christian Futterlieb",
+            "homepage": "https://github.com/christianfutterlieb",
             "role": "Developer"
         }
     ],
