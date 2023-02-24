@@ -11,29 +11,31 @@ namespace AawTeam\BackendRoles\Domain\Model;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Extbase\Domain\Model\BackendUserGroup as ExtbaseBackendUserGroup;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
- * AbstractController
+ * BackendUserGroup
  */
-class BackendUserGroup extends ExtbaseBackendUserGroup
+class BackendUserGroup extends AbstractEntity
 {
-    /**
-     * @var string
-     */
-    protected $roleIdentifier = '';
+    protected string $title = '';
+    protected string $roleIdentifier = '';
 
-    /**
-     * @return string
-     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
     public function getRoleIdentifier(): string
     {
         return $this->roleIdentifier;
     }
 
-    /**
-     * @param string $roleIdentifier
-     */
     public function setRoleIdentifier(string $roleIdentifier): void
     {
         $this->roleIdentifier = $roleIdentifier;

@@ -11,11 +11,19 @@ namespace AawTeam\BackendRoles\Domain\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Extbase\Domain\Repository\BackendUserGroupRepository as ExtbaseBackendUserGroupRepository;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Repository;
+use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 
 /**
  * BackendUserGroupRepository
  */
-class BackendUserGroupRepository extends ExtbaseBackendUserGroupRepository
+class BackendUserGroupRepository extends Repository
 {
+    public function initializeObject()
+    {
+        $querySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
+        $querySettings->setRespectStoragePage(false);
+        $this->setDefaultQuerySettings($querySettings);
+    }
 }
