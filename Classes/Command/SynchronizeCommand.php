@@ -26,8 +26,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class SynchronizeCommand extends Command
 {
-    const ERRORCODE_LOCKING = 1;
-
     /**
      * @var Synchronizer
      */
@@ -72,10 +70,10 @@ class SynchronizeCommand extends Command
             $locker->acquire();
         } catch (\TYPO3\CMS\Core\Locking\Exception\LockCreateException $e) {
             $output->writeln('Error: cannot create lock: ' . $e->getMessage());
-            return self::ERRORCODE_LOCKING;
+            return Command::FAILURE;
         } catch (\Exception $e) {
             $output->writeln('Error: cannot acquire lock: ' . $e->getMessage());
-            return self::ERRORCODE_LOCKING;
+            return Command::FAILURE;
         }
 
         // Run the synchronizer
@@ -88,7 +86,7 @@ class SynchronizeCommand extends Command
 
         // Release the lock
         $locker->release();
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**
