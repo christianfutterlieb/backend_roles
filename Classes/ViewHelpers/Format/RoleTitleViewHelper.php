@@ -68,7 +68,7 @@ class RoleTitleViewHelper extends AbstractViewHelper
         $backendUserGroup = $this->arguments['backendUserGroup'];
 
         // No role
-        if (!is_string($backendUserGroup['tx_backendroles_role_identifier']) || trim($backendUserGroup['tx_backendroles_role_identifier']) === '') {
+        if (!is_string($backendUserGroup['tx_backendroles_role_identifier'] ?? null) || trim($backendUserGroup['tx_backendroles_role_identifier']) === '') {
             return '';
         }
 

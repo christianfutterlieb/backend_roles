@@ -51,7 +51,7 @@ $extConf = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
 )->get('backend_roles');
 
 // Add displayCond to all managed fields to hide them for the managed roles
-if ($extConf['hideManagedBackendUserGroupColumnns']) {
+if ($extConf['hideManagedBackendUserGroupColumnns'] ?? false) {
     $displayCond = 'FIELD:tx_backendroles_role_identifier:REQ:false';
     /** @var \AawTeam\BackendRoles\Role\Definition\Formatter $roleDefinitionFormatter */
     $roleDefinitionFormatter = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\AawTeam\BackendRoles\Role\Definition\Formatter::class);

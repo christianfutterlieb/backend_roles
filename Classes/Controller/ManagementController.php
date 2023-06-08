@@ -117,7 +117,7 @@ class ManagementController extends ActionController
         if (!is_array($backendUserGroup)) {
             $this->addFlashMessage('Invalid backendUserGroup UID received', 'Error', AbstractMessage::ERROR);
             $this->redirect('index');
-        } elseif ($backendUserGroup['tx_backendroles_role_identifier']) {
+        } elseif ($backendUserGroup['tx_backendroles_role_identifier'] ?? false) {
             $this->addFlashMessage('This BackendUserGroup is a managed group', 'Error', AbstractMessage::ERROR);
             $this->redirect('index');
         }
