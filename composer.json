@@ -1,5 +1,5 @@
 {
-    "name": "aaw-team/backend_roles",
+    "name": "christianfutterlieb/backend_roles",
     "type": "typo3-cms-extension",
     "description": "Backend user group role management for TYPO3",
     "keywords": ["typo3", "backend", "usergroup", "group", "role"],
@@ -27,7 +27,8 @@
         "friendsofphp/php-cs-fixer": "^3.14"
     },
     "replace": {
-        "typo3-ter/backend_roles": "self.version"
+        "typo3-ter/backend_roles": "self.version",
+        "aaw-team/backend_roles": "self.version"
     },
     "autoload": {
         "psr-4": {
