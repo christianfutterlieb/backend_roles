@@ -23,8 +23,9 @@
         "typo3/cms-core": "^11.5.24"
     },
     "require-dev": {
-        "nimut/testing-framework": "^6.0",
-        "friendsofphp/php-cs-fixer": "^3.14"
+        "friendsofphp/php-cs-fixer": "^3.14",
+        "mikey179/vfsstream": "^1.6",
+        "typo3/testing-framework": "^7.0"
     },
     "replace": {
         "typo3-ter/backend_roles": "self.version",
@@ -54,16 +55,15 @@
         },
         "typo3/cms": {
             "extension-key": "backend_roles",
-            "app-dir": ".Build",
             "web-dir": ".Build/public"
         }
     },
     "scripts": {
         "php-cs-fixer": [
-            "php-cs-fixer fix Classes --rules='@PSR1,@PSR2'"
+            "php-cs-fixer fix -v --cache-file=.Build/.php-cs-fixer.cache --rules='@PSR1,@PSR2' Classes"
         ],
         "run-tests": [
-            "phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/"
+            "phpunit -c Build/phpunit/UnitTests.xml"
         ]
     }
 }

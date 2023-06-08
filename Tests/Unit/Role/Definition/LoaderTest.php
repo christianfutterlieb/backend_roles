@@ -16,7 +16,7 @@ use AawTeam\BackendRoles\Role\ExtensionInformationProvider;
 use AawTeam\BackendRoles\Role\Definition;
 use AawTeam\BackendRoles\Role\Definition\Formatter;
 use AawTeam\BackendRoles\Role\Definition\Loader;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
 
