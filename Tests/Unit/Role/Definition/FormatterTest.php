@@ -13,7 +13,7 @@ namespace AawTeam\LanguageMatcher\Tests\Unit\Context\Context;
 
 use AawTeam\BackendRoles\Role\Definition;
 use AawTeam\BackendRoles\Role\Definition\Formatter;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * FormatterTest

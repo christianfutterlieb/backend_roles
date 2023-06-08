@@ -167,13 +167,13 @@ class Formatter
      */
     public function formatFromDbToArray(array $backendUserGroup): array
     {
-//         $defaultValues = $this->getManagedColumnsWithDefaultValues();
-//         $dataToProcess = array_filter($backendUserGroup, function ($v, $k) use ($defaultValues) {
-//             if (array_key_exists($k, $defaultValues)) {
-//                 return $defaultValues[$k] !== $v;
-//             }
-//             return false;
-//         }, ARRAY_FILTER_USE_BOTH);
+        // $defaultValues = $this->getManagedColumnsWithDefaultValues();
+        // $dataToProcess = array_filter($backendUserGroup, function ($v, $k) use ($defaultValues) {
+        //     if (array_key_exists($k, $defaultValues)) {
+        //         return $defaultValues[$k] !== $v;
+        //     }
+        //     return false;
+        // }, ARRAY_FILTER_USE_BOTH);
         $dataToProcess = $backendUserGroup;
 
         $return = [];
