@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace AawTeam\BackendRoles\Domain\Repository;
 
 /*
@@ -12,8 +14,8 @@ namespace AawTeam\BackendRoles\Domain\Repository;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Persistence\Repository;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
+use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
  * BackendUserGroupRepository

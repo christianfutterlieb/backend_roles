@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace AawTeam\LanguageMatcher\Tests\Unit\Context\Context;
 
 /*
@@ -12,13 +14,13 @@ namespace AawTeam\LanguageMatcher\Tests\Unit\Context\Context;
  */
 
 use AawTeam\BackendRoles\Exception\RoleDefinitionException;
-use AawTeam\BackendRoles\Role\ExtensionInformationProvider;
 use AawTeam\BackendRoles\Role\Definition;
 use AawTeam\BackendRoles\Role\Definition\Formatter;
 use AawTeam\BackendRoles\Role\Definition\Loader;
-use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
+use AawTeam\BackendRoles\Role\ExtensionInformationProvider;
 use org\bovigo\vfs\vfsStream;
 use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * LoaderTest
@@ -96,27 +98,27 @@ class LoaderTest extends UnitTestCase
             // Invalid configurations
             'role-definition-is-null' => [
                 '<?php return [ null ];',
-                1589386642
+                1589386642,
             ],
             'role-definition-is-bool' => [
                 '<?php return [ true ];',
-                1589386642
+                1589386642,
             ],
             'role-definition-is-int' => [
                 '<?php return [ 1 ];',
-                1589386642
+                1589386642,
             ],
             'role-definition-is-float' => [
                 '<?php return [ 1.0 ];',
-                1589386642
+                1589386642,
             ],
             'role-definition-is-string' => [
                 '<?php return [ "1" ];',
-                1589386642
+                1589386642,
             ],
             'role-definition-is-object' => [
                 '<?php return [ new \\stdClass() ];',
-                1589386642
+                1589386642,
             ],
         ];
     }
@@ -240,7 +242,7 @@ class LoaderTest extends UnitTestCase
         });
 
         $loader = new Loader($this->getCacheMock(), $extensionInformationProviderMock);
-        $this->assertSame([], $loader->getRoleDefinitions());
+        self::assertSame([], $loader->getRoleDefinitions());
     }
 
     /**
@@ -262,7 +264,7 @@ class LoaderTest extends UnitTestCase
         $extensionInformationProviderMock->method('extPath')->willReturn('vfs://root/myext');
 
         $loader = new Loader($this->getCacheMock(), $extensionInformationProviderMock);
-        $this->assertArrayHasKey($identifier, $loader->getRoleDefinitions());
+        self::assertArrayHasKey($identifier, $loader->getRoleDefinitions());
     }
 
     /**
@@ -289,9 +291,9 @@ class LoaderTest extends UnitTestCase
 
         $loader = new Loader($this->getCacheMock(), $extensionInformationProviderMock);
         $actualResult = $loader->getRoleDefinitions();
-        $this->assertCount(1, $actualResult);
-        $this->assertArrayHasKey($identifier, $actualResult);
-        $this->assertInstanceOf(Definition::class, $actualResult[$identifier]);
+        self::assertCount(1, $actualResult);
+        self::assertArrayHasKey($identifier, $actualResult);
+        self::assertInstanceOf(Definition::class, $actualResult[$identifier]);
     }
 
     /**
@@ -321,7 +323,7 @@ class LoaderTest extends UnitTestCase
 
         $loader = new Loader($this->getCacheMock(), $extensionInformationProviderMock);
         $roleDefinitions = $loader->getRoleDefinitions();
-        $this->assertArrayNotHasKey($unknownOffset, $roleDefinitions[$identifier]);
-        $this->assertEmpty(array_diff(array_keys($roleDefinitions[$identifier]), $knownOffsets));
+        self::assertArrayNotHasKey($unknownOffset, $roleDefinitions[$identifier]);
+        self::assertEmpty(array_diff(array_keys($roleDefinitions[$identifier]), $knownOffsets));
     }
 }

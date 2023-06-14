@@ -27,7 +27,7 @@ $bootstrap = function () {
         'backend_roles-module-management',
         \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
         [
-            'source' => 'EXT:backend_roles/Resources/Public/Icons/ModuleManagement.svg'
+            'source' => 'EXT:backend_roles/Resources/Public/Icons/ModuleManagement.svg',
         ]
     );
 };

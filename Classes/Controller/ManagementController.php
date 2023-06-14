@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace AawTeam\BackendRoles\Controller;
 
 /*
@@ -12,8 +14,8 @@ namespace AawTeam\BackendRoles\Controller;
  */
 
 use AawTeam\BackendRoles\Domain\Repository\BackendUserGroupRepository;
-use AawTeam\BackendRoles\Role\Synchronizer;
 use AawTeam\BackendRoles\Role\Definition\Formatter;
+use AawTeam\BackendRoles\Role\Synchronizer;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
@@ -61,9 +63,6 @@ class ManagementController extends ActionController
         }
     }
 
-    /**
-     *
-     */
     protected function indexAction(): ?ResponseInterface
     {
         $query = $this->backendUserGroupRepository->createQuery();
@@ -78,9 +77,6 @@ class ManagementController extends ActionController
             : $this->htmlResponse();
     }
 
-    /**
-     *
-     */
     protected function synchronizeAllBackendUserGroupRolesAction()
     {
         $affectedRows = $this->synchronizer->synchronizeAllBackendUserGroups();

@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 /*
  * Copyright by Agentur am Wasser | Maeder & Partner AG
@@ -15,7 +16,7 @@ return [
         'tableName' => 'be_groups',
         'properties' => [
             'roleIdentifier' => [
-                'fieldName' => 'tx_backendroles_role_identifier'
+                'fieldName' => 'tx_backendroles_role_identifier',
             ],
         ],
     ],
