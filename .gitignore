@@ -7,3 +7,4 @@
 .Build
 composer.lock
 Build/testing-docker/local/.env
+Documentation-GENERATED-temp
