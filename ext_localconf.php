@@ -11,7 +11,7 @@
 
 defined('TYPO3_MODE') or die();
 
-$bootstrap = function () {
+(function () {
     // Register cache
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['backend_roles'] = [
         'backend' => \TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend::class,
@@ -30,6 +30,4 @@ $bootstrap = function () {
             'source' => 'EXT:backend_roles/Resources/Public/Icons/ModuleManagement.svg',
         ]
     );
-};
-$bootstrap();
-unset($bootstrap);
+})();

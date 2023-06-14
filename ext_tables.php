@@ -10,8 +10,7 @@
 
 defined('TYPO3_MODE') or die();
 
-$bootstrap = function () {
-
+(function () {
     // Register the backend module
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
         'BackendRoles',
@@ -38,6 +37,4 @@ module.tx_backendroles {
     }
 }
     ');
-};
-$bootstrap();
-unset($bootstrap);
+})();
