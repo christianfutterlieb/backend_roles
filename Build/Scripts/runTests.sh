@@ -45,7 +45,8 @@ purgeAllBuildFiles() {
     echo -n "Clean build files ... " ; rm -rf \
         ../../../.Build \
         ../../../Build/testing-docker/local/.env \
-        ../../../composer.lock
+        ../../../composer.lock \
+        ../../../Documentation-GENERATED-temp
     echo "done"
 }
 
@@ -70,6 +71,7 @@ Options:
             - composerValidate: "composer validate"
             - lintPhp: PHP linting
             - rebirth: Remove the .Build folder and the composer.lock file. Note: re-run "$0 -s composerInstall" after this
+            - t3docmake: Render the documentation locally
             - unit (default): PHP unit tests
 
     -p <8.1|8.2>
@@ -267,6 +269,12 @@ case ${TEST_SUITE} in
     rebirth)
         cleanCacheFiles
         purgeAllBuildFiles
+        ;;
+    t3docmake)
+        setUpDockerComposeDotEnv
+        docker-compose run --rm t3docmake
+        SUITE_EXIT_CODE=$?
+        docker-compose down
         ;;
     unit)
         setUpDockerComposeDotEnv

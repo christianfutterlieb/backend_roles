@@ -1,13 +1,14 @@
 # Backend roles for TYPO3
 
-This TYPO3 extension allows the text-based definition and synchronization of `be_groups` records.
+This TYPO3 extension allows the text-based definition and synchronization of (parts of) `be_groups` records.
 
 ## Features
 
 * Define the access definitions for `be_groups` records
 * Set up `be_groups` records to be synchronized with the definitions
-* Synchronize via TYPO3 backend or CLI
-* Create definitions from existing `be_groups` recoreds
+* Synchronize via TYPO3 backend or CLI command
+* Export definitions from existing `be_groups` records for a smooth migration
+  towards this extension
 
 ## Installation
 
@@ -19,7 +20,7 @@ TODO
 
 ## License
 
-GPLv2.0
+GPLv2.0 or later
 
 ## Copyright
 

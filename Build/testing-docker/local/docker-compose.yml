@@ -103,3 +103,10 @@ services:
         php -v | grep '^PHP'
         php -dxdebug.mode=off .Build/bin/php-cs-fixer fix -v ${CGLCHECK_DRY_RUN} --config=Build/php-cs-fixer/config.php
       "
+
+  t3docmake:
+    image: ghcr.io/t3docs/render-documentation:v3.0.dev30
+    command: makehtml
+    volumes:
+      - ${ROOT_DIR}:/PROJECT:ro
+      - ${ROOT_DIR}/Documentation-GENERATED-temp:/RESULT
