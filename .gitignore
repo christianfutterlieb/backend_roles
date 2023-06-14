@@ -4,5 +4,6 @@
 .cache
 .DS_Store
 .sass-cache
-/.Build
-/composer.lock
+.Build
+composer.lock
+Build/testing-docker/local/.env

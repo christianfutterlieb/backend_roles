@@ -1,0 +1,105 @@
+version: '2.3'
+services:
+  composer_install:
+    image: typo3/core-testing-${DOCKER_PHP_IMAGE}:latest
+    user: "${HOST_UID}"
+    volumes:
+    - ${ROOT_DIR}:${ROOT_DIR}
+    working_dir: ${ROOT_DIR}
+    environment:
+      COMPOSER_CACHE_DIR: ".Build/.cache/composer"
+    command: >
+      /bin/sh -c "
+        if [ ${SCRIPT_VERBOSE} -eq 1 ]; then
+          set -x
+        fi
+        php -v | grep '^PHP'
+        composer install --no-progress --no-interaction;
+      "
+
+  composer_update:
+    image: typo3/core-testing-${DOCKER_PHP_IMAGE}:latest
+    user: "${HOST_UID}"
+    volumes:
+    - ${ROOT_DIR}:${ROOT_DIR}
+    working_dir: ${ROOT_DIR}
+    environment:
+      COMPOSER_CACHE_DIR: ".Build/.cache/composer"
+    command: >
+      /bin/sh -c "
+        if [ ${SCRIPT_VERBOSE} -eq 1 ]; then
+          set -x
+        fi
+        php -v | grep '^PHP'
+        composer update --no-progress --no-interaction;
+      "
+
+  composer_validate:
+    image: typo3/core-testing-${DOCKER_PHP_IMAGE}:latest
+    user: "${HOST_UID}"
+    volumes:
+    - ${ROOT_DIR}:${ROOT_DIR}
+    working_dir: ${ROOT_DIR}
+    command: >
+      /bin/sh -c "
+        if [ ${SCRIPT_VERBOSE} -eq 1 ]; then
+          set -x
+        fi
+        composer validate;
+      "
+
+  lint_php:
+    image: typo3/core-testing-${DOCKER_PHP_IMAGE}:latest
+    user: "${HOST_UID}"
+    volumes:
+    - ${ROOT_DIR}:${ROOT_DIR}
+    working_dir: ${ROOT_DIR}
+    command: >
+      /bin/sh -c "
+        if [ ${SCRIPT_VERBOSE} -eq 1 ]; then
+          set -x
+        fi
+        php -v | grep '^PHP'
+        find . -name \\*.php ! -path "./.Build/\\*" -print0 | xargs -0 -n1 -P4 php -dxdebug.mode=off -l ${OUTPUT_TO_DEV_NULL}
+      "
+
+  unit:
+    image: typo3/core-testing-${DOCKER_PHP_IMAGE}:latest
+    user: "${HOST_UID}"
+    volumes:
+    - ${ROOT_DIR}:${ROOT_DIR}
+    working_dir: ${ROOT_DIR}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      TYPO3_PATH_APP: "${ROOT_DIR}/.Build"
+    command: >
+      /bin/sh -c "
+        if [ ${SCRIPT_VERBOSE} -eq 1 ]; then
+          set -x
+        fi
+        php -v | grep '^PHP'
+        if [ ${PHP_XDEBUG_ON} -eq 0 ]; then
+          XDEBUG_MODE=\"off\" \
+          .Build/bin/phpunit -c Build/phpunit/UnitTests.xml ${EXTRA_TEST_OPTIONS} ${TEST_FILE};
+        else
+          XDEBUG_MODE=\"debug,develop\" \
+          XDEBUG_CONFIG=\"client_port=${PHP_XDEBUG_PORT} client_host=host.docker.internal\" \
+          .Build/bin/phpunit -c Build/phpunit/UnitTests.xml ${EXTRA_TEST_OPTIONS} ${TEST_FILE};
+        fi
+      "
+
+  cgl:
+    image: typo3/core-testing-${DOCKER_PHP_IMAGE}:latest
+    user: "${HOST_UID}"
+    volumes:
+    - ${ROOT_DIR}:${ROOT_DIR}
+    working_dir: ${ROOT_DIR}
+    command: >
+      /bin/sh -c "
+        if [ ${SCRIPT_VERBOSE} -eq 1 ]; then
+          set -x
+        fi
+        php -v | grep '^PHP'
+        php -dxdebug.mode=off .Build/bin/php-cs-fixer fix -v ${CGLCHECK_DRY_RUN} --config=Build/php-cs-fixer/config.php
+      "
