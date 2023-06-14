@@ -67,7 +67,7 @@ class LoaderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function invalidConfigurationFileThrowsExceptionDataProvider(): array
+    public static function invalidConfigurationFileThrowsExceptionDataProvider(): array
     {
         return [
             // Invalid file contents (no array)
@@ -155,7 +155,7 @@ class LoaderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function invalidRoleDefinitionThrowsExceptionDataProvider(): array
+    public static function invalidRoleDefinitionThrowsExceptionDataProvider(): array
     {
         return [
             'array-without-identifier' => [

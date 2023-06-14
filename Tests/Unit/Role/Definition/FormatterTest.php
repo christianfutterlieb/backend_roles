@@ -54,7 +54,7 @@ class FormatterTest extends UnitTestCase
     /**
      * @return array
      */
-    public function formatTitleTestDataProvider(): array
+    public static function formatTitleTestDataProvider(): array
     {
         $identifier = 'test';
         return [
@@ -144,7 +144,7 @@ class FormatterTest extends UnitTestCase
      *
      * @return array
      */
-    public function formatForDatabaseSimpleArrayValuesTestDataProvider(): array
+    public static function formatForDatabaseSimpleArrayValuesTestDataProvider(): array
     {
         return [
             'pagetypes_select' => [
@@ -260,7 +260,7 @@ class FormatterTest extends UnitTestCase
      *
      * @return array
      */
-    public function formatForDatabaseComplexArrayValuesTestDataProvider(): array
+    public static function formatForDatabaseComplexArrayValuesTestDataProvider(): array
     {
         return [
             'explicit_allowdeny-empty' => [
@@ -388,7 +388,7 @@ class FormatterTest extends UnitTestCase
     /**
      * @return array
      */
-    public function sortArrayForFormatRecursiveTestDataProvider(): array
+    public static function sortArrayForFormatRecursiveTestDataProvider(): array
     {
         return [
             'numeric indexed strings' => [

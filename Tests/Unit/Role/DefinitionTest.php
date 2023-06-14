@@ -143,7 +143,7 @@ class DefinitionTest extends UnitTestCase
     /**
      * @return array
      */
-    public function objectConstructorThrowsExceptionWithInvalidDataDataProvider(): array
+    public static function objectConstructorThrowsExceptionWithInvalidDataDataProvider(): array
     {
         $dataSet = [
             'identifier-is-empty-string' => [
