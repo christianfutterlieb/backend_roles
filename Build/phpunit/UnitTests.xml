@@ -17,8 +17,8 @@
      xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd"
      backupGlobals="true"
      beStrictAboutTestsThatDoNotTestAnything="false"
-     bootstrap="../../.Build/vendor/typo3/testing-framework/Resources/Core/Build/UnitTestsBootstrap.php"
-     cacheDirectory=".phpunit.cache"
+     bootstrap="UnitTestsBootstrap.php"
+     cacheDirectory="../../.Build/.cache/phpunit"
      cacheResult="false"
      colors="true"
      displayDetailsOnTestsThatTriggerDeprecations="true"
@@ -33,10 +33,6 @@
 >
     <testsuites>
         <testsuite name="Unit tests">
-            <!--
-                This path either needs an adaption in extensions, or an extension's
-                test location path needs to be given to phpunit.
-            -->
             <directory>../../Tests/Unit/</directory>
         </testsuite>
     </testsuites>

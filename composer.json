@@ -57,13 +57,5 @@
             "extension-key": "backend_roles",
             "web-dir": ".Build/public"
         }
-    },
-    "scripts": {
-        "php-cs-fixer": [
-            "php-cs-fixer fix -v --cache-file=.Build/.php-cs-fixer.cache --rules='@PSR1,@PSR2' Classes"
-        ],
-        "run-tests": [
-            "phpunit -c Build/phpunit/UnitTests.xml"
-        ]
     }
 }
