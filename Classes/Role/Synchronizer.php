@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace AawTeam\BackendRoles\Role;
 
 /*
@@ -15,8 +17,8 @@ use AawTeam\BackendRoles\Role\Definition\Formatter;
 use AawTeam\BackendRoles\Role\Definition\Loader;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Synchronizer

@@ -60,7 +60,7 @@
     $cache = new \TYPO3\CMS\Core\Cache\Frontend\PhpFrontend(
         'core',
         new \TYPO3\CMS\Core\Cache\Backend\NullBackend('production', [])
-        );
+    );
 
     // Set all packages to active
     if (interface_exists(\TYPO3\CMS\Core\Package\Cache\PackageCacheInterface::class)) {

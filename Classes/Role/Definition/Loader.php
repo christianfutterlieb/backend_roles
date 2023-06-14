@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace AawTeam\BackendRoles\Role\Definition;
 
 /*
@@ -105,7 +107,8 @@ class Loader
 
                     if (!is_string($configRoleDefinition['identifier'] ?? null) || empty($configRoleDefinition['identifier']) || trim($configRoleDefinition['identifier']) === '') {
                         throw new RoleDefinitionException('Invalid role definition found in "' . $roleDefinitionsFile . '": no or invalid identifier', 1589387779);
-                    } elseif (array_key_exists($configRoleDefinition['identifier'], $roleDefinitions)) {
+                    }
+                    if (array_key_exists($configRoleDefinition['identifier'], $roleDefinitions)) {
                         throw new RoleDefinitionException('Invalid role definition found in "' . $roleDefinitionsFile . '": the role definition identifier "' . htmlspecialchars($configRoleDefinition['identifier']) . '" already exists', 1589387862);
                     }
                     $roleDefinitions[$configRoleDefinition['identifier']] = new Definition($configRoleDefinition['identifier'], $configRoleDefinition);

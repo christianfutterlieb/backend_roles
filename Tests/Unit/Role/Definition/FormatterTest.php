@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace AawTeam\LanguageMatcher\Tests\Unit\Context\Context;
 
 /*
@@ -26,7 +28,7 @@ class FormatterTest extends UnitTestCase
     public function managedColumnsApiTest()
     {
         $formatter = new Formatter();
-        $this->assertSame($formatter->getManagedColumnNames(), array_keys($formatter->getManagedColumnsWithDefaultValues()));
+        self::assertSame($formatter->getManagedColumnNames(), array_keys($formatter->getManagedColumnsWithDefaultValues()));
     }
 
     /**
@@ -36,7 +38,7 @@ class FormatterTest extends UnitTestCase
     {
         $formatter = new Formatter();
         $definition = new Definition('test');
-        $this->assertSame($formatter->getManagedColumnsWithDefaultValues(), $formatter->formatForDatabase($definition));
+        self::assertSame($formatter->getManagedColumnsWithDefaultValues(), $formatter->formatForDatabase($definition));
     }
 
     /**
@@ -46,7 +48,7 @@ class FormatterTest extends UnitTestCase
     public function formatTitleTest(Definition $definition, string $expectedTitle)
     {
         $formatter = new Formatter();
-        $this->assertSame($expectedTitle, $formatter->formatTitle($definition));
+        self::assertSame($expectedTitle, $formatter->formatTitle($definition));
     }
 
     /**
@@ -58,23 +60,23 @@ class FormatterTest extends UnitTestCase
         return [
             'no-title-at-all-returns-identifier' => [
                 new Definition($identifier),
-                $identifier
+                $identifier,
             ],
             'empty-title-returns-identifier' => [
                 new Definition($identifier, ['title' => '']),
-                $identifier
+                $identifier,
             ],
             'whitespace-only-title-returns-identifier' => [
                 new Definition($identifier, ['title' => " \n\t "]),
-                $identifier
+                $identifier,
             ],
             'title-that-can-be-interpreted-as-empty-but-is-not-returns-title' => [
                 new Definition($identifier, ['title' => '0']),
-                '0'
+                '0',
             ],
             'normal-title' => [
                 new Definition($identifier, ['title' => 'My title']),
-                'My title'
+                'My title',
             ],
         ];
     }
@@ -93,10 +95,10 @@ class FormatterTest extends UnitTestCase
         $definition = new Definition($identifier, $options);
         $formatter = new Formatter();
         $result = $formatter->formatForDatabase($definition);
-        $this->assertArrayNotHasKey('title', $result);
+        self::assertArrayNotHasKey('title', $result);
 
-        $this->assertArrayHasKey('TSconfig', $result);
-        $this->assertSame('My TSConfig', $result['TSconfig']);
+        self::assertArrayHasKey('TSconfig', $result);
+        self::assertSame('My TSConfig', $result['TSconfig']);
     }
 
     /**
@@ -116,8 +118,8 @@ class FormatterTest extends UnitTestCase
         $formatter = new Formatter();
         $result = $formatter->formatForDatabase($definition);
 
-        $this->assertArrayHasKey($optionName, $result);
-        $this->assertSame($expectedFormattedValue, $result[$optionName]);
+        self::assertArrayHasKey($optionName, $result);
+        self::assertSame($expectedFormattedValue, $result[$optionName]);
     }
 
     /**
@@ -134,7 +136,7 @@ class FormatterTest extends UnitTestCase
         ];
         $formatter = new Formatter();
         $result = $formatter->formatFromDbToArray($input);
-        $this->assertSame($asArray, $result[$option]);
+        self::assertSame($asArray, $result[$option]);
     }
 
     /**
@@ -148,67 +150,67 @@ class FormatterTest extends UnitTestCase
             'pagetypes_select' => [
                 'pagetypes_select',
                 [1, 2, 3],
-                '1,2,3'
+                '1,2,3',
             ],
             'pagetypes_select (empty)' => [
                 'pagetypes_select',
                 [],
-                ''
+                '',
             ],
             'tables_select' => [
                 'tables_select',
                 ['My', 'select', 'tables'],
-                'My,select,tables'
+                'My,select,tables',
             ],
             'tables_select (empty)' => [
                 'tables_select',
                 [],
-                ''
+                '',
             ],
             'tables_modify' => [
                 'tables_modify',
                 ['My', 'modify', 'tables'],
-                'My,modify,tables'
+                'My,modify,tables',
             ],
             'tables_modify (empty)' => [
                 'tables_modify',
                 [],
-                ''
+                '',
             ],
             'groupMods' => [
                 'groupMods',
                 ['Mods', 'My', 'group'],
-                'Mods,My,group'
+                'Mods,My,group',
             ],
             'groupMods (empty)' => [
                 'groupMods',
                 [],
-                ''
+                '',
             ],
             'file_permissions' => [
                 'file_permissions',
                 ['My', 'file', 'permissions'],
-                'My,file,permissions'
+                'My,file,permissions',
             ],
             'file_permissions (empty)' => [
                 'file_permissions',
                 [],
-                ''
+                '',
             ],
             'allowed_languages' => [
                 'allowed_languages',
                 [0, 1, 2],
-                '0,1,2'
+                '0,1,2',
             ],
             'allowed_languages (empty)' => [
                 'allowed_languages',
                 [],
-                ''
+                '',
             ],
             'allowed_languages (default language)' => [
                 'allowed_languages',
                 [0],
-                '0'
+                '0',
             ],
         ];
     }
@@ -231,8 +233,8 @@ class FormatterTest extends UnitTestCase
         $formatter = new Formatter();
         $result = $formatter->formatForDatabase($definition);
 
-        $this->assertArrayHasKey($optionName, $result);
-        $this->assertSame($expectedFormattedValue, $result[$optionName]);
+        self::assertArrayHasKey($optionName, $result);
+        self::assertSame($expectedFormattedValue, $result[$optionName]);
     }
 
     /**
@@ -249,8 +251,8 @@ class FormatterTest extends UnitTestCase
         ];
         $formatter = new Formatter();
         $result = $formatter->formatFromDbToArray($input);
-        $this->assertArrayHasKey($optionName, $result);
-        $this->assertSame($asArray, $result[$optionName]);
+        self::assertArrayHasKey($optionName, $result);
+        self::assertSame($asArray, $result[$optionName]);
     }
 
     /**
@@ -264,40 +266,40 @@ class FormatterTest extends UnitTestCase
             'explicit_allowdeny-empty' => [
                 'explicit_allowdeny',
                 [],
-                ''
+                '',
             ],
             'non_exclude_fields-empty' => [
                 'non_exclude_fields',
                 [],
-                ''
+                '',
             ],
             'explicit_allowdeny-simple' => [
                 'explicit_allowdeny',
                 [
-                    'tt_content' => ['CType:header:ALLOW']
+                    'tt_content' => ['CType:header:ALLOW'],
                 ],
-                'tt_content:CType:header:ALLOW'
+                'tt_content:CType:header:ALLOW',
             ],
             'non_exclude_fields-simple' => [
                 'non_exclude_fields',
                 [
-                    'tt_content' => ['CType']
+                    'tt_content' => ['CType'],
                 ],
-                'tt_content:CType'
+                'tt_content:CType',
             ],
             'explicit_allowdeny-more-fields' => [
                 'explicit_allowdeny',
                 [
-                    'tt_content' => ['CType:header:ALLOW', 'CType:textmedia:ALLOW']
+                    'tt_content' => ['CType:header:ALLOW', 'CType:textmedia:ALLOW'],
                 ],
-                'tt_content:CType:header:ALLOW,tt_content:CType:textmedia:ALLOW'
+                'tt_content:CType:header:ALLOW,tt_content:CType:textmedia:ALLOW',
             ],
             'non_exclude_fields-more-fields' => [
                 'non_exclude_fields',
                 [
-                    'tt_content' => ['CType', 'header']
+                    'tt_content' => ['CType', 'header'],
                 ],
-                'tt_content:CType,tt_content:header'
+                'tt_content:CType,tt_content:header',
             ],
             'non_exclude_fields-with-flexforms-simple-1' => [
                 'non_exclude_fields',
@@ -306,9 +308,9 @@ class FormatterTest extends UnitTestCase
                         'pi_flexform' => [
                             'settings.pages',
                         ],
-                    ]
+                    ],
                 ],
-                'tt_content:pi_flexform;settings.pages'
+                'tt_content:pi_flexform;settings.pages',
             ],
             'non_exclude_fields-with-flexforms-simple-2' => [
                 'non_exclude_fields',
@@ -319,9 +321,9 @@ class FormatterTest extends UnitTestCase
                                 'settings.pages',
                             ],
                         ],
-                    ]
+                    ],
                 ],
-                'tt_content:pi_flexform;sDEF;settings.pages'
+                'tt_content:pi_flexform;sDEF;settings.pages',
             ],
             'non_exclude_fields-with-flexforms-like-normal' => [
                 'non_exclude_fields',
@@ -334,9 +336,9 @@ class FormatterTest extends UnitTestCase
                                 ],
                             ],
                         ],
-                    ]
+                    ],
                 ],
-                'tt_content:pi_flexform;login;sDEF;settings.pages'
+                'tt_content:pi_flexform;login;sDEF;settings.pages',
             ],
             'non_exclude_fields-with-multiple-flexforms' => [
                 'non_exclude_fields',
@@ -367,7 +369,7 @@ class FormatterTest extends UnitTestCase
                 'tt_content:pi_flexform;login;sDEF;settings.pages,' .
                 'tt_content:pi_flexform;teams_person;appearance;settings.centered,' .
                 'tt_content:pi_flexform;teams_person;appearance;settings.roundImage,' .
-                'tx_teams_person:options;sDEF;myoption'
+                'tx_teams_person:options;sDEF;myoption',
             ],
         ];
     }
@@ -380,7 +382,7 @@ class FormatterTest extends UnitTestCase
      */
     public function sortArrayForFormatRecursiveTest(array $input, array $expectedOutput)
     {
-        $this->assertSame($expectedOutput, Formatter::sortArrayForFormatRecursive($input));
+        self::assertSame($expectedOutput, Formatter::sortArrayForFormatRecursive($input));
     }
 
     /**
@@ -398,7 +400,7 @@ class FormatterTest extends UnitTestCase
                 [0 => 1, 1 => 2, 2 => 3],
             ],
             'numeric indexed strings and numbers' => [
-                ['3', 'c', '2','b', 'a', '1'],
+                ['3', 'c', '2', 'b', 'a', '1'],
                 [0 => '1', 1 => '2', 2 => '3', 3 => 'a', 4 => 'b', 5 => 'c'],
             ],
             'string indexed strings' => [

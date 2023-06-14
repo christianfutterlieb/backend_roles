@@ -10,7 +10,7 @@
 
 // Prepare role identifier select items
 $selectItems = [
-    ['', '']
+    ['', ''],
 ];
 
 /** @var \TYPO3\CMS\Core\Cache\CacheManager $cacheManager */
@@ -23,7 +23,7 @@ if ($cacheManager->hasCache('backend_roles')) {
     foreach ($roleDefinitionLoader->getRoleDefinitions() as $roleIdentifier => $roleDefinition) {
         $selectItems[] = [
             $formatter->formatTitle($roleDefinition),
-            $roleIdentifier
+            $roleIdentifier,
         ];
     }
 }
@@ -43,7 +43,6 @@ $columns = [
 ];
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('be_groups', $columns);
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('be_groups', 'tx_backendroles_role_identifier', '', 'after:title');
-
 
 // Load extension configuration
 $extConf = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(

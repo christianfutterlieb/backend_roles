@@ -11,7 +11,6 @@
 defined('TYPO3_MODE') or die();
 
 $bootstrap = function () {
-
     // Register the backend module
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
         'BackendRoles',

@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace AawTeam\BackendRoles\Command;
 
 /*
@@ -92,7 +94,7 @@ class SynchronizeCommand extends Command
     /**
      * @return \TYPO3\CMS\Core\Locking\LockingStrategyInterface
      */
-    protected function getLocker(string $key) : LockingStrategyInterface
+    protected function getLocker(string $key): LockingStrategyInterface
     {
         return GeneralUtility::makeInstance(LockFactory::class)->createLocker($key);
     }

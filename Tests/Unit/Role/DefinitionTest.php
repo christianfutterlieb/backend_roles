@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace AawTeam\LanguageMatcher\Tests\Unit\Context\Context;
 
 /*
@@ -11,8 +13,8 @@ namespace AawTeam\LanguageMatcher\Tests\Unit\Context\Context;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AawTeam\BackendRoles\Role\Definition;
 use AawTeam\BackendRoles\Exception\RoleDefinitionException;
+use AawTeam\BackendRoles\Role\Definition;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -28,7 +30,7 @@ class DefinitionTest extends UnitTestCase
         $identifier = 'test';
         $definition = new Definition($identifier);
 
-        $this->assertSame($identifier, $definition->getIdentifier());
+        self::assertSame($identifier, $definition->getIdentifier());
     }
 
     /**
@@ -39,16 +41,16 @@ class DefinitionTest extends UnitTestCase
         $identifier = 'test';
         $definition = new Definition($identifier);
 
-        $this->assertNull($definition->getTitle());
-        $this->assertNull($definition->getTSConfig());
-        $this->assertNull($definition->getPagetypesSelect());
-        $this->assertNull($definition->getTablesSelect());
-        $this->assertNull($definition->getTablesModify());
-        $this->assertNull($definition->getGroupMods());
-        $this->assertNull($definition->getFilePermissions());
-        $this->assertNull($definition->getAllowedLanguages());
-        $this->assertNull($definition->getExplicitAllowdeny());
-        $this->assertNull($definition->getNonExcludeFields());
+        self::assertNull($definition->getTitle());
+        self::assertNull($definition->getTSConfig());
+        self::assertNull($definition->getPagetypesSelect());
+        self::assertNull($definition->getTablesSelect());
+        self::assertNull($definition->getTablesModify());
+        self::assertNull($definition->getGroupMods());
+        self::assertNull($definition->getFilePermissions());
+        self::assertNull($definition->getAllowedLanguages());
+        self::assertNull($definition->getExplicitAllowdeny());
+        self::assertNull($definition->getNonExcludeFields());
     }
 
     /**
@@ -74,16 +76,16 @@ class DefinitionTest extends UnitTestCase
         $definition = new Definition($identifier, $options);
 
         // Note: $definition->getIdentifier() is tested by objectIdentificationTest()
-        $this->assertSame($definition->getTitle(), $options['title']);
-        $this->assertSame($definition->getTSConfig(), $options['TSconfig']);
-        $this->assertSame($definition->getPagetypesSelect(), $options['pagetypes_select']);
-        $this->assertSame($definition->getTablesSelect(), $options['tables_select']);
-        $this->assertSame($definition->getTablesModify(), $options['tables_modify']);
-        $this->assertSame($definition->getGroupMods(), $options['groupMods']);
-        $this->assertSame($definition->getFilePermissions(), $options['file_permissions']);
-        $this->assertSame($definition->getAllowedLanguages(), $options['allowed_languages']);
-        $this->assertSame($definition->getExplicitAllowdeny(), $options['explicit_allowdeny']);
-        $this->assertSame($definition->getNonExcludeFields(), $options['non_exclude_fields']);
+        self::assertSame($definition->getTitle(), $options['title']);
+        self::assertSame($definition->getTSConfig(), $options['TSconfig']);
+        self::assertSame($definition->getPagetypesSelect(), $options['pagetypes_select']);
+        self::assertSame($definition->getTablesSelect(), $options['tables_select']);
+        self::assertSame($definition->getTablesModify(), $options['tables_modify']);
+        self::assertSame($definition->getGroupMods(), $options['groupMods']);
+        self::assertSame($definition->getFilePermissions(), $options['file_permissions']);
+        self::assertSame($definition->getAllowedLanguages(), $options['allowed_languages']);
+        self::assertSame($definition->getExplicitAllowdeny(), $options['explicit_allowdeny']);
+        self::assertSame($definition->getNonExcludeFields(), $options['non_exclude_fields']);
     }
 
     /**
@@ -99,7 +101,7 @@ class DefinitionTest extends UnitTestCase
         ];
 
         $definition = new Definition($identifier, $options);
-        $this->assertSame($definition->toArray(), $options);
+        self::assertSame($definition->toArray(), $options);
     }
 
     /**
@@ -123,7 +125,7 @@ class DefinitionTest extends UnitTestCase
         ];
 
         $definition = new Definition($identifier, $options);
-        $this->assertSame($definition->toArray(), $options);
+        self::assertSame($definition->toArray(), $options);
     }
 
     /**
@@ -145,10 +147,10 @@ class DefinitionTest extends UnitTestCase
     {
         $dataSet = [
             'identifier-is-empty-string' => [
-                '', []
+                '', [],
             ],
             'identifier-contains-only-whitespace' => [
-                " \n\t", []
+                " \n\t", [],
             ],
         ];
 
@@ -161,67 +163,67 @@ class DefinitionTest extends UnitTestCase
             $dataSet[$optionName . '-is-null'] = [
                 $validIdentifier, [
                     $optionName => null,
-                ]
+                ],
             ];
             $dataSet[$optionName . '-is-bool'] = [
                 $validIdentifier, [
                     $optionName => true,
-                ]
+                ],
             ];
             $dataSet[$optionName . '-is-int'] = [
                 $validIdentifier, [
                     $optionName => 42,
-                ]
+                ],
             ];
             $dataSet[$optionName . '-is-float'] = [
                 $validIdentifier, [
                     $optionName => 42.0,
-                ]
+                ],
             ];
             $dataSet[$optionName . '-is-array'] = [
                 $validIdentifier, [
                     $optionName => [],
-                ]
+                ],
             ];
             $dataSet[$optionName . '-is-object'] = [
                 $validIdentifier, [
                     $optionName => new \stdClass(),
-                ]
+                ],
             ];
         }
         $testForArrayOptions = [
-            'pagetypes_select', 'tables_select', 'tables_modify', 'groupMods', 'file_permissions', 'allowed_languages', 'explicit_allowdeny', 'non_exclude_fields'
+            'pagetypes_select', 'tables_select', 'tables_modify', 'groupMods', 'file_permissions', 'allowed_languages', 'explicit_allowdeny', 'non_exclude_fields',
         ];
         foreach ($testForArrayOptions as $optionName) {
             $dataSet[$optionName . '-is-null'] = [
                 $validIdentifier, [
                     $optionName => null,
-                ]
+                ],
             ];
             $dataSet[$optionName . '-is-bool'] = [
                 $validIdentifier, [
                     $optionName => true,
-                ]
+                ],
             ];
             $dataSet[$optionName . '-is-int'] = [
                 $validIdentifier, [
                     $optionName => 42,
-                ]
+                ],
             ];
             $dataSet[$optionName . '-is-float'] = [
                 $validIdentifier, [
                     $optionName => 42.0,
-                ]
+                ],
             ];
             $dataSet[$optionName . '-is-string'] = [
                 $validIdentifier, [
                     $optionName => '42',
-                ]
+                ],
             ];
             $dataSet[$optionName . '-is-object'] = [
                 $validIdentifier, [
                     $optionName => new \stdClass(),
-                ]
+                ],
             ];
         }
 

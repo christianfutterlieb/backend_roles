@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace AawTeam\BackendRoles\Role\Definition;
 
 /*
@@ -141,7 +143,6 @@ class Formatter
     }
 
     /**
-     *
      * @param array $input
      * @param string $prefix
      * @return array
@@ -220,7 +221,8 @@ class Formatter
                 foreach (explode(',', $dataToProcess[$option]) as $entry) {
                     if (trim($entry) === '') {
                         continue;
-                    } elseif (strpos($entry, ';') !== false) {
+                    }
+                    if (strpos($entry, ';') !== false) {
                         list($path, $ffPath) = explode(';', $entry, 2);
                         $parts = explode(';', $ffPath);
                         $value = array_pop($parts);
