@@ -8,25 +8,7 @@
  * The TYPO3 project - inspiring people to share!
  */
 
-// Prepare role identifier select items
-$selectItems = [
-    ['', ''],
-];
-
-/** @var \TYPO3\CMS\Core\Cache\CacheManager $cacheManager */
-$cacheManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Cache\CacheManager::class);
-if ($cacheManager->hasCache('backend_roles')) {
-    $roleDefinitionLoader = new \AawTeam\BackendRoles\Role\Definition\Loader($cacheManager->getCache('backend_roles'));
-    /** @var \AawTeam\BackendRoles\Role\Definition\Formatter $formatter */
-    $formatter = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\AawTeam\BackendRoles\Role\Definition\Formatter::class);
-
-    foreach ($roleDefinitionLoader->getRoleDefinitions() as $roleIdentifier => $roleDefinition) {
-        $selectItems[] = [
-            $formatter->formatTitle($roleDefinition),
-            $roleIdentifier,
-        ];
-    }
-}
+use AawTeam\BackendRoles\FormEngine\BackendRoleSelectItemsProcessor;
 
 // Add columns
 $columns = [
@@ -37,7 +19,10 @@ $columns = [
             'type' => 'select',
             'renderType' => 'selectSingle',
             'default' => '',
-            'items' => $selectItems,
+            'items' => [
+                ['', ''],
+            ],
+            'itemsProcFunc' => BackendRoleSelectItemsProcessor::class . '->process',
         ],
     ],
 ];
