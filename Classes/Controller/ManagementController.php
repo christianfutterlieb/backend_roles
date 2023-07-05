@@ -93,19 +93,16 @@ class ManagementController extends ActionController
         return $moduleTemplate;
     }
 
-    /**
-     * @todo
-     */
-    protected function initializeIdexAction(): void
+    protected function initializeIndexAction(): void
     {
         // Generate Buttons for this action
-        // $buttonBar = $this->moduleTemplate->getDocHeaderComponent()->getButtonBar();
+        $buttonBar = $this->moduleTemplate->getDocHeaderComponent()->getButtonBar();
 
-        // @todo: Add the Shortcut button
-        // $shortcutButton = $buttonBar->makeShortcutButton()
-        //     ->setDisplayName('DisplayName')
-        //     ->setRouteIdentifier('system_BackendRolesManagement.Management_exportAsRole');
-        // $buttonBar->addButton($shortcutButton, ButtonBar::BUTTON_POSITION_RIGHT, 2);
+        // Add the Shortcut button
+        $shortcutButton = $buttonBar->makeShortcutButton()
+            ->setDisplayName('Shortcut')
+            ->setRouteIdentifier('system_BackendRolesManagement.Management_index');
+        $buttonBar->addButton($shortcutButton, ButtonBar::BUTTON_POSITION_RIGHT);
     }
 
     protected function indexAction(): ResponseInterface
@@ -146,26 +143,6 @@ class ManagementController extends ActionController
         return $this->redirect('index');
     }
 
-    protected function initializeExportAsRoleAction(): void
-    {
-        // Generate Buttons for this action
-        $buttonBar = $this->moduleTemplate->getDocHeaderComponent()->getButtonBar();
-
-        // @todo: Add the Shortcut button
-        // $shortcutButton = $buttonBar->makeShortcutButton()
-        //     ->setDisplayName('DisplayName')
-        //     ->setRouteIdentifier('system_BackendRolesManagement.Management_exportAsRole');
-        // $buttonBar->addButton($shortcutButton, ButtonBar::BUTTON_POSITION_RIGHT, 2);
-
-        // Add a 'close' button leading to indexAction()
-        $closeButton = $buttonBar->makeLinkButton()
-            ->setTitle('Close')
-            ->setShowLabelText(true)
-            ->setHref($this->uriBuilder->reset()->uriFor('index'))
-            ->setIcon($this->iconFactory->getIcon('actions-close', Icon::SIZE_SMALL));
-        $buttonBar->addButton($closeButton, ButtonBar::BUTTON_POSITION_LEFT);
-    }
-
     /**
      * @param int $backendUserGroupUid
      */
@@ -190,8 +167,34 @@ class ManagementController extends ActionController
             'configAsString' => $configAsString,
         ]);
 
+        // Extend ModuleTemplate for this action
+        $this->extendModuleTemplateForExportAsRoleAction();
+
         $this->moduleTemplate->setContent($this->view->render());
         return $this->htmlResponse($this->moduleTemplate->renderContent());
+    }
+
+    protected function extendModuleTemplateForExportAsRoleAction(): void
+    {
+        // Generate Buttons for this action
+        $buttonBar = $this->moduleTemplate->getDocHeaderComponent()->getButtonBar();
+
+        // Add the Shortcut button
+        $shortcutButton = $buttonBar->makeShortcutButton()
+            ->setDisplayName('Shortcut')
+            ->setRouteIdentifier('system_BackendRolesManagement.Management_exportAsRole')
+            ->setArguments([
+                'backendUserGroupUid' => $this->arguments->getArgument('backendUserGroupUid')->getValue(),
+            ]);
+        $buttonBar->addButton($shortcutButton, ButtonBar::BUTTON_POSITION_RIGHT);
+
+        // Add a 'close' button leading to indexAction()
+        $closeButton = $buttonBar->makeLinkButton()
+            ->setTitle('Close')
+            ->setShowLabelText(true)
+            ->setHref($this->uriBuilder->reset()->uriFor('index'))
+            ->setIcon($this->iconFactory->getIcon('actions-close', Icon::SIZE_SMALL));
+        $buttonBar->addButton($closeButton, ButtonBar::BUTTON_POSITION_LEFT);
     }
 
     /**
