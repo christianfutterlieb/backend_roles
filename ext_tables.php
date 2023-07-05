@@ -11,21 +11,7 @@
 defined('TYPO3') or die();
 
 (function () {
-    // Register the backend module
-    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-        'BackendRoles',
-        'tools',
-        'management',
-        '',
-        [
-            \AawTeam\BackendRoles\Controller\ManagementController::class => 'index, synchronizeAllBackendUserGroupRoles, resetBackendUserGroupToDefaults, exportAsRole',
-        ],
-        [
-            'access' => 'admin',
-            'iconIdentifier' => 'backend_roles-module-management',
-            'labels' => 'LLL:EXT:backend_roles/Resources/Private/Language/ModuleLabels.xlf',
-        ]
-    );
+    // Register the backend module config
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup('
 module.tx_backendroles {
     view {

@@ -14,11 +14,18 @@ namespace AawTeam\BackendRoles\Controller;
  */
 
 use AawTeam\BackendRoles\Domain\Repository\BackendUserGroupRepository;
-use AawTeam\BackendRoles\Role\Definition\Formatter;
 use AawTeam\BackendRoles\Role\Synchronizer;
+use AawTeam\BackendRoles\Role\Definition\Formatter;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
+use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Http\PropagateResponseException;
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
@@ -30,23 +37,15 @@ use TYPO3\CMS\Extbase\Persistence\QueryInterface;
  */
 class ManagementController extends ActionController
 {
-    protected BackendUserGroupRepository $backendUserGroupRepository;
-    protected Synchronizer $synchronizer;
-    protected Typo3Version $typo3Version;
+    protected ModuleTemplate $moduleTemplate;
 
-    public function injectBackendUserGroupRepository(BackendUserGroupRepository $backendUserGroupRepository)
-    {
-        $this->backendUserGroupRepository = $backendUserGroupRepository;
-    }
-
-    public function injectSynchronizer(Synchronizer $synchronizer)
-    {
-        $this->synchronizer = $synchronizer;
-    }
-
-    public function injectTypo3Version(Typo3Version $typo3Version)
-    {
-        $this->typo3Version = $typo3Version;
+    public function __construct(
+        protected readonly BackendUserGroupRepository $backendUserGroupRepository,
+        protected readonly IconFactory $iconFactory,
+        protected readonly ModuleTemplateFactory $moduleTemplateFactory,
+        protected readonly Synchronizer $synchronizer,
+        protected readonly Typo3Version $typo3Version
+    ) {
     }
 
     /**
@@ -57,27 +56,70 @@ class ManagementController extends ActionController
     {
         // Make sure only admins access this controller
         if ($this->getBackendUserAuthentication()->isAdmin() !== true) {
-            $this->response->setStatus(401);
-            $this->response->setContent('401 - Unauthorized');
-            throw new \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException();
+            throw new PropagateResponseException(
+                $this->responseFactory->createResponse(401)
+            );
         }
+
+        // Initialize the ModuleTemplate instance
+        $this->moduleTemplate = $this->setupModuleTemplate(
+            $this->iconFactory,
+            $this->moduleTemplateFactory,
+            $this->request
+        );
     }
 
-    protected function indexAction(): ?ResponseInterface
+    protected function setupModuleTemplate(
+        IconFactory $iconFactory,
+        ModuleTemplateFactory $moduleTemplateFactory,
+        ServerRequestInterface $request
+    ): ModuleTemplate {
+        // Create
+        $moduleTemplate = $moduleTemplateFactory->create($request);
+
+        // Add page zero as metaInformation
+        $moduleTemplate->getDocHeaderComponent()->setMetaInformation([
+            'uid' => 0,
+        ]);
+
+        // Add a refresh button
+        $buttonBar = $moduleTemplate->getDocHeaderComponent()->getButtonBar();
+        $refreshButton = $buttonBar->makeLinkButton()
+            ->setTitle('Refresh this page')
+            ->setHref((string)$request->getUri())
+            ->setIcon($iconFactory->getIcon('actions-refresh', Icon::SIZE_SMALL));
+        $buttonBar->addButton($refreshButton, ButtonBar::BUTTON_POSITION_RIGHT);
+
+        return $moduleTemplate;
+    }
+
+    /**
+     * @todo
+     */
+    protected function initializeIdexAction(): void
+    {
+        // Generate Buttons for this action
+        // $buttonBar = $this->moduleTemplate->getDocHeaderComponent()->getButtonBar();
+
+        // @todo: Add the Shortcut button
+        // $shortcutButton = $buttonBar->makeShortcutButton()
+        //     ->setDisplayName('DisplayName')
+        //     ->setRouteIdentifier('system_BackendRolesManagement.Management_exportAsRole');
+        // $buttonBar->addButton($shortcutButton, ButtonBar::BUTTON_POSITION_RIGHT, 2);
+    }
+
+    protected function indexAction(): ResponseInterface
     {
         $query = $this->backendUserGroupRepository->createQuery();
         $query->getQuerySettings()->setIgnoreEnableFields(true);
         $query->setOrderings(['title' => QueryInterface::ORDER_ASCENDING]);
         $this->view->assign('backendUserGroups', $query->execute(true));
 
-        // @todo: remove this construct when dropping support for TYPO3 < v11
-        //        and change the return type of the method to ResponseInterface
-        return $this->typo3Version->getMajorVersion() < 11
-            ? null
-            : $this->htmlResponse();
+        $this->moduleTemplate->setContent($this->view->render());
+        return $this->htmlResponse($this->moduleTemplate->renderContent());
     }
 
-    protected function synchronizeAllBackendUserGroupRolesAction()
+    protected function synchronizeAllBackendUserGroupRolesAction(): ResponseInterface
     {
         $affectedRows = $this->synchronizer->synchronizeAllBackendUserGroups();
         if ($affectedRows > 0) {
@@ -85,13 +127,13 @@ class ManagementController extends ActionController
         } else {
             $this->addFlashMessage('Apparently, everything is already synchronized.', 'No rows were updated', AbstractMessage::INFO);
         }
-        $this->redirect('index');
+        return $this->redirect('index');
     }
 
     /**
      * @param int $backendUserGroupUid
      */
-    protected function resetBackendUserGroupToDefaultsAction(int $backendUserGroupUid)
+    protected function resetBackendUserGroupToDefaultsAction(int $backendUserGroupUid): ResponseInterface
     {
         $affectedRows = $this->synchronizer->resetManagedFieldsToDefaults($backendUserGroupUid);
         if ($affectedRows > 1) {
@@ -101,21 +143,42 @@ class ManagementController extends ActionController
         } else {
             $this->addFlashMessage('Apparently, everything is already synchronized.', 'Nothing was updated', AbstractMessage::INFO);
         }
-        $this->redirect('index');
+        return $this->redirect('index');
+    }
+
+    protected function initializeExportAsRoleAction(): void
+    {
+        // Generate Buttons for this action
+        $buttonBar = $this->moduleTemplate->getDocHeaderComponent()->getButtonBar();
+
+        // @todo: Add the Shortcut button
+        // $shortcutButton = $buttonBar->makeShortcutButton()
+        //     ->setDisplayName('DisplayName')
+        //     ->setRouteIdentifier('system_BackendRolesManagement.Management_exportAsRole');
+        // $buttonBar->addButton($shortcutButton, ButtonBar::BUTTON_POSITION_RIGHT, 2);
+
+        // Add a 'close' button leading to indexAction()
+        $closeButton = $buttonBar->makeLinkButton()
+            ->setTitle('Close')
+            ->setShowLabelText(true)
+            ->setHref($this->uriBuilder->reset()->uriFor('index'))
+            ->setIcon($this->iconFactory->getIcon('actions-close', Icon::SIZE_SMALL));
+        $buttonBar->addButton($closeButton, ButtonBar::BUTTON_POSITION_LEFT);
     }
 
     /**
      * @param int $backendUserGroupUid
      */
-    protected function exportAsRoleAction(int $backendUserGroupUid): ?ResponseInterface
+    protected function exportAsRoleAction(int $backendUserGroupUid): ResponseInterface
     {
         $backendUserGroup = BackendUtility::getRecord('be_groups', $backendUserGroupUid);
         if (!is_array($backendUserGroup)) {
             $this->addFlashMessage('Invalid backendUserGroup UID received', 'Error', AbstractMessage::ERROR);
-            $this->redirect('index');
-        } elseif ($backendUserGroup['tx_backendroles_role_identifier'] ?? false) {
+            return $this->redirect('index');
+        }
+        if ($backendUserGroup['tx_backendroles_role_identifier'] ?? false) {
             $this->addFlashMessage('This BackendUserGroup is a managed group', 'Error', AbstractMessage::ERROR);
-            $this->redirect('index');
+            return $this->redirect('index');
         }
 
         $formatter = new Formatter();
@@ -127,11 +190,8 @@ class ManagementController extends ActionController
             'configAsString' => $configAsString,
         ]);
 
-        // @todo: remove this construct when dropping support for TYPO3 < v11
-        //        and change the return type of the method to ResponseInterface
-        return $this->typo3Version->getMajorVersion() < 11
-            ? null
-            : $this->htmlResponse();
+        $this->moduleTemplate->setContent($this->view->render());
+        return $this->htmlResponse($this->moduleTemplate->renderContent());
     }
 
     /**
