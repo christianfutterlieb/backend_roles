@@ -21,3 +21,6 @@ services:
       - name: 'console.command'
         command: 'backendroles:synchronize'
         schedulable: false
+
+  AawTeam\BackendRoles\FormEngine\BackendRoleSelectItemsProcessor:
+    public: true
