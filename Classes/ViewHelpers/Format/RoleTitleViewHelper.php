@@ -13,6 +13,7 @@ namespace AawTeam\BackendRoles\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AawTeam\BackendRoles\Role\Definition;
 use AawTeam\BackendRoles\Role\Definition\Formatter;
 use AawTeam\BackendRoles\Role\Definition\Loader;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -22,29 +23,14 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class RoleTitleViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var Formatter
-     */
-    protected $formatter;
-
-    /**
-     * @var Loader
-     */
-    protected $loader;
-
-    /**
-     * @param Formatter $formatter
-     */
-    public function injectFormatter(Formatter $formatter)
-    {
+    protected Formatter $formatter;
+    protected Loader $loader;
+    
+    public function __construct(
+        Formatter $formatter,
+        Loader $loader
+    ) {
         $this->formatter = $formatter;
-    }
-
-    /**
-     * @param Loader $loader
-     */
-    public function injectLoader(Loader $loader)
-    {
         $this->loader = $loader;
     }
 
@@ -69,16 +55,16 @@ class RoleTitleViewHelper extends AbstractViewHelper
         }
         $backendUserGroup = $this->arguments['backendUserGroup'];
 
-        // No role
-        if (!is_string($backendUserGroup['tx_backendroles_role_identifier'] ?? null) || trim($backendUserGroup['tx_backendroles_role_identifier']) === '') {
+        // No (valid) role
+        if (!Definition::isValidIdentifier($backendUserGroup['tx_backendroles_role_identifier'] ?? null)) {
             return '';
         }
 
         $roleDefinitions = $this->loader->getRoleDefinitions();
-        if (!array_key_exists($backendUserGroup['tx_backendroles_role_identifier'], $roleDefinitions)) {
+        if (!$roleDefinitions->offsetExists($backendUserGroup['tx_backendroles_role_identifier'])) {
             return '[UNKNOWN ROLE IDENTIFIER "' . $backendUserGroup['tx_backendroles_role_identifier'] . '"]';
         }
 
-        return $this->formatter->formatTitle($roleDefinitions[$backendUserGroup['tx_backendroles_role_identifier']]);
+        return $this->formatter->formatTitle($roleDefinitions->offsetGet($backendUserGroup['tx_backendroles_role_identifier']));
     }
 }

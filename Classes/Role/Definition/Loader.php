@@ -15,79 +15,59 @@ namespace AawTeam\BackendRoles\Role\Definition;
 
 use AawTeam\BackendRoles\Exception\RoleDefinitionException;
 use AawTeam\BackendRoles\Role\Definition;
+use AawTeam\BackendRoles\Role\DefinitionCollection;
+use AawTeam\BackendRoles\Role\DefinitionFactory;
 use AawTeam\BackendRoles\Role\ExtensionInformationProvider;
-use TYPO3\CMS\Core\Cache\CacheManager;
-use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
+use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Information\Typo3Version;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Loader
  */
-class Loader
+final class Loader
 {
-    /**
-     * @var \TYPO3\CMS\Core\Cache\Frontend\PhpFrontend
-     */
-    protected $cache;
+    protected ExtensionInformationProvider $extensionInformationProvider;
+    protected DefinitionFactory $definitionFactory;
+    protected PhpFrontend $cache;
 
-    /**
-     * @var ExtensionInformationProvider
-     */
-    protected $extensionInformationProvider;
-
-    /**
-     * @param FrontendInterface $cache
-     * @param ExtensionInformationProvider $extensionInformationProvider
-     */
-    public function __construct(FrontendInterface $cache = null, ExtensionInformationProvider $extensionInformationProvider = null)
-    {
-        if ($cache === null) {
-            $cache = GeneralUtility::makeInstance(CacheManager::class)->getCache('backend_roles');
-        }
-        $this->cache = $cache;
-
-        if ($extensionInformationProvider === null) {
-            $extensionInformationProvider = GeneralUtility::makeInstance(ExtensionInformationProvider::class);
-        }
+    public function __construct(
+        ExtensionInformationProvider $extensionInformationProvider,
+        DefinitionFactory $definitionFactory,
+        PhpFrontend $cache
+    ) {
         $this->extensionInformationProvider = $extensionInformationProvider;
+        $this->definitionFactory = $definitionFactory;
+        $this->cache = $cache;
     }
 
-    /**
-     * @return Definition[]
-     */
-    public function getRoleDefinitions(): array
+    public function getRoleDefinitions(): DefinitionCollection
     {
         $cacheIdentifier = $this->getRoleDefinitionCacheIdentifier();
         if ($this->cache->has($cacheIdentifier)) {
-            $roleDefinitions = array_map(
-                function (array $cached): Definition {
-                    return new Definition($cached['identifier'], $cached);
-                },
-                $this->cache->require($cacheIdentifier)
-            );
+            $roleDefinitions = new DefinitionCollection();
+            array_walk($this->cache->require($cacheIdentifier), function (array $definitionArray) use (&$roleDefinitions) {
+                $roleDefinitions->add(
+                    $this->definitionFactory->create($definitionArray)
+                );
+            });
         } else {
             $roleDefinitions = $this->loadRoleDefinitions();
             $roleDefinitionsArray = array_map(
                 function (Definition $definition): array {
                     return $definition->toArray();
                 },
-                $this->loadRoleDefinitions()
+                $roleDefinitions->toArray()
             );
             $this->cache->set($cacheIdentifier, 'return ' . var_export($roleDefinitionsArray, true) . ';');
         }
         return $roleDefinitions;
     }
 
-    /**
-     * @throws RoleDefinitionException
-     * @return Definition[]
-     */
-    protected function loadRoleDefinitions(): array
+    protected function loadRoleDefinitions(): DefinitionCollection
     {
-        $roleDefinitions = [];
+        $defititionCollection = new DefinitionCollection();
         foreach ($this->extensionInformationProvider->getLoadedExtensionListArray() as $loadedExtKey) {
             if ($loadedExtKey === 'backend_roles') {
                 continue;
@@ -101,21 +81,14 @@ class Loader
                 }
 
                 foreach ($configRoleDefinitions as $configRoleDefinition) {
-                    if (!is_array($configRoleDefinition)) {
-                        throw new RoleDefinitionException('Invalid role definition found in "' . $roleDefinitionsFile . '": a role definition must be array', 1589386642);
-                    }
-
-                    if (!is_string($configRoleDefinition['identifier'] ?? null) || empty($configRoleDefinition['identifier']) || trim($configRoleDefinition['identifier']) === '') {
-                        throw new RoleDefinitionException('Invalid role definition found in "' . $roleDefinitionsFile . '": no or invalid identifier', 1589387779);
-                    }
-                    if (array_key_exists($configRoleDefinition['identifier'], $roleDefinitions)) {
-                        throw new RoleDefinitionException('Invalid role definition found in "' . $roleDefinitionsFile . '": the role definition identifier "' . htmlspecialchars($configRoleDefinition['identifier']) . '" already exists', 1589387862);
-                    }
-                    $roleDefinitions[$configRoleDefinition['identifier']] = new Definition($configRoleDefinition['identifier'], $configRoleDefinition);
+                    $defititionCollection->add(
+                        $this->definitionFactory->create($configRoleDefinition)
+                    );
                 }
             }
         }
-        return $roleDefinitions;
+
+        return $defititionCollection;
     }
 
     /**
@@ -130,7 +103,7 @@ class Loader
             implode('-', [
                 GeneralUtility::makeInstance(Typo3Version::class)->getBranch(),
                 Environment::getProjectPath(),
-                serialize(ExtensionManagementUtility::getLoadedExtensionListArray()),
+                serialize($this->extensionInformationProvider->getLoadedExtensionListArray()),
             ]),
             $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
         );

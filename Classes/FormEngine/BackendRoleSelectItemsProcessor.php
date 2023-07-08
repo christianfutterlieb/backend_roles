@@ -45,10 +45,10 @@ class BackendRoleSelectItemsProcessor
         }
 
         $selectItems = [];
-        foreach ($this->loader->getRoleDefinitions() as $roleIdentifier => $roleDefinition) {
+        foreach ($this->loader->getRoleDefinitions() as $roleDefinition) {
             $selectItems[] = [
                 $this->formatter->formatTitle($roleDefinition),
-                $roleIdentifier,
+                $roleDefinition->getIdentifier(),
             ];
         }
 

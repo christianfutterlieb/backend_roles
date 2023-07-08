@@ -25,29 +25,14 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class Synchronizer
 {
-    /**
-     * @var Loader
-     */
-    protected $loader;
+    protected Loader $loader;
+    protected Formatter $formatter;
 
-    /**
-     * @var Formatter
-     */
-    protected $formatter;
-
-    /**
-     * @param Loader $roleDefinitionLoader
-     */
-    public function injectLoader(Loader $loader)
-    {
+    public function __construct(
+        Loader $loader,
+        Formatter $formatter
+    ) {
         $this->loader = $loader;
-    }
-
-    /**
-     * @param Formatter $formatter
-     */
-    public function injectFormatter(Formatter $formatter)
-    {
         $this->formatter = $formatter;
     }
 
@@ -74,14 +59,17 @@ class Synchronizer
     public function synchronizeBackendUserGroup(array $backendUserGroup): int
     {
         $roleIdentifier = $backendUserGroup['tx_backendroles_role_identifier'] ?? null;
+        if (!Definition::isValidIdentifier($roleIdentifier)) {
+            return 0;
+        }
         $roleDefinitions = $this->loader->getRoleDefinitions();
-        if ($roleIdentifier === null || !array_key_exists($roleIdentifier, $roleDefinitions)) {
+        if (!$roleDefinitions->offsetExists($roleIdentifier)) {
             return 0;
         }
 
         return $this->getConnectionForTable('be_groups')->update(
             'be_groups',
-            $this->formatter->formatForDatabase($roleDefinitions[$roleIdentifier]),
+            $this->formatter->formatForDatabase($roleDefinitions->offsetGet($roleIdentifier)),
             ['uid' => $backendUserGroup['uid']]
         );
     }
