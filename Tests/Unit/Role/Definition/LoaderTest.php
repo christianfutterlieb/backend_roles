@@ -17,6 +17,7 @@ use AawTeam\BackendRoles\Exception\RoleDefinitionException;
 use AawTeam\BackendRoles\Role\Definition;
 use AawTeam\BackendRoles\Role\Definition\Formatter;
 use AawTeam\BackendRoles\Role\Definition\Loader;
+use AawTeam\BackendRoles\Role\DefinitionFactory;
 use AawTeam\BackendRoles\Role\ExtensionInformationProvider;
 use org\bovigo\vfs\vfsStream;
 use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
@@ -37,13 +38,22 @@ class LoaderTest extends UnitTestCase
         return $cacheMock;
     }
 
+    protected function getLoaderInstance(ExtensionInformationProvider $extensionInformationProviderMock): Loader
+    {
+        return new Loader(
+            $extensionInformationProviderMock,
+            new DefinitionFactory(),
+            $this->getCacheMock()
+        );
+    }
+
     /**
      * @test
      * @dataProvider invalidConfigurationFileThrowsExceptionDataProvider
      * @param string $configurationFileContents
      * @param int $expectedExceptionCode
      */
-    public function invalidConfigurationFileThrowsException(string $configurationFileContents, int $expectedExceptionCode)
+    public function invalidConfigurationFileThrowsException(string $configurationFileContents)
     {
         vfsStream::setup('root', null, [
             'myext' => [
@@ -57,10 +67,10 @@ class LoaderTest extends UnitTestCase
         $extensionInformationProviderMock->method('getLoadedExtensionListArray')->willReturn(['myext']);
         $extensionInformationProviderMock->method('extPath')->willReturn('vfs://root/myext');
 
-        $loader = new Loader($this->getCacheMock(), $extensionInformationProviderMock);
+        $loader = $this->getLoaderInstance($extensionInformationProviderMock);
 
         $this->expectException(RoleDefinitionException::class);
-        $this->expectExceptionCode($expectedExceptionCode);
+        $this->expectExceptionCode(1589311592);
         $loader->getRoleDefinitions();
     }
 
@@ -73,145 +83,21 @@ class LoaderTest extends UnitTestCase
             // Invalid file contents (no array)
             'configuration-file-returns-null' => [
                 '<?php return null;',
-                1589311592,
             ],
             'configuration-file-returns-bool' => [
                 '<?php return true;',
-                1589311592,
             ],
             'configuration-file-returns-int' => [
                 '<?php return 1;',
-                1589311592,
             ],
             'configuration-file-returns-float' => [
                 '<?php return 1.0;',
-                1589311592,
             ],
             'configuration-file-returns-string' => [
                 '<?php return "1";',
-                1589311592,
             ],
             'configuration-file-returns-object' => [
                 '<?php return new \\stdClass();',
-                1589311592,
-            ],
-            // Invalid configurations
-            'role-definition-is-null' => [
-                '<?php return [ null ];',
-                1589386642,
-            ],
-            'role-definition-is-bool' => [
-                '<?php return [ true ];',
-                1589386642,
-            ],
-            'role-definition-is-int' => [
-                '<?php return [ 1 ];',
-                1589386642,
-            ],
-            'role-definition-is-float' => [
-                '<?php return [ 1.0 ];',
-                1589386642,
-            ],
-            'role-definition-is-string' => [
-                '<?php return [ "1" ];',
-                1589386642,
-            ],
-            'role-definition-is-object' => [
-                '<?php return [ new \\stdClass() ];',
-                1589386642,
-            ],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider invalidRoleDefinitionThrowsExceptionDataProvider
-     * @param array $configurationDir
-     * @param int $expectedExceptionCode
-     */
-    public function invalidRoleDefinitionThrowsException(array $roleDefinitions, int $expectedExceptionCode)
-    {
-        $roleDefinitionsCode = var_export($roleDefinitions, true);
-
-        vfsStream::setup('root', null, [
-            'myext' => [
-                'Configuration' => [
-                    'RoleDefinitions.php' => '<?php return ' . $roleDefinitionsCode . ';',
-                ],
-            ],
-        ]);
-
-        $extensionInformationProviderMock = $this->createMock(ExtensionInformationProvider::class);
-        $extensionInformationProviderMock->method('getLoadedExtensionListArray')->willReturn(['myext']);
-        $extensionInformationProviderMock->method('extPath')->willReturn('vfs://root/myext');
-
-        $loader = new Loader($this->getCacheMock(), $extensionInformationProviderMock);
-
-        $this->expectException(RoleDefinitionException::class);
-        $this->expectExceptionCode($expectedExceptionCode);
-        $loader->getRoleDefinitions();
-    }
-
-    /**
-     * @return array
-     */
-    public static function invalidRoleDefinitionThrowsExceptionDataProvider(): array
-    {
-        return [
-            'array-without-identifier' => [
-                [
-                    [],
-                ],
-                1589387779,
-            ],
-            'identifier-is-null' => [
-                [
-                    ['identifier' => null],
-                ],
-                1589387779,
-            ],
-            'identifier-is-bool' => [
-                [
-                    ['identifier' => true],
-                ],
-                1589387779,
-            ],
-            'identifier-is-int' => [
-                [
-                    ['identifier' => 1],
-                ],
-                1589387779,
-            ],
-            'identifier-is-float' => [
-                [
-                    ['identifier' => 1.0],
-                ],
-                1589387779,
-            ],
-            'identifier-is-object' => [
-                [
-                    ['identifier' => new \stdClass()],
-                ],
-                1589387779,
-            ],
-            'identifier-is-empty-string' => [
-                [
-                    ['identifier' => ''],
-                ],
-                1589387779,
-            ],
-            'identifier-contains-only-whitespaces' => [
-                [
-                    ['identifier' => " \n\t "],
-                ],
-                1589387779,
-            ],
-            'identifier-duplicates' => [
-                [
-                    ['identifier' => 'id'],
-                    ['identifier' => 'id'],
-                ],
-                1589387862,
             ],
         ];
     }
@@ -241,8 +127,8 @@ class LoaderTest extends UnitTestCase
             return 'vfs://root/typo3conf/ext/' . $extKey;
         });
 
-        $loader = new Loader($this->getCacheMock(), $extensionInformationProviderMock);
-        self::assertSame([], $loader->getRoleDefinitions());
+        $loader = $this->getLoaderInstance($extensionInformationProviderMock);
+        self::assertSame([], $loader->getRoleDefinitions()->toArray());
     }
 
     /**
@@ -263,7 +149,7 @@ class LoaderTest extends UnitTestCase
         $extensionInformationProviderMock->method('getLoadedExtensionListArray')->willReturn(['myext']);
         $extensionInformationProviderMock->method('extPath')->willReturn('vfs://root/myext');
 
-        $loader = new Loader($this->getCacheMock(), $extensionInformationProviderMock);
+        $loader = $this->getLoaderInstance($extensionInformationProviderMock);
         self::assertArrayHasKey($identifier, $loader->getRoleDefinitions());
     }
 
@@ -289,7 +175,7 @@ class LoaderTest extends UnitTestCase
         $extensionInformationProviderMock->method('getLoadedExtensionListArray')->willReturn(['myext']);
         $extensionInformationProviderMock->method('extPath')->willReturn('vfs://root/myext');
 
-        $loader = new Loader($this->getCacheMock(), $extensionInformationProviderMock);
+        $loader = $this->getLoaderInstance($extensionInformationProviderMock);
         $actualResult = $loader->getRoleDefinitions();
         self::assertCount(1, $actualResult);
         self::assertArrayHasKey($identifier, $actualResult);
@@ -321,7 +207,7 @@ class LoaderTest extends UnitTestCase
         $extensionInformationProviderMock->method('getLoadedExtensionListArray')->willReturn(['myext']);
         $extensionInformationProviderMock->method('extPath')->willReturn('vfs://root/myext');
 
-        $loader = new Loader($this->getCacheMock(), $extensionInformationProviderMock);
+        $loader = $this->getLoaderInstance($extensionInformationProviderMock);
         $roleDefinitions = $loader->getRoleDefinitions();
         self::assertArrayNotHasKey($unknownOffset, $roleDefinitions[$identifier]);
         self::assertEmpty(array_diff(array_keys($roleDefinitions[$identifier]), $knownOffsets));

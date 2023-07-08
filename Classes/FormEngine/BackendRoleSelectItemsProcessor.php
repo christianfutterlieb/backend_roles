@@ -21,20 +21,10 @@ use AawTeam\BackendRoles\Role\Definition\Loader;
  */
 class BackendRoleSelectItemsProcessor
 {
-    /**
-     * @var Loader
-     */
-    private Loader $loader;
-
-    /**
-     * @var Formatter
-     */
-    private Formatter $formatter;
-
-    public function __construct(Loader $loader, Formatter $formatter)
-    {
-        $this->loader = $loader;
-        $this->formatter = $formatter;
+    public function __construct(
+        private readonly Loader $loader,
+        private readonly Formatter $formatter
+    ) {
     }
 
     public function process(array &$params): void
@@ -45,10 +35,10 @@ class BackendRoleSelectItemsProcessor
         }
 
         $selectItems = [];
-        foreach ($this->loader->getRoleDefinitions() as $roleIdentifier => $roleDefinition) {
+        foreach ($this->loader->getRoleDefinitions() as $roleDefinition) {
             $selectItems[] = [
                 $this->formatter->formatTitle($roleDefinition),
-                $roleIdentifier,
+                $roleDefinition->getIdentifier(),
             ];
         }
 

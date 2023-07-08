@@ -20,21 +20,21 @@ use AawTeam\BackendRoles\Exception\RoleDefinitionException;
  */
 class Definition
 {
-    protected $identifier = '';
-    protected $title;
-    protected $tSConfig;
-    protected $pagetypesSelect;
-    protected $tablesSelect;
-    protected $tablesModify;
-    protected $groupMods;
-    protected $filePermissions;
-    protected $allowedLanguages;
-    protected $explicitAllowdeny;
-    protected $nonExcludeFields;
+    protected string $identifier = '';
+    protected ?string $title = null;
+    protected ?string $tSConfig = null;
+    protected ?array $pagetypesSelect = null;
+    protected ?array $tablesSelect = null;
+    protected ?array $tablesModify = null;
+    protected ?array $groupMods = null;
+    protected ?array $filePermissions = null;
+    protected ?array $allowedLanguages = null;
+    protected ?array $explicitAllowdeny = null;
+    protected ?array $nonExcludeFields = null;
 
     public function __construct(string $identifier, array $array = null)
     {
-        if (trim($identifier) === '') {
+        if (!static::isValidIdentifier($identifier)) {
             throw new RoleDefinitionException('$identifier must be not empty string');
         }
         $this->identifier = $identifier;
@@ -101,6 +101,13 @@ class Definition
                 $this->nonExcludeFields = $array['non_exclude_fields'];
             }
         }
+    }
+
+    public static function isValidIdentifier(mixed $identifier): bool
+    {
+        return is_string($identifier)
+            && trim($identifier) !== ''
+            && strlen($identifier) > 0;
     }
 
     public function toArray(): array
