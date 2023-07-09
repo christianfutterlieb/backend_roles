@@ -22,7 +22,7 @@ return [
         'labels' => 'LLL:EXT:backend_roles/Resources/Private/Language/ModuleLabels.xlf',
         'extensionName' => 'BackendRoles',
         'controllerActions' => [
-            ManagementController::class => 'index, synchronizeAllBackendUserGroupRoles, resetBackendUserGroupToDefaults, exportAsRole',
+            ManagementController::class => 'index, synchronizeAllBackendUserGroupRoles, resetBackendUserGroupToDefaults, exportAsRole, downloadRoleDefinition',
         ],
     ],
 ];
