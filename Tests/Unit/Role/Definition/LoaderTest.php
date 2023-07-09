@@ -21,6 +21,7 @@ use AawTeam\BackendRoles\Role\ExtensionInformationProvider;
 use org\bovigo\vfs\vfsStream;
 use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
 use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -28,6 +29,8 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  */
 class LoaderTest extends UnitTestCase
 {
+    protected bool $backupEnvironment = true;
+
     protected function getCacheMock(): PhpFrontend
     {
         $cacheMock = $this->createMock(PhpFrontend::class);
@@ -232,5 +235,77 @@ class LoaderTest extends UnitTestCase
         self::assertCount(1, $actualResult);
         self::assertArrayHasKey($identifier, $actualResult);
         self::assertInstanceOf(Definition::class, $actualResult[$identifier]);
+    }
+
+    /**
+     * @test
+     */
+    public function loadConfigsFromDifferentLocations(): void
+    {
+        // Fake the config path in Environment
+        Environment::initialize(
+            Environment::getContext(),
+            Environment::isCli(),
+            Environment::isComposerMode(),
+            Environment::getProjectPath(),
+            Environment::getPublicPath(),
+            Environment::getVarPath(),
+            'vfs://root/config',
+            Environment::getCurrentScript(),
+            Environment::isWindows() ? 'WINDOWS' : 'UNIX',
+        );
+
+        $roleIdentifier1 = 'identifier-1';
+        $roleIdentifier2 = 'identifier-2';
+        $roleIdentifier3 = 'identifier-3';
+        $roleIdentifier4 = 'identifier-4';
+
+        vfsStream::setup('root', null, [
+            'myext' => [
+                'Configuration' => [
+                    'RoleDefinitions.yaml' => '',
+                    'RoleDefinitions.php' => '<?php return [["identifier" => "' . $roleIdentifier1 . '"]];',
+                ],
+            ],
+            'config' => [
+                'BackendRoleDefinitions.yaml' => '',
+                'BackendRoleDefinitions.php' => '<?php return [["identifier" => "' . $roleIdentifier2 . '"]];',
+            ],
+        ]);
+
+        $extensionInformationProviderMock = $this->createMock(ExtensionInformationProvider::class);
+        $extensionInformationProviderMock->method('getLoadedExtensionListArray')->willReturn(['myext']);
+        $extensionInformationProviderMock->method('extPath')->willReturn('vfs://root/myext');
+
+        $yamlFileLoaderMock = $this->createMock(YamlFileLoader::class);
+        $yamlFileLoaderMock->method('load')->willReturnCallback(function (string $fileName) use ($roleIdentifier3, $roleIdentifier4): array {
+            if ($fileName === 'vfs://root/myext/Configuration/RoleDefinitions.yaml') {
+                return [
+                    'RoleDefinitions' => [
+                        [
+                            'identifier' => $roleIdentifier3,
+                        ],
+                    ],
+                ];
+            }
+            if ($fileName === Environment::getConfigPath() . '/BackendRoleDefinitions.yaml') {
+                return [
+                    'RoleDefinitions' => [
+                        [
+                            'identifier' => $roleIdentifier4,
+                        ],
+                    ],
+                ];
+            }
+        });
+
+        $loader = $this->getLoaderInstance($extensionInformationProviderMock, $yamlFileLoaderMock);
+        $definitions = $loader->getRoleDefinitions();
+
+        self::assertSame(4, count($definitions->toArray()));
+        self::assertTrue($definitions->offsetExists($roleIdentifier1));
+        self::assertTrue($definitions->offsetExists($roleIdentifier2));
+        self::assertTrue($definitions->offsetExists($roleIdentifier3));
+        self::assertTrue($definitions->offsetExists($roleIdentifier4));
     }
 }
