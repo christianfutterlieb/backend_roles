@@ -17,7 +17,6 @@ use AawTeam\BackendRoles\Domain\Repository\BackendUserGroupRepository;
 use AawTeam\BackendRoles\Role\Definition\Formatter;
 use AawTeam\BackendRoles\Role\Synchronizer;
 use Psr\Http\Message\ResponseInterface;
-
 use Symfony\Component\Yaml\Yaml;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
@@ -111,24 +110,14 @@ class ManagementController extends ActionController
      */
     protected function exportAsRoleAction(int $backendUserGroupUid): ?ResponseInterface
     {
-        $backendUserGroup = BackendUtility::getRecord('be_groups', $backendUserGroupUid);
-        if (!is_array($backendUserGroup)) {
-            $this->addFlashMessage('Invalid backendUserGroup UID received', 'Error', AbstractMessage::ERROR);
-            $this->redirect('index');
-        } elseif ($backendUserGroup['tx_backendroles_role_identifier'] ?? false) {
-            $this->addFlashMessage('This BackendUserGroup is a managed group', 'Error', AbstractMessage::ERROR);
-            $this->redirect('index');
+        try {
+            $backendUserGroup = $this->getUnmanagedBackendUserGroupRecord($backendUserGroupUid);
+        } catch (\InvalidArgumentException $e) {
+            $this->addFlashMessage($e->getMessage(), 'Error', AbstractMessage::ERROR);
+            return $this->redirect('index');
         }
 
-        $formatter = new Formatter();
-        // Add a template for identifier and title
-        $configToExport = array_merge(
-            [
-                'identifier' => 'PUT_THE_IDENTIFIER_HERE',
-                'title' => '[Role] ' . $backendUserGroup['title'],
-            ],
-            $formatter->formatFromDbToArray($backendUserGroup)
-        );
+        $configToExport = $this->createConfigToExportFromBackendUserGroup($backendUserGroup);
 
         $this->view->assignMultiple([
             'backendUserGroup' => $backendUserGroup,
@@ -141,6 +130,68 @@ class ManagementController extends ActionController
         return $this->typo3Version->getMajorVersion() < 11
             ? null
             : $this->htmlResponse();
+    }
+
+    protected function downloadRoleDefinitionAction(int $backendUserGroupUid, string $fileFormat): ResponseInterface
+    {
+        try {
+            $backendUserGroup = $this->getUnmanagedBackendUserGroupRecord($backendUserGroupUid);
+        } catch (\InvalidArgumentException $e) {
+            $this->addFlashMessage($e->getMessage(), 'Error', AbstractMessage::ERROR);
+            return $this->redirect('index');
+        }
+
+        if (!in_array($fileFormat, ['yaml', 'php'], true)) {
+            $this->addFlashMessage('Invalid fileFormat', 'Error', AbstractMessage::ERROR);
+            return $this->redirect('index');
+        }
+
+        $configToExport = $this->createConfigToExportFromBackendUserGroup($backendUserGroup);
+
+        if ($fileFormat === 'yaml') {
+            $configAsString = Yaml::dump(['RoleDefinitions' => [$configToExport]], 99, 2) . PHP_EOL;
+            $fileName = 'role-' . $backendUserGroupUid . '.yaml';
+            // @see https://www.iana.org/assignments/media-types/application/yaml
+            $mimeType = 'application/yaml';
+        } elseif ($fileFormat === 'php') {
+            $configAsString = '<?php' . PHP_EOL . PHP_EOL . 'return ' . ArrayUtility::arrayExport($configToExport) . ';' . PHP_EOL;
+            $fileName = 'role-' . $backendUserGroupUid . '.php';
+            $mimeType = 'text/x-php';
+        }
+
+        $body = $this->streamFactory->createStream($configAsString);
+        return $this->responseFactory->createResponse()
+            ->withBody($body)
+            ->withHeader('Content-Length', (string)$body->getSize())
+            ->withHeader('Content-Type', $mimeType)
+            ->withHeader('Content-Disposition', 'attachment; filename="' . $fileName . '"')
+            ->withHeader('Cache-Control', 'no-store')
+            ->withHeader('Pragma', 'no-cache')
+        ;
+    }
+
+    private function createConfigToExportFromBackendUserGroup(array $backendUserGroup): array
+    {
+        // Add a template for identifier and title
+        return array_merge(
+            [
+                'identifier' => 'PUT_THE_IDENTIFIER_HERE',
+                'title' => '[Role] ' . $backendUserGroup['title'],
+            ],
+            (new Formatter())->formatFromDbToArray($backendUserGroup)
+        );
+    }
+
+    private function getUnmanagedBackendUserGroupRecord(int $backendUserGroupUid): array
+    {
+        $backendUserGroup = BackendUtility::getRecord('be_groups', $backendUserGroupUid);
+        if (!is_array($backendUserGroup)) {
+            throw new \InvalidArgumentException('Invalid backendUserGroup UID received');
+        }
+        if ($backendUserGroup['tx_backendroles_role_identifier'] ?? false) {
+            throw new \InvalidArgumentException('This BackendUserGroup is a managed group');
+        }
+        return $backendUserGroup;
     }
 
     /**

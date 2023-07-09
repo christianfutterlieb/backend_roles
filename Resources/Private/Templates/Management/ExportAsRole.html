@@ -30,6 +30,11 @@
                     <code><pre>{yamlConfigAsString}</pre></code>
                 </div>
             </div>
+            <div class="card-footer">
+                <f:link.action action="downloadRoleDefinition" arguments="{backendUserGroupUid:backendUserGroup.uid, fileFormat:'yaml'}" class="btn btn-primary">
+                    Download as YAML file
+                </f:link.action>
+            </div>
         </div>
         <div class="card card-size-medium">
             <div class="card-header">
@@ -42,6 +47,11 @@
                 <div class="card-code">
                     <code><pre>{phpConfigAsString}</pre></code>
                 </div>
+            </div>
+            <div class="card-footer">
+                <f:link.action action="downloadRoleDefinition" arguments="{backendUserGroupUid:backendUserGroup.uid, fileFormat:'php'}" class="btn btn-primary">
+                    Download as PHP file
+                </f:link.action>
             </div>
         </div>
     </div>

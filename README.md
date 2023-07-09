@@ -7,7 +7,8 @@ This TYPO3 extension allows the text-based definition and synchronization of `be
 * Define the access definitions for `be_groups` records
 * Set up `be_groups` records to be synchronized with the definitions
 * Synchronize via TYPO3 backend or CLI
-* Create definitions from existing `be_groups` recoreds
+* Export definitions representing existing `be_groups` records for an easy
+  migration towards this extension. Either as download or text-based copy&paste
 
 ## Installation
 

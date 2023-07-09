@@ -18,7 +18,7 @@ $bootstrap = function () {
         'management',
         '',
         [
-            \AawTeam\BackendRoles\Controller\ManagementController::class => 'index, synchronizeAllBackendUserGroupRoles, resetBackendUserGroupToDefaults, exportAsRole',
+            \AawTeam\BackendRoles\Controller\ManagementController::class => 'index, synchronizeAllBackendUserGroupRoles, resetBackendUserGroupToDefaults, exportAsRole, downloadRoleDefinition',
         ],
         [
             'access' => 'admin',
