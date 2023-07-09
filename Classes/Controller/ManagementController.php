@@ -17,6 +17,8 @@ use AawTeam\BackendRoles\Domain\Repository\BackendUserGroupRepository;
 use AawTeam\BackendRoles\Role\Definition\Formatter;
 use AawTeam\BackendRoles\Role\Synchronizer;
 use Psr\Http\Message\ResponseInterface;
+
+use Symfony\Component\Yaml\Yaml;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Information\Typo3Version;
@@ -119,12 +121,19 @@ class ManagementController extends ActionController
         }
 
         $formatter = new Formatter();
-        $configToExport = $formatter->formatFromDbToArray($backendUserGroup);
-        $configAsString = 'return ' . ArrayUtility::arrayExport($configToExport) . ';';
+        // Add a template for identifier and title
+        $configToExport = array_merge(
+            [
+                'identifier' => 'PUT_THE_IDENTIFIER_HERE',
+                'title' => '[Role] ' . $backendUserGroup['title'],
+            ],
+            $formatter->formatFromDbToArray($backendUserGroup)
+        );
 
         $this->view->assignMultiple([
             'backendUserGroup' => $backendUserGroup,
-            'configAsString' => $configAsString,
+            'yamlConfigAsString' => Yaml::dump(['RoleDefinitions' => [$configToExport]], 10, 2),
+            'phpConfigAsString' => 'return ' . ArrayUtility::arrayExport([$configToExport]) . ';',
         ]);
 
         // @todo: remove this construct when dropping support for TYPO3 < v11
