@@ -7,13 +7,44 @@
 <f:layout name="Backend" />
 
 <f:section name="content">
-    <f:be.pageRenderer includeRequireJsModules="{0:'TYPO3/CMS/Backend/Modal'}" />
-
+<f:asset.css identifier="backendroles_exportasrole">
+.card-code {
+    padding:1em;
+    background-color:#292929;
+}
+</f:asset.css>
     <h1>Backend Role Export</h1>
 
-    <p>Following code represents the role definition configuration for the backend group <b>{backendUserGroup.title}</b>:</p>
+    <p>These codes represent the role definitions for the backend group <b>{backendUserGroup.title}</b>:</p>
 
-    <pre>{configAsString}</pre>
+    <div class="card-container">
+        <div class="card card-size-medium">
+            <div class="card-header">
+                <div class="card-header-body">
+                    <h2 class="card-title">YAML</h2>
+                    <span class="card-subtitle">The YAML representation of the role definition</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="card-code">
+                    <code><pre>{yamlConfigAsString}</pre></code>
+                </div>
+            </div>
+        </div>
+        <div class="card card-size-medium">
+            <div class="card-header">
+                <div class="card-header-body">
+                    <h2 class="card-title">PHP</h2>
+                    <span class="card-subtitle">The PHP representation of the role definition</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="card-code">
+                    <code><pre>{phpConfigAsString}</pre></code>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </f:section>
 
