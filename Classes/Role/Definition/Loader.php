@@ -63,6 +63,36 @@ final class Loader
     protected function loadRoleDefinitions(): DefinitionCollection
     {
         $defititionCollection = new DefinitionCollection();
+
+        // Define config loader functions
+        // @todo: move functions to service classes
+        $yamlConfigLoader = function (string $fileName): mixed {
+            return $this->yamlFileLoader->load($fileName, YamlFileLoader::PROCESS_IMPORTS)['RoleDefinitions'] ?? null;
+        };
+        $phpConfigLoader = function (string $fileName): mixed {
+            return require $fileName;
+        };
+
+        // Load from global configuration
+        $globalConfigurationPath = rtrim(Environment::getConfigPath(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+
+        // Load from config/BackendRoleDefinitions.yaml
+        $defititionCollection->addFromCollection(
+            $this->loadRoleDefinitionsFromFile(
+                $globalConfigurationPath . 'BackendRoleDefinitions.yaml',
+                $yamlConfigLoader
+            )
+        );
+
+        // Load from config/BackendRoleDefinitions.php
+        $defititionCollection->addFromCollection(
+            $this->loadRoleDefinitionsFromFile(
+                $globalConfigurationPath . 'BackendRoleDefinitions.php',
+                $phpConfigLoader
+            )
+        );
+
+        // Load from extensions
         foreach ($this->extensionInformationProvider->getLoadedExtensionListArray() as $loadedExtKey) {
             if ($loadedExtKey === 'backend_roles') {
                 continue;
@@ -74,9 +104,7 @@ final class Loader
             $defititionCollection->addFromCollection(
                 $this->loadRoleDefinitionsFromFile(
                     $extensionConfigurationPath . 'RoleDefinitions.yaml',
-                    function (string $fileName): mixed {
-                        return $this->yamlFileLoader->load($fileName, YamlFileLoader::PROCESS_IMPORTS)['RoleDefinitions'] ?? null;
-                    }
+                    $yamlConfigLoader
                 )
             );
 
@@ -84,9 +112,7 @@ final class Loader
             $defititionCollection->addFromCollection(
                 $this->loadRoleDefinitionsFromFile(
                     $extensionConfigurationPath . 'RoleDefinitions.php',
-                    function (string $fileName): mixed {
-                        return require $fileName;
-                    }
+                    $phpConfigLoader
                 )
             );
         }
