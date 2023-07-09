@@ -15,12 +15,12 @@ namespace AawTeam\LanguageMatcher\Tests\Unit\Context\Context;
 
 use AawTeam\BackendRoles\Exception\RoleDefinitionException;
 use AawTeam\BackendRoles\Role\Definition;
-use AawTeam\BackendRoles\Role\Definition\Formatter;
 use AawTeam\BackendRoles\Role\Definition\Loader;
 use AawTeam\BackendRoles\Role\DefinitionFactory;
 use AawTeam\BackendRoles\Role\ExtensionInformationProvider;
 use org\bovigo\vfs\vfsStream;
 use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
+use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -28,9 +28,6 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  */
 class LoaderTest extends UnitTestCase
 {
-    /**
-     * @return PhpFrontend
-     */
     protected function getCacheMock(): PhpFrontend
     {
         $cacheMock = $this->createMock(PhpFrontend::class);
@@ -38,22 +35,21 @@ class LoaderTest extends UnitTestCase
         return $cacheMock;
     }
 
-    protected function getLoaderInstance(ExtensionInformationProvider $extensionInformationProviderMock): Loader
+    protected function getLoaderInstance(ExtensionInformationProvider $extensionInformationProviderMock, ?YamlFileLoader $yamlFileLoader = null): Loader
     {
         return new Loader(
             $extensionInformationProviderMock,
             new DefinitionFactory(),
-            $this->getCacheMock()
+            $this->getCacheMock(),
+            $yamlFileLoader ?? new YamlFileLoader()
         );
     }
 
     /**
      * @test
      * @dataProvider invalidConfigurationFileThrowsExceptionDataProvider
-     * @param string $configurationFileContents
-     * @param int $expectedExceptionCode
      */
-    public function invalidConfigurationFileThrowsException(string $configurationFileContents)
+    public function invalidConfigurationFileThrowsException(string $configurationFileContents): void
     {
         vfsStream::setup('root', null, [
             'myext' => [
@@ -75,6 +71,10 @@ class LoaderTest extends UnitTestCase
     }
 
     /**
+     * Note: yaml connfguration is always returned as array, this test only
+     * applies to php-based configuration
+     *
+     * @see invalidYamlConfigurationStructureThrowsException()
      * @return array
      */
     public function invalidConfigurationFileThrowsExceptionDataProvider(): array
@@ -104,8 +104,82 @@ class LoaderTest extends UnitTestCase
 
     /**
      * @test
+     * @dataProvider invalidYamlConfigurationStructureThrowsExceptionDataProvider
      */
-    public function whenNoConfigFileIsFoundNoRoleDefinitionsAreProduced()
+    public function invalidYamlConfigurationStructureThrowsException(array $yamlConfiguration): void
+    {
+        vfsStream::setup('root', null, [
+            'myext' => [
+                'Configuration' => [
+                    'RoleDefinitions.yaml' => '',
+                ],
+            ],
+        ]);
+
+        $extensionInformationProviderMock = $this->createMock(ExtensionInformationProvider::class);
+        $extensionInformationProviderMock->method('getLoadedExtensionListArray')->willReturn(['myext']);
+        $extensionInformationProviderMock->method('extPath')->willReturn('vfs://root/myext');
+
+        $yamlFileLoaderMock = $this->createMock(YamlFileLoader::class);
+        $yamlFileLoaderMock->method('load')->willReturn($yamlConfiguration);
+
+        $loader = $this->getLoaderInstance($extensionInformationProviderMock, $yamlFileLoaderMock);
+
+        $this->expectException(RoleDefinitionException::class);
+        $this->expectExceptionCode(1589311592);
+        $loader->getRoleDefinitions();
+    }
+
+    public static function invalidYamlConfigurationStructureThrowsExceptionDataProvider(): array
+    {
+        return [
+            'empty-array' => [
+                [],
+            ],
+            'missing-roledefinition-key' => [
+                [
+                    'some' => [
+                        'configuration' => 'goes-here',
+                    ],
+                ],
+            ],
+            'roledefinition-is-null' => [
+                [
+                    'RoleDefinitions' => null,
+                ],
+            ],
+            'roledefinition-is-bool' => [
+                [
+                    'RoleDefinitions' => true,
+                ],
+            ],
+            'roledefinition-is-int' => [
+                [
+                    'RoleDefinitions' => 1,
+                ],
+            ],
+            'roledefinition-is-float' => [
+                [
+                    'RoleDefinitions' => 1.0,
+                ],
+            ],
+            'roledefinition-is-string' => [
+                [
+                    'RoleDefinitions' => 'string',
+                ],
+            ],
+            'roledefinition-is-object' => [
+                [
+                    'RoleDefinitions' => new \stdClass(),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     */
+    public function whenNoConfigFileIsFoundNoRoleDefinitionsAreProduced(): void
     {
         vfsStream::setup('root', null, [
             'typo3conf' => [
@@ -134,29 +208,7 @@ class LoaderTest extends UnitTestCase
     /**
      * @test
      */
-    public function roleDefinitionIdentifierIsUsedAsArrayOffset()
-    {
-        $identifier = 'id';
-        vfsStream::setup('root', null, [
-            'myext' => [
-                'Configuration' => [
-                    'RoleDefinitions.php' => '<?php return [ ["identifier" => "' . $identifier . '"] ];',
-                ],
-            ],
-        ]);
-
-        $extensionInformationProviderMock = $this->createMock(ExtensionInformationProvider::class);
-        $extensionInformationProviderMock->method('getLoadedExtensionListArray')->willReturn(['myext']);
-        $extensionInformationProviderMock->method('extPath')->willReturn('vfs://root/myext');
-
-        $loader = $this->getLoaderInstance($extensionInformationProviderMock);
-        self::assertArrayHasKey($identifier, $loader->getRoleDefinitions());
-    }
-
-    /**
-     * @test
-     */
-    public function correctlyProcessARoleDefinition()
+    public function correctlyProcessARoleDefinition(): void
     {
         $identifier = 'id';
         $roleDefinitionArray = [
@@ -180,36 +232,5 @@ class LoaderTest extends UnitTestCase
         self::assertCount(1, $actualResult);
         self::assertArrayHasKey($identifier, $actualResult);
         self::assertInstanceOf(Definition::class, $actualResult[$identifier]);
-    }
-
-    /**
-     * @todo Should we 'sanitize' the role definition array?
-     */
-    private function roleDefinitionsDoNotContainUnknownOffsets()
-    {
-        $identifier = 'id';
-        $unknownOffset = 'unknown';
-
-        $knownOffsets = (new Formatter())->getManagedColumnNames();
-        $knownOffsets[] = 'identifier';
-        $knownOffsets[] = 'title';
-
-        vfsStream::setup('root', null, [
-            'myext' => [
-                'Configuration' => [
-                    'BackendUserGroupRoles.php' => '<?php return ["vfs://root/myext/Configuration/role.php"];',
-                    'role.php' => '<?php return ["identifier" => "' . $identifier . '", "' . $unknownOffset . '" => "some value", "silly" => "value"];',
-                ],
-            ],
-        ]);
-
-        $extensionInformationProviderMock = $this->createMock(ExtensionInformationProvider::class);
-        $extensionInformationProviderMock->method('getLoadedExtensionListArray')->willReturn(['myext']);
-        $extensionInformationProviderMock->method('extPath')->willReturn('vfs://root/myext');
-
-        $loader = $this->getLoaderInstance($extensionInformationProviderMock);
-        $roleDefinitions = $loader->getRoleDefinitions();
-        self::assertArrayNotHasKey($unknownOffset, $roleDefinitions[$identifier]);
-        self::assertEmpty(array_diff(array_keys($roleDefinitions[$identifier]), $knownOffsets));
     }
 }

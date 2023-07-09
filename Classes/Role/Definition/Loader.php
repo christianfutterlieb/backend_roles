@@ -19,6 +19,7 @@ use AawTeam\BackendRoles\Role\DefinitionCollection;
 use AawTeam\BackendRoles\Role\DefinitionFactory;
 use AawTeam\BackendRoles\Role\ExtensionInformationProvider;
 use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
+use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -31,15 +32,18 @@ final class Loader
     protected ExtensionInformationProvider $extensionInformationProvider;
     protected DefinitionFactory $definitionFactory;
     protected PhpFrontend $cache;
+    protected YamlFileLoader $yamlFileLoader;
 
     public function __construct(
         ExtensionInformationProvider $extensionInformationProvider,
         DefinitionFactory $definitionFactory,
-        PhpFrontend $cache
+        PhpFrontend $cache,
+        YamlFileLoader $yamlFileLoader
     ) {
         $this->extensionInformationProvider = $extensionInformationProvider;
         $this->definitionFactory = $definitionFactory;
         $this->cache = $cache;
+        $this->yamlFileLoader = $yamlFileLoader;
     }
 
     public function getRoleDefinitions(): DefinitionCollection
@@ -73,28 +77,54 @@ final class Loader
                 continue;
             }
 
-            $roleDefinitionsFile = rtrim($this->extensionInformationProvider->extPath($loadedExtKey), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'Configuration' . DIRECTORY_SEPARATOR . 'RoleDefinitions.php';
-            if (is_file($roleDefinitionsFile) && is_readable($roleDefinitionsFile)) {
-                $configRoleDefinitions = require $roleDefinitionsFile;
-                if (!is_array($configRoleDefinitions)) {
-                    throw new RoleDefinitionException('The role definition file "' . $roleDefinitionsFile . '" must return an array. Got ' . gettype($configRoleDefinitions) . ' instead', 1589311592);
-                }
+            $extensionConfigurationPath = rtrim($this->extensionInformationProvider->extPath($loadedExtKey), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'Configuration' . DIRECTORY_SEPARATOR;
 
-                foreach ($configRoleDefinitions as $configRoleDefinition) {
-                    $defititionCollection->add(
-                        $this->definitionFactory->create($configRoleDefinition)
-                    );
-                }
-            }
+            // Load from Configuration/RoleDefinitions.yaml
+            $defititionCollection->addFromCollection(
+                $this->loadRoleDefinitionsFromFile(
+                    $extensionConfigurationPath . 'RoleDefinitions.yaml',
+                    function (string $fileName) {
+                        return $this->yamlFileLoader->load($fileName, YamlFileLoader::PROCESS_IMPORTS)['RoleDefinitions'] ?? null;
+                    }
+                )
+            );
+
+            // Load from Configuration/RoleDefinitions.php
+            $defititionCollection->addFromCollection(
+                $this->loadRoleDefinitionsFromFile(
+                    $extensionConfigurationPath . 'RoleDefinitions.php',
+                    function (string $fileName) {
+                        return require $fileName;
+                    }
+                )
+            );
         }
 
         return $defititionCollection;
     }
 
+    protected function loadRoleDefinitionsFromFile(string $roleDefinitionsFileName, callable $fileContentsReader): DefinitionCollection
+    {
+        $defititionCollection = new DefinitionCollection();
+        if ($roleDefinitionsFileName && is_file($roleDefinitionsFileName)) {
+            // Call the file content reader
+            $fileContents = $fileContentsReader($roleDefinitionsFileName);
+
+            if (!is_array($fileContents)) {
+                throw new RoleDefinitionException('The role definition in "' . $roleDefinitionsFileName . '" must be array. Got ' . gettype($fileContents) . ' instead', 1589311592);
+            }
+
+            foreach ($fileContents as $roleDefinition) {
+                $defititionCollection->add(
+                    $this->definitionFactory->create($roleDefinition)
+                );
+            }
+        }
+        return $defititionCollection;
+    }
+
     /**
      * Returns a reliable, reproducible and secure cache identifier.
-     *
-     * @return string
      */
     private function getRoleDefinitionCacheIdentifier(): string
     {

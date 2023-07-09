@@ -25,7 +25,7 @@ class RoleTitleViewHelper extends AbstractViewHelper
 {
     protected Formatter $formatter;
     protected Loader $loader;
-    
+
     public function __construct(
         Formatter $formatter,
         Loader $loader
