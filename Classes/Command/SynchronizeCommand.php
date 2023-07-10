@@ -13,42 +13,23 @@ namespace AawTeam\BackendRoles\Command;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AawTeam\BackendRoles\Role\Definition\Formatter;
-use AawTeam\BackendRoles\Role\Definition\Loader;
 use AawTeam\BackendRoles\Role\Synchronizer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use TYPO3\CMS\Core\Locking\LockFactory;
 use TYPO3\CMS\Core\Locking\LockingStrategyInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * SynchronizeCommand
  */
 class SynchronizeCommand extends Command
 {
-    /**
-     * @var Synchronizer
-     */
-    protected $synchronizer;
-
-    /**
-     * @param string $name
-     * @param Synchronizer $synchronizer
-     */
-    public function __construct(string $name = null, Synchronizer $synchronizer = null)
-    {
+    public function __construct(
+        protected readonly LockingStrategyInterface $locker,
+        protected readonly Synchronizer $synchronizer,
+        string $name = null
+    ) {
         parent::__construct($name);
-
-        // TYPO3 < v10.3 workaround
-        if ($synchronizer === null) {
-            /** @var Synchronizer $synchronizer */
-            $synchronizer = GeneralUtility::makeInstance(Synchronizer::class);
-            $synchronizer->injectFormatter(new Formatter());
-            $synchronizer->injectLoader(new Loader());
-        }
-        $this->synchronizer = $synchronizer;
     }
 
     /**
@@ -68,8 +49,7 @@ class SynchronizeCommand extends Command
     {
         // Acquire lock
         try {
-            $locker = $this->getLocker('backendgroups_synchronize');
-            $locker->acquire();
+            $this->locker->acquire();
         } catch (\TYPO3\CMS\Core\Locking\Exception\LockCreateException $e) {
             $output->writeln('Error: cannot create lock: ' . $e->getMessage());
             return Command::FAILURE;
@@ -87,15 +67,7 @@ class SynchronizeCommand extends Command
         }
 
         // Release the lock
-        $locker->release();
+        $this->locker->release();
         return Command::SUCCESS;
-    }
-
-    /**
-     * @return \TYPO3\CMS\Core\Locking\LockingStrategyInterface
-     */
-    protected function getLocker(string $key): LockingStrategyInterface
-    {
-        return GeneralUtility::makeInstance(LockFactory::class)->createLocker($key);
     }
 }
