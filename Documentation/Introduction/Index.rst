@@ -27,16 +27,21 @@ Features
 Screenshots
 ===========
 
-**TODO:**
+The Backend Module's overview
+-----------------------------
 
-This chapter should help people understand how the extension works.
-Remove it if it is not relevant.
-
-..  figure:: /Images/IntroductionPackage.png
+..  figure:: /Images/BackendModule.png
     :class: with-shadow
-    :alt: Introduction Package
-    :width: 300px
+    :alt: Backend Module
 
-    Introduction Package after installation (caption of the image).
+    The Backend Module's overview
 
-How the Frontend of the Introduction Package looks like after installation (legend of the image).
+
+The Backend Module's export view
+--------------------------------
+
+..  figure:: /Images/BackendRoleExport.png
+    :class: with-shadow
+    :alt: Backend role export
+
+    The Backend Module's export view
