@@ -29,6 +29,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 final class Loader
 {
+    public const ROLEDEFINITIONS_BASENAME = 'BackendRoleDefinitions';
+
     public function __construct(
         protected readonly ExtensionInformationProvider $extensionInformationProvider,
         protected readonly DefinitionFactory $definitionFactory,
@@ -79,7 +81,7 @@ final class Loader
         // Load from config/BackendRoleDefinitions.yaml
         $defititionCollection->addFromCollection(
             $this->loadRoleDefinitionsFromFile(
-                $globalConfigurationPath . 'BackendRoleDefinitions.yaml',
+                $globalConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.yaml',
                 $yamlConfigLoader
             )
         );
@@ -87,7 +89,7 @@ final class Loader
         // Load from config/BackendRoleDefinitions.php
         $defititionCollection->addFromCollection(
             $this->loadRoleDefinitionsFromFile(
-                $globalConfigurationPath . 'BackendRoleDefinitions.php',
+                $globalConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.php',
                 $phpConfigLoader
             )
         );
@@ -100,18 +102,18 @@ final class Loader
 
             $extensionConfigurationPath = rtrim($this->extensionInformationProvider->extPath($loadedExtKey), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'Configuration' . DIRECTORY_SEPARATOR;
 
-            // Load from Configuration/RoleDefinitions.yaml
+            // Load from Configuration/BackendRoleDefinitions.yaml
             $defititionCollection->addFromCollection(
                 $this->loadRoleDefinitionsFromFile(
-                    $extensionConfigurationPath . 'RoleDefinitions.yaml',
+                    $extensionConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.yaml',
                     $yamlConfigLoader
                 )
             );
 
-            // Load from Configuration/RoleDefinitions.php
+            // Load from Configuration/BackendRoleDefinitions.php
             $defititionCollection->addFromCollection(
                 $this->loadRoleDefinitionsFromFile(
-                    $extensionConfigurationPath . 'RoleDefinitions.php',
+                    $extensionConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.php',
                     $phpConfigLoader
                 )
             );
