@@ -29,6 +29,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 final class Loader
 {
+    public const ROLEDEFINITIONS_BASENAME = 'BackendRoleDefinitions';
+
     protected ExtensionInformationProvider $extensionInformationProvider;
     protected DefinitionFactory $definitionFactory;
     protected PhpFrontend $cache;
@@ -88,7 +90,7 @@ final class Loader
         // Load from config/BackendRoleDefinitions.yaml
         $defititionCollection->addFromCollection(
             $this->loadRoleDefinitionsFromFile(
-                $globalConfigurationPath . 'BackendRoleDefinitions.yaml',
+                $globalConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.yaml',
                 $yamlConfigLoader
             )
         );
@@ -96,7 +98,7 @@ final class Loader
         // Load from config/BackendRoleDefinitions.php
         $defititionCollection->addFromCollection(
             $this->loadRoleDefinitionsFromFile(
-                $globalConfigurationPath . 'BackendRoleDefinitions.php',
+                $globalConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.php',
                 $phpConfigLoader
             )
         );
@@ -109,21 +111,47 @@ final class Loader
 
             $extensionConfigurationPath = rtrim($this->extensionInformationProvider->extPath($loadedExtKey), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'Configuration' . DIRECTORY_SEPARATOR;
 
-            // Load from Configuration/RoleDefinitions.yaml
+            // Load from Configuration/BackendRoleDefinitions.yaml
             $defititionCollection->addFromCollection(
                 $this->loadRoleDefinitionsFromFile(
-                    $extensionConfigurationPath . 'RoleDefinitions.yaml',
+                    $extensionConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.yaml',
                     $yamlConfigLoader
                 )
             );
+            // Deprecated: load from Configuration/RoleDefinitions.yaml
+            if (is_file($extensionConfigurationPath . 'RoleDefinitions.yaml')) {
+                trigger_error(
+                    'Usage of Configuration/RoleDefinitions.yaml is deprecated in v2.0 and will be removed in v3.0. Rename the file to ' . self::ROLEDEFINITIONS_BASENAME . '.yaml',
+                    E_USER_DEPRECATED
+                );
+                $defititionCollection->addFromCollection(
+                    $this->loadRoleDefinitionsFromFile(
+                        $extensionConfigurationPath . 'RoleDefinitions.yaml',
+                        $yamlConfigLoader
+                    )
+                );
+            }
 
-            // Load from Configuration/RoleDefinitions.php
+            // Load from Configuration/BackendRoleDefinitions.php
             $defititionCollection->addFromCollection(
                 $this->loadRoleDefinitionsFromFile(
-                    $extensionConfigurationPath . 'RoleDefinitions.php',
+                    $extensionConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.php',
                     $phpConfigLoader
                 )
             );
+            // Deprecated: load from Configuration/RoleDefinitions.php
+            if (is_file($extensionConfigurationPath . 'RoleDefinitions.php')) {
+                trigger_error(
+                    'Usage of Configuration/RoleDefinitions.php is deprecated in v2.0 and will be removed in v3.0. Rename the file to ' . self::ROLEDEFINITIONS_BASENAME . '.php',
+                    E_USER_DEPRECATED
+                );
+                $defititionCollection->addFromCollection(
+                    $this->loadRoleDefinitionsFromFile(
+                        $extensionConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.php',
+                        $phpConfigLoader
+                    )
+                );
+            }
         }
 
         return $defititionCollection;

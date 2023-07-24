@@ -44,7 +44,7 @@ The role definitions are expected to be found in either of following locations:
 
    Location: an extension's configuration directory `<extension>/Configuration`.
    
-   Filename `RoleDefinitions.yaml` / `RoleDefinitions.php`
+   Filename `BackendRoleDefinitions.yaml` / `BackendRoleDefinitions.php`
 
 ..  note::
     Every such file that could be found by backend_roles will be interpreted as
@@ -55,8 +55,8 @@ The files are searched and loaded in the following order:
 
 1. Global `<project-root>/config/BackendRoleDefinitions.yaml`
 2. Global `<project-root>/config/BackendRoleDefinitions.php`
-3. Per extension `<extension>/Configuration/RoleDefinitions.yaml`
-4. Per extension `<extension>/Configuration/RoleDefinitions.php`
+3. Per extension `<extension>/Configuration/BackendRoleDefinitions.yaml`
+4. Per extension `<extension>/Configuration/BackendRoleDefinitions.php`
 
 ..  tip::
     Use the :ref:`sortItems<t3tca:columns-select-properties-sort-items>`

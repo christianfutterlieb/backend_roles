@@ -57,7 +57,7 @@ class LoaderTest extends UnitTestCase
         vfsStream::setup('root', null, [
             'myext' => [
                 'Configuration' => [
-                    'RoleDefinitions.php' => $configurationFileContents,
+                    Loader::ROLEDEFINITIONS_BASENAME . '.php' => $configurationFileContents,
                 ],
             ],
         ]);
@@ -114,7 +114,7 @@ class LoaderTest extends UnitTestCase
         vfsStream::setup('root', null, [
             'myext' => [
                 'Configuration' => [
-                    'RoleDefinitions.yaml' => '',
+                    Loader::ROLEDEFINITIONS_BASENAME . '.yaml' => '',
                 ],
             ],
         ]);
@@ -221,7 +221,7 @@ class LoaderTest extends UnitTestCase
         vfsStream::setup('root', null, [
             'myext' => [
                 'Configuration' => [
-                    'RoleDefinitions.php' => '<?php return [ ' . var_export($roleDefinitionArray, true) . ' ];',
+                    Loader::ROLEDEFINITIONS_BASENAME . '.php' => '<?php return [ ' . var_export($roleDefinitionArray, true) . ' ];',
                 ],
             ],
         ]);
@@ -263,13 +263,13 @@ class LoaderTest extends UnitTestCase
         vfsStream::setup('root', null, [
             'myext' => [
                 'Configuration' => [
-                    'RoleDefinitions.yaml' => '',
-                    'RoleDefinitions.php' => '<?php return [["identifier" => "' . $roleIdentifier1 . '"]];',
+                    Loader::ROLEDEFINITIONS_BASENAME . '.yaml' => '',
+                    Loader::ROLEDEFINITIONS_BASENAME . '.php' => '<?php return [["identifier" => "' . $roleIdentifier1 . '"]];',
                 ],
             ],
             'config' => [
-                'BackendRoleDefinitions.yaml' => '',
-                'BackendRoleDefinitions.php' => '<?php return [["identifier" => "' . $roleIdentifier2 . '"]];',
+                Loader::ROLEDEFINITIONS_BASENAME . '.yaml' => '',
+                Loader::ROLEDEFINITIONS_BASENAME . '.php' => '<?php return [["identifier" => "' . $roleIdentifier2 . '"]];',
             ],
         ]);
 
@@ -279,7 +279,7 @@ class LoaderTest extends UnitTestCase
 
         $yamlFileLoaderMock = $this->createMock(YamlFileLoader::class);
         $yamlFileLoaderMock->method('load')->willReturnCallback(function (string $fileName) use ($roleIdentifier3, $roleIdentifier4): array {
-            if ($fileName === 'vfs://root/myext/Configuration/RoleDefinitions.yaml') {
+            if ($fileName === 'vfs://root/myext/Configuration/' . Loader::ROLEDEFINITIONS_BASENAME . '.yaml') {
                 return [
                     'RoleDefinitions' => [
                         [
@@ -288,7 +288,7 @@ class LoaderTest extends UnitTestCase
                     ],
                 ];
             }
-            if ($fileName === Environment::getConfigPath() . '/BackendRoleDefinitions.yaml') {
+            if ($fileName === Environment::getConfigPath() . '/' . Loader::ROLEDEFINITIONS_BASENAME . '.yaml') {
                 return [
                     'RoleDefinitions' => [
                         [
