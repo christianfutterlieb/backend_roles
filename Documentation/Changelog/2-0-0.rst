@@ -86,6 +86,41 @@ This is a list of all changes in this release:
 
 ::
 
-    TODO: add the git log here
+    8095056 [TASK] Improve documentation
+    5aed246 [TASK] Sort backend roles selector by label
+    dd7a9eb [BUGFIX] No need to deprecate Configuration/RoleDefinitions.yaml
+    0924768 [FEATURE] Add changelog to documentation
+    36c1f69 [!!!][TASK] Unify role definitions file name
+    8033acc [TASK] Change version in the documentation
+    af1d3c3 [TASK] Add more documentation
+    16969c1 [FEATURE] Add documentation
+    0aac702 [FEATURE] Add possibility to download role definitions as file
+    7f9bfd5 [FEATURE] Add YAML configuration export to the BackendModule
+    7c59f5d [FEATURE] Add support for global configuration storage
+    2bbce66 [FEATURE] Add support for YAML configuration
+    e6a4f45 !!![FEATURE] Improve definition loading and handling
+    b0aa799 [TASK] Move roleIdentifier selector generation to an itemsProcFunc
+    4cd4154 [TASK] Remove deprecated constants
+    d90cafb [TASK] Add package branch alias "dev-2"
+    8906a74 [TASK] Apply cgl
+    cb24266 [!!!][FEATURE] Add runTests.sh - a docker-based test runner
+    0dbf3d6 [TASK] Re-define dev-dependencies
+    e48bf80 [TASK] Update dependencies
+    7085ec0 [!!!][TASK] Change package name
+    e4d1288 [BUGFIX] Fix PHP 8 problems
+    3fe98a8 [TASK] Remove homegrown errorcode
+    7714788 [TASK] Reset version to 2.0.0-dev
+    f8238a0 [RELEASE] Release version 2.0.0-beta1
+    fe98c3c [TASK] Return ResponseInterface in controller action when possible
+    f3592e2 [TASK] Remove usage of generic extbase domain classes
+    607aa1c [TASK] Adapt .gitignore
+    4ddb751 [TASK] Update dependency requirements
+    b5c9446 [TASK] Allow composer plugins
+    750dad6 [TASK] Remove outdated code
+    80a0ed8 [TASK] Update composer.json
+    d41dc96 [TASK] Move build directory
+    dc0adaf [TASK] Raise version to 2.0.0-dev
+    0d72159 [TASK] Add README.md
+    879cfe4 [TASK] Raise version to 1.1.4-dev
 
-Generated with `git log 1.1.3..2.0.0  --oneline --no-decorate`
+Generated with `git log 1.1.3..HEAD --oneline --no-decorate`
