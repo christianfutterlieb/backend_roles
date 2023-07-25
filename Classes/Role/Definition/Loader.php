@@ -118,19 +118,6 @@ final class Loader
                     $yamlConfigLoader
                 )
             );
-            // Deprecated: load from Configuration/RoleDefinitions.yaml
-            if (is_file($extensionConfigurationPath . 'RoleDefinitions.yaml')) {
-                trigger_error(
-                    'Usage of Configuration/RoleDefinitions.yaml is deprecated in v2.0 and will be removed in v3.0. Rename the file to ' . self::ROLEDEFINITIONS_BASENAME . '.yaml',
-                    E_USER_DEPRECATED
-                );
-                $defititionCollection->addFromCollection(
-                    $this->loadRoleDefinitionsFromFile(
-                        $extensionConfigurationPath . 'RoleDefinitions.yaml',
-                        $yamlConfigLoader
-                    )
-                );
-            }
 
             // Load from Configuration/BackendRoleDefinitions.php
             $defititionCollection->addFromCollection(
