@@ -12,11 +12,14 @@ This TYPO3 extension allows the text-based definition and synchronization of (pa
 
 ## Installation
 
-TODO
+```
+composer require christianfutterlieb/backend_roles
+```
 
 ## Docs
 
-TODO
+The documentation can be found here:
+https://docs.typo3.org/p/christianfutterlieb/backend_roles/main/en-us/
 
 ## License
 
