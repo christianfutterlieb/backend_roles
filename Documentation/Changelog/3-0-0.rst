@@ -1,0 +1,35 @@
+..  include:: /Includes.rst.txt
+
+=====
+3.0.0
+=====
+
+This new release supports TYPO3 v12.4. For more information see
+:ref:`section-system-requirement`.
+
+.. only:: html
+
+   .. contents::
+        :local:
+        :depth: 3
+
+
+Breaking changes
+================
+
+No breaking changes.
+
+All Changes
+===========
+
+As the version 3 has been developed alongside version 2, there are lots of
+changes that have been applied to both versions. Keep this in mind when reading
+through the `git log`.
+
+This is a list of all changes in this release:
+
+::
+
+    TODO: add the git log here
+
+Generated with `git log 2.0.0..3.0.0  --oneline --no-decorate`

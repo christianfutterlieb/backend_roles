@@ -1,0 +1,31 @@
+..  include:: /Includes.rst.txt
+
+=====
+1.0.0
+=====
+
+.. only:: html
+
+   .. contents::
+        :local:
+        :depth: 3
+
+
+All Changes
+===========
+
+This is a list of all changes in this release:
+
+::
+
+    a6dbf64 [RELEASE] Release version 1.0.0
+    76939f1 [FEATURE] Add synchronization as console command
+    54e1bc1 [TASK] Add extension and module icon
+    0c662f9 [BUGFIX] Workaround PHP < v7.3 behaviour with stdClass() of var_export()
+    e892cd9 [BUGFIX] Prevent errors in TYPO3 Upgrade checks
+    ee670dd [TASK] Simplify configuration
+    114c206 [FEATURE] Add a simple role exporter
+    6a77874 [TASK] Initial code
+    dcb87fe [TASK] Initial commit, add .gitignore file
+
+Generated with `git log 1.0.0 --oneline --no-decorate`

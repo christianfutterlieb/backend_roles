@@ -51,7 +51,9 @@ This TYPO3 extension allows the text-based definition and synchronization of
 
     Introduction/Index
     Installation/Index
+    Upgrade/Index
     Configuration/Index
+    Changelog/Index
 
 ..  toctree::
     :maxdepth: 1
