@@ -1,0 +1,25 @@
+..  include:: /Includes.rst.txt
+
+=====
+1.1.1
+=====
+
+.. only:: html
+
+   .. contents::
+        :local:
+        :depth: 3
+
+
+All Changes
+===========
+
+This is a list of all changes in this release:
+
+::
+
+    45484ac [RELEASE] Release version 1.1.1
+    46d0dc2 [TASK] Improve export: ignore 'empty' values
+    69ed0a6 [TASK] Raise version to 1.1.1-dev
+
+Generated with `git log 1.1.0..1.1.1 --oneline --no-decorate`

@@ -1,0 +1,91 @@
+..  include:: /Includes.rst.txt
+
+=====
+2.0.0
+=====
+
+This new release supports TYPO3 v11.4. For more information see
+:ref:`section-system-requirement`. Lots of changes and improvements have been
+made, enjoy the renewed backend_roles extension.
+
+.. only:: html
+
+   .. contents::
+        :local:
+        :depth: 3
+
+
+Breaking changes
+================
+
+Change vendor name
+------------------
+
+The vendor name of the composer package changed from `aaw-team/backend_roles` to
+`christianfutterlieb/backend_roles`. See commit
+`7085ec011039560fb94642afb5b4767d2d8a41a8
+<https://github.com/christianfutterlieb/backend_roles/commit/7085ec011039560fb94642afb5b4767d2d8a41a8>`_.
+
+
+Add `runTests.sh`
+----------------
+
+Testing (and other processes) are handeled by a bash script `runTests.sh`, as it
+is done in TYPO3 core. The following composer scripts have been removed:
+
+*    `php-cs-fixer`
+*    `run-tests`
+
+See commit
+`cb2426677fe870595a05e57988b777b0d5ccec82
+<https://github.com/christianfutterlieb/backend_roles/commit/cb2426677fe870595a05e57988b777b0d5ccec82>`_.
+
+
+Features
+========
+
+Support for YAML-based configuration
+------------------------------------
+
+Role definitions can now be stored in YAML files as well. See
+:ref:`section-configuration-roledefinition` for more information.
+
+In the backend module, the export of `be_groups` supports YAML too.
+
+
+Support for global configuration
+--------------------------------
+
+Role definitions can now be stored in the global `config` directory. See
+:ref:`section-configuration-roledefinition` for more information.
+
+
+Download role definitions export as file
+----------------------------------------
+
+Role definitions exports can now be downloaded as YAML or PHP file.
+
+
+Deprecations
+============
+
+Role definitions file name
+--------------------------
+
+The use of the role definition file `Configuration/RoleDefinitions.php` is
+deprecated an will be removed in v3. Use
+`Configuration/BackendRoleDefinitions.php` instead, or the newly introduced
+possibility of global role definitions in `config/BackendRoleDefinitions.yaml`
+or `config/BackendRoleDefinitions.php`.
+
+
+All Changes
+===========
+
+This is a list of all changes in this release:
+
+::
+
+    TODO: add the git log here
+
+Generated with `git log 1.1.3..2.0.0  --oneline --no-decorate`

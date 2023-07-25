@@ -1,0 +1,26 @@
+..  include:: /Includes.rst.txt
+
+=====
+1.1.2
+=====
+
+.. only:: html
+
+   .. contents::
+        :local:
+        :depth: 3
+
+
+All Changes
+===========
+
+This is a list of all changes in this release:
+
+::
+
+    37cd23d [RELEASE] Release version 1.1.2
+    75055f9 [BUGFIX] Do not ignore zeroes when filtering
+    a836401 [BUGFIX] Only fix our own code
+    4a91a23 [TASK] Raise version to 1.1.2-dev
+
+Generated with `git log 1.1.1..1.1.2 --oneline --no-decorate`
