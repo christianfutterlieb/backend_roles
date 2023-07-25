@@ -58,11 +58,6 @@ The files are searched and loaded in the following order:
 3. Per extension `<extension>/Configuration/BackendRoleDefinitions.yaml`
 4. Per extension `<extension>/Configuration/BackendRoleDefinitions.php`
 
-..  tip::
-    Use the :ref:`sortItems<t3tca:columns-select-properties-sort-items>`
-    property of the `select` field in
-    `be_groups.tx_backendroles_role_identifier`.
-
 
 .. _section-configuration-roledefinition-definitionsfile-format:
 
