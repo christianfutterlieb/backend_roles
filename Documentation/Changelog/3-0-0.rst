@@ -22,14 +22,39 @@ No breaking changes.
 All Changes
 ===========
 
-As the version 3 has been developed alongside version 2, there are lots of
-changes that have been applied to both versions. Keep this in mind when reading
-through the `git log`.
+..  note::
+    As the version 3 has been developed alongside version 2, there are lots of
+    changes that have been applied to both versions. Keep this in mind when
+    reading through the `git log`.
 
 This is a list of all changes in this release:
 
 ::
 
-    TODO: add the git log here
+    97e541d [TASK] Add changelog from v2.0.0 release
+    efbea53 [TASK] Improve documentation
+    e580f49 [TASK] Sort backend roles selector by label
+    e7e0fe7 [FEATURE] Add changelog to documentation
+    8bdb11d [!!!][TASK] Unify role definitions file name
+    50ca14a [TASK] Add more documentation
+    569b4ac [!!!][FEATURE] Use constructor dependency injection everywhere
+    f286846 [FEATURE] Add possibility to download role definitions as file
+    10b5b83 [FEATURE] Add YAML configuration export to the BackendModule
+    efd5535 [FEATURE] Add support for global configuration storage
+    86f2f2c [FEATURE] Add support for YAML configuration
+    1798b9d !!![FEATURE] Improve definition loading and handling
+    c736835 [FEATURE] Re-enable shortcuts in the backend module
+    f9966a7 [BUGFIX] Fix CGL issues
+    3d7a205 !!![TASK] Adopt new TYPO3 backend APIs
+    c0c0c25 [TASK] Move roleIdentifier selector generation to an itemsProcFunc
+    834c605 [TASK] Remove deprecated constants
+    423d2e3 [TASK] Add package branch alias "dev-2"
+    4df0d76 [FEATURE] Add documentation
+    56bd173 [TASK] Cleanup anonymous function construct
+    1738d0a [TASK] Make dataprovider methods static
+    c45813e [TASK] Apply cgl
+    b99adda [!!!][FEATURE] Add runTests.sh - a docker-based test runner
+    431625c [TASK] Re-define dev-dependencies
+    13b0be1 [TASK] Raise version to 3.0.0-dev
 
-Generated with `git log 2.0.0..3.0.0  --oneline --no-decorate`
+Generated with `git log 2.0.0..HEAD --oneline --no-decorate`
