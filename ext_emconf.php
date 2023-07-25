@@ -11,7 +11,7 @@
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Backend Roles',
     'description' => 'Backend user group role management for TYPO3',
-    'category' => 'fe',
+    'category' => 'be',
     'author' => 'Agentur am Wasser | Maeder & Partner AG',
     'author_email' => 'development@agenturamwasser.ch',
     'state' => 'stable',
