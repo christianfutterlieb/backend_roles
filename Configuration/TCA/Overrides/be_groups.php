@@ -23,6 +23,9 @@ $columns = [
                 ['', ''],
             ],
             'itemsProcFunc' => BackendRoleSelectItemsProcessor::class . '->process',
+            'sortItems' => [
+                'label' => 'asc',
+            ],
         ],
     ],
 ];
