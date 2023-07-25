@@ -100,16 +100,18 @@ Role definition options
 The available options correspond 1:1 to the fields of the `be_groups` record.
 Except for `identifier` and `title`.
 
-The documentation of the types/formats can be found below.
+The documentation of the types/formats can be found
+:ref:`below <section-configuration-roledefinition-options-format>`.
 
 +----------------------+-------------+-----------------------------------------+
 |  Option name         | Type        | Description                             |
 +======================+=============+=========================================+
-| `identifier`         | Text        | Used to identify the used role in a     |
-|                      |             | `be_groups` record                      |
+| `identifier`         | Text        | **Required**. Used to identify the role |
+|                      |             | in a `be_groups` record                 |
 +----------------------+-------------+-----------------------------------------+
-| `title`              | Text        | The title of the role is shown in the   |
-|                      |             | role-selector in `be_groups` record     |
+| `title`              | Text        | **Required**. The title of the role is  |
+|                      |             | shown in the role-selector in           |
+|                      |             | `be_groups` records                     |
 +----------------------+-------------+-----------------------------------------+
 | `TSconfig`           | Text        | `be_groups.TSconfig`                    |
 +----------------------+-------------+-----------------------------------------+
