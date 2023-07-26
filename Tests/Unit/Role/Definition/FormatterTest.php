@@ -15,6 +15,8 @@ namespace AawTeam\LanguageMatcher\Tests\Unit\Context\Context;
 
 use AawTeam\BackendRoles\Role\Definition;
 use AawTeam\BackendRoles\Role\Definition\Formatter;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -22,18 +24,14 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  */
 class FormatterTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function managedColumnsApiTest()
     {
         $formatter = new Formatter();
         self::assertSame($formatter->getManagedColumnNames(), array_keys($formatter->getManagedColumnsWithDefaultValues()));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnDefaultsWhenInputIsEmpty()
     {
         $formatter = new Formatter();
@@ -41,19 +39,14 @@ class FormatterTest extends UnitTestCase
         self::assertSame($formatter->getManagedColumnsWithDefaultValues(), $formatter->formatForDatabase($definition));
     }
 
-    /**
-     * @test
-     * @dataProvider formatTitleTestDataProvider
-     */
+    #[Test]
+    #[DataProvider('formatTitleTestDataProvider')]
     public function formatTitleTest(Definition $definition, string $expectedTitle)
     {
         $formatter = new Formatter();
         self::assertSame($expectedTitle, $formatter->formatTitle($definition));
     }
 
-    /**
-     * @return array
-     */
     public static function formatTitleTestDataProvider(): array
     {
         $identifier = 'test';
@@ -81,9 +74,7 @@ class FormatterTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function formatForDatabaseStringValuesTest()
     {
         $identifier = 'test';
@@ -101,13 +92,9 @@ class FormatterTest extends UnitTestCase
         self::assertSame('My TSConfig', $result['TSconfig']);
     }
 
-    /**
-     * @test
-     * @dataProvider formatForDatabaseSimpleArrayValuesTestDataProvider
-     * @param string $optionName
-     * @param array $optionValue
-     * @param string $expectedFormattedValue
-     */
+
+    #[Test]
+    #[DataProvider('formatForDatabaseSimpleArrayValuesTestDataProvider')]
     public function formatForDatabaseSimpleArrayValuesTest(string $optionName, array $optionValue, string $expectedFormattedValue)
     {
         $identifier = 'test';
@@ -122,13 +109,8 @@ class FormatterTest extends UnitTestCase
         self::assertSame($expectedFormattedValue, $result[$optionName]);
     }
 
-    /**
-     * @test
-     * @dataProvider formatForDatabaseComplexArrayValuesTestDataProvider
-     * @param string $option
-     * @param array $asArray
-     * @param string $asString
-     */
+    #[Test]
+    #[DataProvider('formatForDatabaseComplexArrayValuesTestDataProvider')]
     public function formatFromDbToArrayComplexArrayValuesTest(string $option, array $asArray, string $asString)
     {
         $input = [
@@ -141,8 +123,6 @@ class FormatterTest extends UnitTestCase
 
     /**
      * Caution: this dataProvider is used by two tests!
-     *
-     * @return array
      */
     public static function formatForDatabaseSimpleArrayValuesTestDataProvider(): array
     {
@@ -215,13 +195,8 @@ class FormatterTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider formatForDatabaseComplexArrayValuesTestDataProvider
-     * @param string $optionName
-     * @param array $optionValue
-     * @param string $expectedFormattedValue
-     */
+    #[Test]
+    #[DataProvider('formatForDatabaseComplexArrayValuesTestDataProvider')]
     public function formatForDatabaseComplexArrayValuesTest(string $optionName, array $optionValue, string $expectedFormattedValue)
     {
         $identifier = 'test';
@@ -237,13 +212,8 @@ class FormatterTest extends UnitTestCase
         self::assertSame($expectedFormattedValue, $result[$optionName]);
     }
 
-    /**
-     * @test
-     * @dataProvider formatForDatabaseSimpleArrayValuesTestDataProvider
-     * @param string $optionName
-     * @param array $asArray
-     * @param string $asString
-     */
+    #[Test]
+    #[DataProvider('formatForDatabaseSimpleArrayValuesTestDataProvider')]
     public function formatFromDbToArraySimpleArrayValuesTest(string $optionName, array $asArray, string $asString)
     {
         $input = [
@@ -257,8 +227,6 @@ class FormatterTest extends UnitTestCase
 
     /**
      * Caution: this dataProvider is used by two tests!
-     *
-     * @return array
      */
     public static function formatForDatabaseComplexArrayValuesTestDataProvider(): array
     {
@@ -374,20 +342,13 @@ class FormatterTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider sortArrayForFormatRecursiveTestDataProvider
-     * @param array $input
-     * @param array $expectedOutput
-     */
+    #[Test]
+    #[DataProvider('sortArrayForFormatRecursiveTestDataProvider')]
     public function sortArrayForFormatRecursiveTest(array $input, array $expectedOutput)
     {
         self::assertSame($expectedOutput, Formatter::sortArrayForFormatRecursive($input));
     }
 
-    /**
-     * @return array
-     */
     public static function sortArrayForFormatRecursiveTestDataProvider(): array
     {
         return [
@@ -428,5 +389,24 @@ class FormatterTest extends UnitTestCase
                 [0 => 1, 1 => 4, 2 => 'a', 3 => 'q', 'a' => 3, 'b' => 'g', 'c' => 0],
             ],
         ];
+    }
+
+    #[Test]
+    public function formatFromDbToArrayIgnoresFieldsWithNullValue()
+    {
+        $formatter = new Formatter();
+
+        // Set every option to be null
+        $input = array_combine(
+            $formatter->getManagedColumnNames(),
+            array_fill(0, count($formatter->getManagedColumnNames()), null)
+        );
+        // 'allowed_languages' cannot be null
+        unset($input['allowed_languages']);
+
+        $result = $formatter->formatFromDbToArray($input);
+        foreach (array_keys($input) as $option) {
+            self::assertArrayNotHasKey($option, $result, var_export($result, true));
+        }
     }
 }
