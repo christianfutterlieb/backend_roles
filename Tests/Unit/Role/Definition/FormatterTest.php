@@ -429,4 +429,25 @@ class FormatterTest extends UnitTestCase
             ],
         ];
     }
+
+    /**
+     * @test
+     */
+    public function formatFromDbToArrayIgnoresFieldsWithNullValue()
+    {
+        $formatter = new Formatter();
+
+        // Set every option to be null
+        $input = array_combine(
+            $formatter->getManagedColumnNames(),
+            array_fill(0, count($formatter->getManagedColumnNames()), null)
+        );
+        // 'allowed_languages' cannot be null
+        unset($input['allowed_languages']);
+
+        $result = $formatter->formatFromDbToArray($input);
+        foreach (array_keys($input) as $option) {
+            self::assertArrayNotHasKey($option, $result, var_export($result, true));
+        }
+    }
 }

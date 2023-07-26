@@ -180,12 +180,12 @@ class Formatter
         $return = [];
 
         // Strings
-        if (array_key_exists('TSconfig', $dataToProcess)) {
+        if (is_string($dataToProcess['TSconfig'] ?? null)) {
             $return['TSconfig'] = trim((string)$dataToProcess['TSconfig']);
         }
 
         // Comma-separated to array
-        if (array_key_exists('pagetypes_select', $dataToProcess)) {
+        if (is_string($dataToProcess['pagetypes_select'] ?? null)) {
             $return['pagetypes_select'] = array_filter(explode(',', $dataToProcess['pagetypes_select']), function ($value) {
                 return MathUtility::canBeInterpretedAsInteger($value);
             });
@@ -193,19 +193,19 @@ class Formatter
                 $v = (int)$v;
             });
         }
-        if (array_key_exists('tables_select', $dataToProcess)) {
+        if (is_string($dataToProcess['tables_select'] ?? null)) {
             $return['tables_select'] = array_filter(explode(',', $dataToProcess['tables_select']));
         }
-        if (array_key_exists('tables_modify', $dataToProcess)) {
+        if (is_string($dataToProcess['tables_modify'] ?? null)) {
             $return['tables_modify'] = array_filter(explode(',', $dataToProcess['tables_modify']));
         }
-        if (array_key_exists('groupMods', $dataToProcess)) {
+        if (is_string($dataToProcess['groupMods'] ?? null)) {
             $return['groupMods'] = array_filter(explode(',', $dataToProcess['groupMods']));
         }
-        if (array_key_exists('file_permissions', $dataToProcess)) {
+        if (is_string($dataToProcess['file_permissions'] ?? null)) {
             $return['file_permissions'] = array_filter(explode(',', $dataToProcess['file_permissions']));
         }
-        if (array_key_exists('allowed_languages', $dataToProcess)) {
+        if (is_string($dataToProcess['allowed_languages'] ?? null)) {
             $return['allowed_languages'] = array_filter(explode(',', $dataToProcess['allowed_languages']), function ($value) {
                 return MathUtility::canBeInterpretedAsInteger($value);
             });
@@ -216,7 +216,7 @@ class Formatter
 
         // Comma-separated to multi-array
         foreach (['explicit_allowdeny', 'non_exclude_fields'] as $option) {
-            if (array_key_exists($option, $dataToProcess)) {
+            if (is_string($dataToProcess[$option] ?? null)) {
                 $final = [];
                 foreach (explode(',', $dataToProcess[$option]) as $entry) {
                     if (trim($entry) === '') {
