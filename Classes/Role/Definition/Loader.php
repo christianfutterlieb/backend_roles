@@ -21,7 +21,6 @@ use AawTeam\BackendRoles\Role\ExtensionInformationProvider;
 use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
 use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -75,24 +74,34 @@ final class Loader
             return require $fileName;
         };
 
+        foreach ($this->getRoleDefinitionFileNames() as $roleDefinitionsFilename) {
+            // @todo: move functions to service classes
+            switch (strtolower(pathinfo($roleDefinitionsFilename, PATHINFO_EXTENSION))) {
+                case 'yaml':
+                    $defititionCollection->addFromCollection(
+                        $this->loadRoleDefinitionsFromFile($roleDefinitionsFilename, $yamlConfigLoader)
+                    );
+                    break;
+                case 'php':
+                    $defititionCollection->addFromCollection(
+                        $this->loadRoleDefinitionsFromFile($roleDefinitionsFilename, $phpConfigLoader)
+                    );
+                    break;
+                default:
+                    throw new \InvalidArgumentException('Unsupported file: "' . $roleDefinitionsFileName . '"');
+            }
+        }
+        return $defititionCollection;
+    }
+
+    public function getRoleDefinitionFileNames(): array
+    {
         // Load from global configuration
         $globalConfigurationPath = rtrim(Environment::getConfigPath(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-
-        // Load from config/BackendRoleDefinitions.yaml
-        $defititionCollection->addFromCollection(
-            $this->loadRoleDefinitionsFromFile(
-                $globalConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.yaml',
-                $yamlConfigLoader
-            )
-        );
-
-        // Load from config/BackendRoleDefinitions.php
-        $defititionCollection->addFromCollection(
-            $this->loadRoleDefinitionsFromFile(
-                $globalConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.php',
-                $phpConfigLoader
-            )
-        );
+        $files = [
+            $globalConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.yaml',
+            $globalConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.php',
+        ];
 
         // Load from extensions
         foreach ($this->extensionInformationProvider->getLoadedExtensionListArray() as $loadedExtKey) {
@@ -101,25 +110,13 @@ final class Loader
             }
 
             $extensionConfigurationPath = rtrim($this->extensionInformationProvider->extPath($loadedExtKey), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'Configuration' . DIRECTORY_SEPARATOR;
-
-            // Load from Configuration/BackendRoleDefinitions.yaml
-            $defititionCollection->addFromCollection(
-                $this->loadRoleDefinitionsFromFile(
-                    $extensionConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.yaml',
-                    $yamlConfigLoader
-                )
-            );
-
-            // Load from Configuration/BackendRoleDefinitions.php
-            $defititionCollection->addFromCollection(
-                $this->loadRoleDefinitionsFromFile(
-                    $extensionConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.php',
-                    $phpConfigLoader
-                )
-            );
+            $files[] = $extensionConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.yaml';
+            $files[] = $extensionConfigurationPath . self::ROLEDEFINITIONS_BASENAME . '.php';
         }
 
-        return $defititionCollection;
+        return array_filter($files, function(string $filename): bool {
+            return GeneralUtility::isAllowedAbsPath($filename) && is_file($filename);
+        });
     }
 
     protected function loadRoleDefinitionsFromFile(string $roleDefinitionsFileName, callable $fileContentsReader): DefinitionCollection
@@ -147,12 +144,18 @@ final class Loader
      */
     private function getRoleDefinitionCacheIdentifier(): string
     {
+        // XOR all sha1sum of all included files
+        $allDefinitionsFilesHash = str_repeat("\x00", 20);
+        array_map(function($filename) use (&$allDefinitionsFilesHash): void {
+            $allDefinitionsFilesHash ^= sha1_file($filename, true);
+        }, $this->getRoleDefinitionFileNames());
+
+        // Calculate HMAC of the relevant information
         return 'roleDefinitions_' . hash_hmac(
             'sha1',
             implode('-', [
-                GeneralUtility::makeInstance(Typo3Version::class)->getBranch(),
                 Environment::getProjectPath(),
-                serialize($this->extensionInformationProvider->getLoadedExtensionListArray()),
+                $allDefinitionsFilesHash,
             ]),
             $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
         );

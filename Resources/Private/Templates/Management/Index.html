@@ -56,6 +56,67 @@
         </f:else>
     </f:if>
 
+    <h2>System Information</h2>
+
+    <div class="panel-group" id="roleDefinitionsFileNamesAccordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" id="simple-heading-panel1">
+                    <a href="#" class="collapsed" data-bs-toggle="collapse" data-bs-target="#simple-panel1" aria-expanded="false" aria-controls="simple-panel1">
+                        <span class="caret"></span>
+                        <core:icon identifier="actions-info-circle" size="small" />
+                        <strong>Role Definitions</strong>
+                    </a>
+                </h3>
+            </div>
+            <div id="simple-panel1" class="collapse" aria-labelledby="simple-heading-panel1">
+                <div class="panel-body">
+                    <f:if condition="1">
+                        <f:then>
+                            <f:be.infobox state="-1" disableIcon="true">This is the list of all role definitions that are currently available for use.</f:be.infobox>
+                            <ul>
+                                <f:for each="{roleDefinitions}" as="roleDefinition">
+                                    <li>{roleDefinition.title} [<code>{roleDefinition.identifier}</code>]</li>
+                                </f:for>
+                            </ul>
+                        </f:then>
+                        <f:else>
+                            <f:be.infobox state="1" disableIcon="true">No role definitions are currently available for use.</f:be.infobox>
+                        </f:else>
+                    </f:if>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" id="simple-heading-panel2">
+                    <a href="#" class="collapsed" data-bs-toggle="collapse" data-bs-target="#simple-panel2" aria-expanded="false" aria-controls="simple-panel2">
+                        <span class="caret"></span>
+                        <core:icon identifier="actions-info-circle" size="small" />
+                        <strong>Role Definition filenames</strong>
+                    </a>
+                </h3>
+            </div>
+            <div id="simple-panel2" class="collapse" aria-labelledby="simple-heading-panel2">
+                <div class="panel-body">
+                    <f:if condition="{roleDefinitionFileNames -> f:count()} > 0">
+                        <f:then>
+                            <f:be.infobox state="-1" disableIcon="true">This is the list of all files with role definitions that are currently in use.</f:be.infobox>
+                            <ul>
+                                <f:for each="{roleDefinitionFileNames}" as="roleDefinitionFileName">
+                                    <li><code>{roleDefinitionFileName}</code></li>
+                                </f:for>
+                            </ul>
+                        </f:then>
+                        <f:else>
+                            <f:be.infobox state="1" disableIcon="true">No role definition files are currently in use.</f:be.infobox>
+                        </f:else>
+                    </f:if>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </f:section>
 
 </html>

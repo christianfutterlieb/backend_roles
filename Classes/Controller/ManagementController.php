@@ -15,6 +15,7 @@ namespace AawTeam\BackendRoles\Controller;
 
 use AawTeam\BackendRoles\Domain\Repository\BackendUserGroupRepository;
 use AawTeam\BackendRoles\Role\Definition\Formatter;
+use AawTeam\BackendRoles\Role\Definition\Loader;
 use AawTeam\BackendRoles\Role\Synchronizer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -27,7 +28,6 @@ use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Http\PropagateResponseException;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -43,9 +43,9 @@ class ManagementController extends ActionController
     public function __construct(
         protected readonly BackendUserGroupRepository $backendUserGroupRepository,
         protected readonly IconFactory $iconFactory,
+        protected readonly Loader $loader,
         protected readonly ModuleTemplateFactory $moduleTemplateFactory,
-        protected readonly Synchronizer $synchronizer,
-        protected readonly Typo3Version $typo3Version
+        protected readonly Synchronizer $synchronizer
     ) {
     }
 
@@ -111,7 +111,11 @@ class ManagementController extends ActionController
         $query = $this->backendUserGroupRepository->createQuery();
         $query->getQuerySettings()->setIgnoreEnableFields(true);
         $query->setOrderings(['title' => QueryInterface::ORDER_ASCENDING]);
-        $this->view->assign('backendUserGroups', $query->execute(true));
+        $this->view->assignMultiple([
+            'backendUserGroups' => $query->execute(true),
+            'roleDefinitions' => $this->loader->getRoleDefinitions(),
+            'roleDefinitionFileNames' => $this->loader->getRoleDefinitionFileNames(),
+        ]);
 
         $this->moduleTemplate->setContent($this->view->render());
         return $this->htmlResponse($this->moduleTemplate->renderContent());
