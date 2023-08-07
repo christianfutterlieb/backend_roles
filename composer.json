@@ -5,6 +5,11 @@
     "keywords": ["typo3", "backend", "usergroup", "group", "role"],
     "homepage": "https://github.com/christianfutterlieb/backend_roles",
     "license": "GPL-2.0-or-later",
+    "support": {
+        "docs": "https://docs.typo3.org/p/christianfutterlieb/backend_roles/main/en-us/",
+        "issues": "https://github.com/christianfutterlieb/backend_roles/issues",
+        "source": "https://github.com/christianfutterlieb/backend_roles"
+    },
     "authors": [
         {
             "name": "Agentur am Wasser Team",
