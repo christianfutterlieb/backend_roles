@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AawTeam\LanguageMatcher\Tests\Unit\Context\Context;
+namespace AawTeam\BackendRoles\Tests\Unit\Role;
 
 /*
  * Copyright by Agentur am Wasser | Maeder & Partner AG
