@@ -53,7 +53,7 @@ class ManagementController extends ActionController
      * {@inheritDoc}
      * @see \TYPO3\CMS\Extbase\Mvc\Controller\ActionController::initializeAction()
      */
-    protected function initializeAction()
+    protected function initializeAction(): void
     {
         // Make sure only admins access this controller
         if ($this->getBackendUserAuthentication()->isAdmin() !== true) {
@@ -232,6 +232,10 @@ class ManagementController extends ActionController
         ;
     }
 
+    /**
+     * @param mixed[] $backendUserGroup
+     * @return mixed[]
+     */
     private function createConfigToExportFromBackendUserGroup(array $backendUserGroup): array
     {
         // Add a template for identifier and title
@@ -244,6 +248,9 @@ class ManagementController extends ActionController
         );
     }
 
+    /**
+     * @return mixed[]
+     */
     private function getUnmanagedBackendUserGroupRecord(int $backendUserGroupUid): array
     {
         $backendUserGroup = BackendUtility::getRecord('be_groups', $backendUserGroupUid);

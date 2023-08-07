@@ -42,14 +42,14 @@ class Synchronizer
             $qb->expr()->neq('tx_backendroles_role_identifier', $qb->createNamedParameter('', \PDO::PARAM_STR))
         );
         $affectedRows = 0;
-        foreach ($qb->execute()->fetchAll() as $backendUserGroup) {
+        foreach ($qb->executeQuery()->fetchAllAssociative() as $backendUserGroup) {
             $affectedRows += $this->synchronizeBackendUserGroup($backendUserGroup);
         }
         return $affectedRows;
     }
 
     /**
-     * @param array $backendUserGroup
+     * @param mixed[] $backendUserGroup
      */
     public function synchronizeBackendUserGroup(array $backendUserGroup): int
     {
@@ -64,7 +64,10 @@ class Synchronizer
 
         return $this->getConnectionForTable('be_groups')->update(
             'be_groups',
-            $this->formatter->formatForDatabase($roleDefinitions->offsetGet($roleIdentifier)),
+            $this->formatter->formatForDatabase(
+                // @phpstan-ignore-next-line, the existence of offset ($roleIdentifier) is tested above
+                $roleDefinitions->offsetGet($roleIdentifier)
+            ),
             ['uid' => $backendUserGroup['uid']]
         );
     }

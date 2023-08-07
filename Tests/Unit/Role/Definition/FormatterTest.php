@@ -25,14 +25,14 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 class FormatterTest extends UnitTestCase
 {
     #[Test]
-    public function managedColumnsApiTest()
+    public function managedColumnsApiTest(): void
     {
         $formatter = new Formatter();
         self::assertSame($formatter->getManagedColumnNames(), array_keys($formatter->getManagedColumnsWithDefaultValues()));
     }
 
     #[Test]
-    public function returnDefaultsWhenInputIsEmpty()
+    public function returnDefaultsWhenInputIsEmpty(): void
     {
         $formatter = new Formatter();
         $definition = new Definition('test');
@@ -41,12 +41,15 @@ class FormatterTest extends UnitTestCase
 
     #[Test]
     #[DataProvider('formatTitleTestDataProvider')]
-    public function formatTitleTest(Definition $definition, string $expectedTitle)
+    public function formatTitleTest(Definition $definition, string $expectedTitle): void
     {
         $formatter = new Formatter();
         self::assertSame($expectedTitle, $formatter->formatTitle($definition));
     }
 
+    /**
+     * @return mixed[]
+     */
     public static function formatTitleTestDataProvider(): array
     {
         $identifier = 'test';
@@ -75,7 +78,7 @@ class FormatterTest extends UnitTestCase
     }
 
     #[Test]
-    public function formatForDatabaseStringValuesTest()
+    public function formatForDatabaseStringValuesTest(): void
     {
         $identifier = 'test';
         $options = [
@@ -92,10 +95,12 @@ class FormatterTest extends UnitTestCase
         self::assertSame('My TSConfig', $result['TSconfig']);
     }
 
-
+    /**
+     * @param mixed[] $optionValue
+     */
     #[Test]
     #[DataProvider('formatForDatabaseSimpleArrayValuesTestDataProvider')]
-    public function formatForDatabaseSimpleArrayValuesTest(string $optionName, array $optionValue, string $expectedFormattedValue)
+    public function formatForDatabaseSimpleArrayValuesTest(string $optionName, array $optionValue, string $expectedFormattedValue): void
     {
         $identifier = 'test';
         $options = [
@@ -109,9 +114,12 @@ class FormatterTest extends UnitTestCase
         self::assertSame($expectedFormattedValue, $result[$optionName]);
     }
 
+    /**
+     * @param mixed[] $asArray
+     */
     #[Test]
     #[DataProvider('formatForDatabaseComplexArrayValuesTestDataProvider')]
-    public function formatFromDbToArrayComplexArrayValuesTest(string $option, array $asArray, string $asString)
+    public function formatFromDbToArrayComplexArrayValuesTest(string $option, array $asArray, string $asString): void
     {
         $input = [
             $option => $asString,
@@ -123,6 +131,8 @@ class FormatterTest extends UnitTestCase
 
     /**
      * Caution: this dataProvider is used by two tests!
+     *
+     * @return mixed[]
      */
     public static function formatForDatabaseSimpleArrayValuesTestDataProvider(): array
     {
@@ -195,9 +205,12 @@ class FormatterTest extends UnitTestCase
         ];
     }
 
+    /**
+     * @param mixed[] $optionValue
+     */
     #[Test]
     #[DataProvider('formatForDatabaseComplexArrayValuesTestDataProvider')]
-    public function formatForDatabaseComplexArrayValuesTest(string $optionName, array $optionValue, string $expectedFormattedValue)
+    public function formatForDatabaseComplexArrayValuesTest(string $optionName, array $optionValue, string $expectedFormattedValue): void
     {
         $identifier = 'test';
         $options = [
@@ -212,9 +225,12 @@ class FormatterTest extends UnitTestCase
         self::assertSame($expectedFormattedValue, $result[$optionName]);
     }
 
+    /**
+     * @param mixed[] $asArray
+     */
     #[Test]
     #[DataProvider('formatForDatabaseSimpleArrayValuesTestDataProvider')]
-    public function formatFromDbToArraySimpleArrayValuesTest(string $optionName, array $asArray, string $asString)
+    public function formatFromDbToArraySimpleArrayValuesTest(string $optionName, array $asArray, string $asString): void
     {
         $input = [
             $optionName => $asString,
@@ -227,6 +243,8 @@ class FormatterTest extends UnitTestCase
 
     /**
      * Caution: this dataProvider is used by two tests!
+     *
+     * @return mixed[]
      */
     public static function formatForDatabaseComplexArrayValuesTestDataProvider(): array
     {
@@ -342,13 +360,20 @@ class FormatterTest extends UnitTestCase
         ];
     }
 
+    /**
+     * @param mixed[] $input
+     * @param mixed[] $expectedOutput
+     */
     #[Test]
     #[DataProvider('sortArrayForFormatRecursiveTestDataProvider')]
-    public function sortArrayForFormatRecursiveTest(array $input, array $expectedOutput)
+    public function sortArrayForFormatRecursiveTest(array $input, array $expectedOutput): void
     {
         self::assertSame($expectedOutput, Formatter::sortArrayForFormatRecursive($input));
     }
 
+    /**
+     * @return mixed[]
+     */
     public static function sortArrayForFormatRecursiveTestDataProvider(): array
     {
         return [
@@ -392,7 +417,7 @@ class FormatterTest extends UnitTestCase
     }
 
     #[Test]
-    public function formatFromDbToArrayIgnoresFieldsWithNullValue()
+    public function formatFromDbToArrayIgnoresFieldsWithNullValue(): void
     {
         $formatter = new Formatter();
 

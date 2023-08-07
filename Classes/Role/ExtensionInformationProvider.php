@@ -21,7 +21,7 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 class ExtensionInformationProvider
 {
     /**
-     * @return array
+     * @return array<int, string>
      */
     public function getLoadedExtensionListArray(): array
     {

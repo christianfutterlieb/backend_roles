@@ -1,0 +1,11 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Dead catch \\- TYPO3\\\\CMS\\\\Core\\\\Locking\\\\Exception\\\\LockCreateException is never thrown in the try block\\.$#"
+			count: 1
+			path: ../../Classes/Command/SynchronizeCommand.php
+
+		-
+			message: "#^Class AawTeam\\\\BackendRoles\\\\Domain\\\\Repository\\\\BackendUserGroupRepository extends generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Repository but does not specify its types\\: T$#"
+			count: 1
+			path: ../../Classes/Domain/Repository/BackendUserGroupRepository.php

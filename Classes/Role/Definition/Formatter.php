@@ -23,7 +23,7 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 class Formatter
 {
     /**
-     * @var array
+     * @var string[]
      */
     protected static $managedColumnNames = [
         'TSconfig',
@@ -38,7 +38,7 @@ class Formatter
     ];
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getManagedColumnNames(): array
     {
@@ -46,7 +46,7 @@ class Formatter
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getManagedColumnsWithDefaultValues(): array
     {
@@ -59,7 +59,6 @@ class Formatter
 
     /**
      * @param Definition $definition
-     * @return string
      */
     public function formatTitle(Definition $definition): string
     {
@@ -71,8 +70,7 @@ class Formatter
     }
 
     /**
-     * @param Definition $definition
-     * @return array
+     * @return array<string, mixed>
      */
     public function formatForDatabase(Definition $definition): array
     {
@@ -117,8 +115,7 @@ class Formatter
     /**
      * $tableName ":" $columnName [ ";" $ff1 [ ";" $ffn ] ]
      *
-     * @param array $value
-     * @return string
+     * @param array<string, mixed> $value
      */
     private function multiArray2CommaSeparated(array $value): string
     {
@@ -143,9 +140,8 @@ class Formatter
     }
 
     /**
-     * @param array $input
-     * @param string $prefix
-     * @return array
+     * @param array<string, mixed> $input
+     * @return array<int, string>
      */
     private function flattenFlexFormSubDefinitions(array $input, string $prefix = ''): array
     {
@@ -162,8 +158,8 @@ class Formatter
     }
 
     /**
-     * @param array $backendUserGroup
-     * @return array
+     * @param mixed[] $backendUserGroup
+     * @return mixed[]
      * @todo Should we use the input data filtering here?
      */
     public function formatFromDbToArray(array $backendUserGroup): array
@@ -266,8 +262,8 @@ class Formatter
      *      b. Perform above logic on either of the arrays
      *      c. Merge the sorted arrays back together (numeric first)
      *
-     * @param array $array
-     * @return array
+     * @param mixed[] $array
+     * @return mixed[]
      */
     public static function sortArrayForFormatRecursive(array $array): array
     {
@@ -309,8 +305,8 @@ class Formatter
     }
 
     /**
-     * @param array $array
-     * @return array
+     * @param array<int, mixed> $array
+     * @return array<int, mixed>
      */
     private static function sortNumericIndexedArrayForFormat(array $array): array
     {
@@ -319,8 +315,8 @@ class Formatter
     }
 
     /**
-     * @param array $array
-     * @return array
+     * @param array<string, mixed> $array
+     * @return array<string, mixed>
      */
     private static function sortStringIndexedArrayForFormat(array $array): array
     {

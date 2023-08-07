@@ -17,9 +17,15 @@ use AawTeam\BackendRoles\Exception\RoleDefinitionException;
 
 /**
  * DefinitionCollection
+ *
+ * @implements \Iterator<Definition>
+ * @implements \ArrayAccess<string, Definition>
  */
 final class DefinitionCollection implements \Iterator, \ArrayAccess
 {
+    /**
+     * @var Definition[]
+     */
     private array $definitions = [];
 
     public function add(Definition $definition): void
@@ -42,6 +48,9 @@ final class DefinitionCollection implements \Iterator, \ArrayAccess
         }
     }
 
+    /**
+     * @return Definition[]
+     */
     public function toArray(): array
     {
         return $this->definitions;
@@ -57,6 +66,9 @@ final class DefinitionCollection implements \Iterator, \ArrayAccess
         return current($this->definitions) !== false;
     }
 
+    /**
+     * @return Definition|false
+     */
     public function current(): mixed
     {
         return current($this->definitions);
@@ -67,6 +79,9 @@ final class DefinitionCollection implements \Iterator, \ArrayAccess
         reset($this->definitions);
     }
 
+    /**
+     * @return int|string|null
+     */
     public function key(): mixed
     {
         return key($this->definitions);

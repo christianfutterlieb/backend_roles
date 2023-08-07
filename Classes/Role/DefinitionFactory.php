@@ -18,6 +18,9 @@ namespace AawTeam\BackendRoles\Role;
  */
 class DefinitionFactory
 {
+    /**
+     * @param mixed[] $definitionArray
+     */
     public function create(array $definitionArray): Definition
     {
         return new Definition($definitionArray['identifier'] ?? '', $definitionArray);
