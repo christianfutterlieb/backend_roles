@@ -70,6 +70,8 @@ Options:
             - composerUpdate: "composer update"
             - composerValidate: "composer validate"
             - lintPhp: PHP linting
+            - phpstan: phpstan tests
+            - phpstanGenerateBaseline: regenerate phpstan baseline, handy after phpstan updates
             - rebirth: Remove the .Build folder and the composer.lock file. Note: re-run "$0 -s composerInstall" after this
             - t3docmake: Render the documentation locally
             - unit (default): PHP unit tests
@@ -265,6 +267,18 @@ case ${TEST_SUITE} in
     lintPhp)
         setUpDockerComposeDotEnv
         docker-compose run lint_php
+        SUITE_EXIT_CODE=$?
+        docker-compose down
+        ;;
+    phpstan)
+        setUpDockerComposeDotEnv
+        docker-compose run phpstan
+        SUITE_EXIT_CODE=$?
+        docker-compose down
+        ;;
+    phpstanGenerateBaseline)
+        setUpDockerComposeDotEnv
+        docker-compose run phpstan_generate_baseline
         SUITE_EXIT_CODE=$?
         docker-compose down
         ;;

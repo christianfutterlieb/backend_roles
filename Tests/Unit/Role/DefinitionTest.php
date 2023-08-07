@@ -25,7 +25,7 @@ class DefinitionTest extends UnitTestCase
     /**
      * @test
      */
-    public function objectIdentificationTest()
+    public function objectIdentificationTest(): void
     {
         $identifier = 'test';
         $definition = new Definition($identifier);
@@ -36,7 +36,7 @@ class DefinitionTest extends UnitTestCase
     /**
      * @test
      */
-    public function defaultOptionValuesAreAlwaysNull()
+    public function defaultOptionValuesAreAlwaysNull(): void
     {
         $identifier = 'test';
         $definition = new Definition($identifier);
@@ -56,7 +56,7 @@ class DefinitionTest extends UnitTestCase
     /**
      * @test
      */
-    public function optionValuesAreSetCorrectlyByConstructor()
+    public function optionValuesAreSetCorrectlyByConstructor(): void
     {
         $identifier = 'test';
         $options = [
@@ -91,7 +91,7 @@ class DefinitionTest extends UnitTestCase
     /**
      * @test
      */
-    public function toArrayDoesNotCreateOffsetsForNotSetOptions()
+    public function toArrayDoesNotCreateOffsetsForNotSetOptions(): void
     {
         $identifier = 'test';
         $options = [
@@ -107,7 +107,7 @@ class DefinitionTest extends UnitTestCase
     /**
      * @test
      */
-    public function toArrayReturnsAllTheCorrectValues()
+    public function toArrayReturnsAllTheCorrectValues(): void
     {
         $identifier = 'test';
         $options = [
@@ -132,16 +132,16 @@ class DefinitionTest extends UnitTestCase
      * @test
      * @dataProvider objectConstructorThrowsExceptionWithInvalidDataDataProvider
      * @param string $identifier
-     * @param array $options
+     * @param mixed[] $options
      */
-    public function objectConstructorThrowsExceptionWithInvalidData(string $identifier, array $options)
+    public function objectConstructorThrowsExceptionWithInvalidData(string $identifier, array $options): void
     {
         $this->expectException(RoleDefinitionException::class);
         new Definition($identifier, $options);
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function objectConstructorThrowsExceptionWithInvalidDataDataProvider(): array
     {

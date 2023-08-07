@@ -37,6 +37,7 @@ class RoleTitleViewHelper extends AbstractViewHelper
     /**
      * {@inheritDoc}
      * @see \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper::initializeArguments()
+     * @return void
      */
     public function initializeArguments()
     {
@@ -65,6 +66,8 @@ class RoleTitleViewHelper extends AbstractViewHelper
             return '[UNKNOWN ROLE IDENTIFIER "' . $backendUserGroup['tx_backendroles_role_identifier'] . '"]';
         }
 
-        return $this->formatter->formatTitle($roleDefinitions->offsetGet($backendUserGroup['tx_backendroles_role_identifier']));
+        return $this->formatter->formatTitle(
+            $roleDefinitions->offsetGet($backendUserGroup['tx_backendroles_role_identifier'])
+        );
     }
 }

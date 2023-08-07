@@ -23,15 +23,26 @@ class Definition
     protected string $identifier = '';
     protected ?string $title = null;
     protected ?string $tSConfig = null;
+    /** @var int[] */
     protected ?array $pagetypesSelect = null;
+    /** @var string[] */
     protected ?array $tablesSelect = null;
+    /** @var string[] */
     protected ?array $tablesModify = null;
+    /** @var string[] */
     protected ?array $groupMods = null;
+    /** @var string[] */
     protected ?array $filePermissions = null;
+    /** @var int[] */
     protected ?array $allowedLanguages = null;
+    /** @var mixed[] */
     protected ?array $explicitAllowdeny = null;
+    /** @var mixed[] */
     protected ?array $nonExcludeFields = null;
 
+    /**
+     * @param mixed[] $array
+     */
     public function __construct(string $identifier, array $array = null)
     {
         if (!static::isValidIdentifier($identifier)) {
@@ -103,6 +114,10 @@ class Definition
         }
     }
 
+    /**
+     * @param mixed $identifier
+     * @return bool
+     */
     public static function isValidIdentifier($identifier): bool
     {
         return is_string($identifier)
@@ -110,6 +125,21 @@ class Definition
             && strlen($identifier) > 0;
     }
 
+    /**
+     * @return array{
+     *   identifier          : string,
+     *   title              ?: string,
+     *   TSconfig           ?: string,
+     *   pagetypes_select   ?: int[],
+     *   tables_select      ?: string[],
+     *   tables_modify      ?: string[],
+     *   groupMods          ?: string[],
+     *   file_permissions   ?: string[],
+     *   allowed_languages  ?: int[],
+     *   explicit_allowdeny ?: mixed[],
+     *   non_exclude_fields ?: mixed[],
+     * }
+     */
     public function toArray(): array
     {
         $array = [
@@ -145,41 +175,65 @@ class Definition
         return $this->tSConfig;
     }
 
+    /**
+     * @return ?int[]
+     */
     public function getPagetypesSelect(): ?array
     {
         return $this->pagetypesSelect;
     }
 
+    /**
+     * @return ?string[]
+     */
     public function getTablesSelect(): ?array
     {
         return $this->tablesSelect;
     }
 
+    /**
+     * @return ?string[]
+     */
     public function getTablesModify(): ?array
     {
         return $this->tablesModify;
     }
 
+    /**
+     * @return ?string[]
+     */
     public function getGroupMods(): ?array
     {
         return $this->groupMods;
     }
 
+    /**
+     * @return ?string[]
+     */
     public function getFilePermissions(): ?array
     {
         return $this->filePermissions;
     }
 
+    /**
+     * @return ?mixed[]
+     */
     public function getExplicitAllowdeny(): ?array
     {
         return $this->explicitAllowdeny;
     }
 
+    /**
+     * @return ?mixed[]
+     */
     public function getNonExcludeFields(): ?array
     {
         return $this->nonExcludeFields;
     }
 
+    /**
+     * @return ?int[]
+     */
     public function getAllowedLanguages(): ?array
     {
         return $this->allowedLanguages;

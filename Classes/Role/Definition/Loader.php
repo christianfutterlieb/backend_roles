@@ -53,11 +53,11 @@ final class Loader
         $cacheIdentifier = $this->getRoleDefinitionCacheIdentifier();
         if ($this->cache->has($cacheIdentifier)) {
             $roleDefinitions = new DefinitionCollection();
-            array_walk($this->cache->require($cacheIdentifier), function (array $definitionArray) use (&$roleDefinitions) {
+            array_map(function (array $definitionArray) use (&$roleDefinitions) {
                 $roleDefinitions->add(
                     $this->definitionFactory->create($definitionArray)
                 );
-            });
+            }, $this->cache->require($cacheIdentifier));
         } else {
             $roleDefinitions = $this->loadRoleDefinitions();
             $roleDefinitionsArray = array_map(
@@ -172,7 +172,7 @@ final class Loader
         return 'roleDefinitions_' . hash_hmac(
             'sha1',
             implode('-', [
-                GeneralUtility::makeInstance(Typo3Version::class)->getBranch(),
+                GeneralUtility::makeInstance(Typo3Version::class)->getBranch(), // @phpstan-ignore-line
                 Environment::getProjectPath(),
                 serialize($this->extensionInformationProvider->getLoadedExtensionListArray()),
             ]),

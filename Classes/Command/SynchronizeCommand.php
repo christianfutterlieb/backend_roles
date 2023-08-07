@@ -37,23 +37,16 @@ class SynchronizeCommand extends Command
      * @param string $name
      * @param Synchronizer $synchronizer
      */
-    public function __construct(string $name = null, Synchronizer $synchronizer = null)
+    public function __construct(string $name = null, Synchronizer $synchronizer)
     {
         parent::__construct($name);
-
-        // TYPO3 < v10.3 workaround
-        if ($synchronizer === null) {
-            /** @var Synchronizer $synchronizer */
-            $synchronizer = GeneralUtility::makeInstance(Synchronizer::class);
-            $synchronizer->injectFormatter(new Formatter());
-            $synchronizer->injectLoader(new Loader());
-        }
         $this->synchronizer = $synchronizer;
     }
 
     /**
      * {@inheritDoc}
      * @see \Symfony\Component\Console\Command\Command::configure()
+     * @return void
      */
     protected function configure()
     {
@@ -96,6 +89,7 @@ class SynchronizeCommand extends Command
      */
     protected function getLocker(string $key): LockingStrategyInterface
     {
+        // @phpstan-ignore-next-line
         return GeneralUtility::makeInstance(LockFactory::class)->createLocker($key);
     }
 }

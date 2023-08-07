@@ -78,7 +78,7 @@ class LoaderTest extends UnitTestCase
      * applies to php-based configuration
      *
      * @see invalidYamlConfigurationStructureThrowsException()
-     * @return array
+     * @return mixed[]
      */
     public function invalidConfigurationFileThrowsExceptionDataProvider(): array
     {
@@ -108,6 +108,7 @@ class LoaderTest extends UnitTestCase
     /**
      * @test
      * @dataProvider invalidYamlConfigurationStructureThrowsExceptionDataProvider
+     * @param mixed[] $yamlConfiguration
      */
     public function invalidYamlConfigurationStructureThrowsException(array $yamlConfiguration): void
     {
@@ -133,6 +134,9 @@ class LoaderTest extends UnitTestCase
         $loader->getRoleDefinitions();
     }
 
+    /**
+     * @return mixed[]
+     */
     public static function invalidYamlConfigurationStructureThrowsExceptionDataProvider(): array
     {
         return [

@@ -37,6 +37,9 @@ class BackendRoleSelectItemsProcessor
         $this->formatter = $formatter;
     }
 
+    /**
+     * @param mixed[] $params
+     */
     public function process(array &$params): void
     {
         // Only add the items to be_groups.tx_backendroles_role_identifier

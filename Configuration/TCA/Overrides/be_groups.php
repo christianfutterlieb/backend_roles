@@ -33,6 +33,7 @@ $columns = [
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('be_groups', 'tx_backendroles_role_identifier', '', 'after:title');
 
 // Load extension configuration
+// @phpstan-ignore-next-line
 $extConf = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
     \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
 )->get('backend_roles');

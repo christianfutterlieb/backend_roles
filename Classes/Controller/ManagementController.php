@@ -20,7 +20,7 @@ use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Yaml\Yaml;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Http\PropagateResponseException;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -33,52 +33,42 @@ class ManagementController extends ActionController
 {
     protected BackendUserGroupRepository $backendUserGroupRepository;
     protected Synchronizer $synchronizer;
-    protected Typo3Version $typo3Version;
 
-    public function injectBackendUserGroupRepository(BackendUserGroupRepository $backendUserGroupRepository)
+    public function injectBackendUserGroupRepository(BackendUserGroupRepository $backendUserGroupRepository): void
     {
         $this->backendUserGroupRepository = $backendUserGroupRepository;
     }
 
-    public function injectSynchronizer(Synchronizer $synchronizer)
+    public function injectSynchronizer(Synchronizer $synchronizer): void
     {
         $this->synchronizer = $synchronizer;
-    }
-
-    public function injectTypo3Version(Typo3Version $typo3Version)
-    {
-        $this->typo3Version = $typo3Version;
     }
 
     /**
      * {@inheritDoc}
      * @see \TYPO3\CMS\Extbase\Mvc\Controller\ActionController::initializeAction()
      */
-    protected function initializeAction()
+    protected function initializeAction(): void
     {
         // Make sure only admins access this controller
         if ($this->getBackendUserAuthentication()->isAdmin() !== true) {
-            $this->response->setStatus(401);
-            $this->response->setContent('401 - Unauthorized');
-            throw new \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException();
+            throw new PropagateResponseException(
+                $this->responseFactory->createResponse(401)
+            );
         }
     }
 
-    protected function indexAction(): ?ResponseInterface
+    protected function indexAction(): ResponseInterface
     {
         $query = $this->backendUserGroupRepository->createQuery();
         $query->getQuerySettings()->setIgnoreEnableFields(true);
         $query->setOrderings(['title' => QueryInterface::ORDER_ASCENDING]);
         $this->view->assign('backendUserGroups', $query->execute(true));
 
-        // @todo: remove this construct when dropping support for TYPO3 < v11
-        //        and change the return type of the method to ResponseInterface
-        return $this->typo3Version->getMajorVersion() < 11
-            ? null
-            : $this->htmlResponse();
+        return $this->htmlResponse();
     }
 
-    protected function synchronizeAllBackendUserGroupRolesAction()
+    protected function synchronizeAllBackendUserGroupRolesAction(): void
     {
         $affectedRows = $this->synchronizer->synchronizeAllBackendUserGroups();
         if ($affectedRows > 0) {
@@ -92,7 +82,7 @@ class ManagementController extends ActionController
     /**
      * @param int $backendUserGroupUid
      */
-    protected function resetBackendUserGroupToDefaultsAction(int $backendUserGroupUid)
+    protected function resetBackendUserGroupToDefaultsAction(int $backendUserGroupUid): void
     {
         $affectedRows = $this->synchronizer->resetManagedFieldsToDefaults($backendUserGroupUid);
         if ($affectedRows > 1) {
@@ -108,7 +98,7 @@ class ManagementController extends ActionController
     /**
      * @param int $backendUserGroupUid
      */
-    protected function exportAsRoleAction(int $backendUserGroupUid): ?ResponseInterface
+    protected function exportAsRoleAction(int $backendUserGroupUid): ResponseInterface
     {
         try {
             $backendUserGroup = $this->getUnmanagedBackendUserGroupRecord($backendUserGroupUid);
@@ -125,11 +115,7 @@ class ManagementController extends ActionController
             'phpConfigAsString' => 'return ' . ArrayUtility::arrayExport([$configToExport]) . ';',
         ]);
 
-        // @todo: remove this construct when dropping support for TYPO3 < v11
-        //        and change the return type of the method to ResponseInterface
-        return $this->typo3Version->getMajorVersion() < 11
-            ? null
-            : $this->htmlResponse();
+        return $this->htmlResponse();
     }
 
     protected function downloadRoleDefinitionAction(int $backendUserGroupUid, string $fileFormat): ResponseInterface
@@ -170,6 +156,10 @@ class ManagementController extends ActionController
         ;
     }
 
+    /**
+     * @param mixed[] $backendUserGroup
+     * @return mixed[]
+     */
     private function createConfigToExportFromBackendUserGroup(array $backendUserGroup): array
     {
         // Add a template for identifier and title
@@ -182,6 +172,9 @@ class ManagementController extends ActionController
         );
     }
 
+    /**
+     * @return mixed[]
+     */
     private function getUnmanagedBackendUserGroupRecord(int $backendUserGroupUid): array
     {
         $backendUserGroup = BackendUtility::getRecord('be_groups', $backendUserGroupUid);
