@@ -1,0 +1,36 @@
+..  include:: /Includes.rst.txt
+
+=====
+2.0.1
+=====
+
+.. only:: html
+
+   .. contents::
+        :local:
+        :depth: 3
+
+
+Breaking changes
+================
+
+No breaking changes.
+
+
+All Changes
+===========
+
+This is a list of all changes in this release:
+
+::
+
+    bad4fd7 [TASK] Ignore changelogs of version 3.x
+    c7769b6 [TASK] Add phpstan for static code analysis
+    3e7eab4 [BUGFIX] Correct wrong namespaces in tests
+    9c12066 [TASK] Add section "support" to composer.json
+    69d10ed [BUGFIX] Ignore database columns with null value
+    0660737 [BUGFIX] Change extension category
+    0409281 [TASK] Update README
+    cd23df3 [TASK] Raise version to 2.0.1-dev
+
+Generated with `git log 2.0.0..HEAD --oneline --no-decorate`
