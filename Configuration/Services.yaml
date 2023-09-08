@@ -6,6 +6,7 @@ services:
 
   AawTeam\BackendRoles\:
     resource: '../Classes/*'
+    exclude: '../Classes/Domain/Model/*'
 
   cache.backend_roles:
     class: TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
@@ -17,6 +18,8 @@ services:
       $cache: '@cache.backend_roles'
 
   AawTeam\BackendRoles\Command\SynchronizeCommand:
+    arguments:
+      $locker: '@locker.backend_roles_synchronization'
     tags:
       - name: 'console.command'
         command: 'backendroles:synchronize'
@@ -24,3 +27,8 @@ services:
 
   AawTeam\BackendRoles\FormEngine\BackendRoleSelectItemsProcessor:
     public: true
+
+  locker.backend_roles_synchronization:
+    class: TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
+    factory: ['@TYPO3\CMS\Core\Locking\LockFactory', 'createLocker']
+    arguments: ['backend_roles_synchronization']
