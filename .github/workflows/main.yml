@@ -2,7 +2,7 @@ name: learn-github-actions
 run-name: ${{ github.actor }} is learning GitHub Actions
 on: [push]
 jobs:
-  my-test-job-one:
+  integrity:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -12,3 +12,32 @@ jobs:
         uses: actions/checkout@v3
       - name: Lint PHP
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s lintPhp
+      - name: Composer validate
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composerValidate
+  composer:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '8.1', '8.2' ]
+    steps:
+      - name: Composer update
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composerUpdate
+  cgl:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '8.1', '8.2' ]
+    steps:
+      - name: CGL check
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -n -s cgl
+    steps:
+      - name: PHPStan
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s phpstan
+  testsuite:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '8.1', '8.2' ]
+    steps:
+      - name: Unit testing
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s unit
