@@ -34,10 +34,10 @@ class SynchronizeCommand extends Command
     protected $synchronizer;
 
     /**
-     * @param string $name
      * @param Synchronizer $synchronizer
+     * @param string $name
      */
-    public function __construct(string $name = null, Synchronizer $synchronizer)
+    public function __construct(Synchronizer $synchronizer, string $name = null)
     {
         parent::__construct($name);
         $this->synchronizer = $synchronizer;
