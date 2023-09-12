@@ -239,7 +239,7 @@ case ${TEST_SUITE} in
             CGLCHECK_DRY_RUN="--dry-run --diff"
         fi
         setUpDockerComposeDotEnv
-        docker-compose run cgl
+        docker-compose run --rm cgl
         SUITE_EXIT_CODE=$?
         docker-compose down
         ;;
@@ -248,37 +248,37 @@ case ${TEST_SUITE} in
         ;;
     composerInstall)
         setUpDockerComposeDotEnv
-        docker-compose run composer_install
+        docker-compose run --rm composer_install
         SUITE_EXIT_CODE=$?
         docker-compose down
         ;;
     composerUpdate)
         setUpDockerComposeDotEnv
-        docker-compose run composer_update
+        docker-compose run --rm composer_update
         SUITE_EXIT_CODE=$?
         docker-compose down
         ;;
     composerValidate)
         setUpDockerComposeDotEnv
-        docker-compose run composer_validate
+        docker-compose run --rm composer_validate
         SUITE_EXIT_CODE=$?
         docker-compose down
         ;;
     lintPhp)
         setUpDockerComposeDotEnv
-        docker-compose run lint_php
+        docker-compose run --rm lint_php
         SUITE_EXIT_CODE=$?
         docker-compose down
         ;;
     phpstan)
         setUpDockerComposeDotEnv
-        docker-compose run phpstan
+        docker-compose run --rm phpstan
         SUITE_EXIT_CODE=$?
         docker-compose down
         ;;
     phpstanGenerateBaseline)
         setUpDockerComposeDotEnv
-        docker-compose run phpstan_generate_baseline
+        docker-compose run --rm phpstan_generate_baseline
         SUITE_EXIT_CODE=$?
         docker-compose down
         ;;
@@ -294,7 +294,7 @@ case ${TEST_SUITE} in
         ;;
     unit)
         setUpDockerComposeDotEnv
-        docker-compose run unit
+        docker-compose run --rm unit
         SUITE_EXIT_CODE=$?
         docker-compose down
         ;;
