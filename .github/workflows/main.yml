@@ -11,5 +11,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Lint PHP
-        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s lint
-        
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s lintPhp
