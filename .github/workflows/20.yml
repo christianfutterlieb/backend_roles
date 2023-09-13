@@ -1,4 +1,4 @@
-name: ci-2-0
+name: ci-20
 run-name: CI for branch 2.0
 on:
   workflow_dispatch:
