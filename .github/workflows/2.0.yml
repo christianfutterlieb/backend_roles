@@ -1,6 +1,7 @@
 name: ci-2-0
 run-name: CI for branch 2.0
 on:
+  workflow_dispatch:
   push:
     branches:
       - '2.0'

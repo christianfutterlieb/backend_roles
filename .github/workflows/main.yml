@@ -1,6 +1,7 @@
 name: ci-main
 run-name: CI for branch main
 on:
+  workflow_dispatch:
   push:
     branches-ignore:
       - '1.0'
