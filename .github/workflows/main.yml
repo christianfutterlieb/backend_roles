@@ -2,8 +2,8 @@ name: ci-main
 run-name: CI for the main branch
 on:
   push:
-    branches:
-      - 'main'
+    branches-ignore:
+      - '2.0'
   pull_request:
     types:
       - opened
