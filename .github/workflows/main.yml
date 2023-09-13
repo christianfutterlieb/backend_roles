@@ -3,12 +3,14 @@ run-name: CI for the main branch
 on:
   push:
     branches-ignore:
+      - '1.0'
+      - '1.1'
       - '2.0'
   pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
+    branches-ignore:
+      - '1.0'
+      - '1.1'
+      - '2.0'
 jobs:
   integrity:
     runs-on: ubuntu-latest
