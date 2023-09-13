@@ -1,0 +1,58 @@
+name: ci-2-0
+run-name: CI for branch 2.0
+on:
+  push:
+    branches:
+      - '2.0'
+  pull_request:
+    branches:
+      - '2.0'
+jobs:
+  integrity:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '7.4', '8.0', '8.1', '8.2' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Lint PHP
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s lintPhp
+      - name: Composer validate
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composerValidate
+  composer:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '7.4', '8.0', '8.1', '8.2' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Composer update
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composerUpdate
+  cgl:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '7.4', '8.0', '8.1', '8.2' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Composer update
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composerUpdate
+      - name: CGL check
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -n -s cgl
+      - name: PHPStan
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s phpstan
+  testsuite:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '7.4', '8.0', '8.1', '8.2' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Composer update
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composerUpdate
+      - name: Unit testing
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s unit
