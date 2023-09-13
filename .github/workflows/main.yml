@@ -1,5 +1,5 @@
 name: ci-main
-run-name: CI for the main branch
+run-name: CI for branch main
 on:
   push:
     branches-ignore:
