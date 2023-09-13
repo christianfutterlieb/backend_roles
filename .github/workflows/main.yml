@@ -30,7 +30,6 @@ jobs:
     steps:
       - name: CGL check
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -n -s cgl
-    steps:
       - name: PHPStan
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s phpstan
   testsuite:
