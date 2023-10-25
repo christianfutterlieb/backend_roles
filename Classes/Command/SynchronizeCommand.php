@@ -13,8 +13,6 @@ namespace AawTeam\BackendRoles\Command;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AawTeam\BackendRoles\Role\Definition\Formatter;
-use AawTeam\BackendRoles\Role\Definition\Loader;
 use AawTeam\BackendRoles\Role\Synchronizer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -46,9 +44,8 @@ class SynchronizeCommand extends Command
     /**
      * {@inheritDoc}
      * @see \Symfony\Component\Console\Command\Command::configure()
-     * @return void
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Synchronize backend_group records with their role definitions');
     }

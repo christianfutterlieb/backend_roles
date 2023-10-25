@@ -37,9 +37,8 @@ class RoleTitleViewHelper extends AbstractViewHelper
     /**
      * {@inheritDoc}
      * @see \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper::initializeArguments()
-     * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('backendUserGroup', 'array', 'The be_groups record', true);
