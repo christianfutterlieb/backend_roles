@@ -46,8 +46,7 @@ class ManagementController extends ActionController
         protected readonly ModuleTemplateFactory $moduleTemplateFactory,
         protected readonly Synchronizer $synchronizer,
         protected readonly Typo3Version $typo3Version
-    ) {
-    }
+    ) {}
 
     /**
      * {@inheritDoc}

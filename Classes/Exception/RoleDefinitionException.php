@@ -16,6 +16,4 @@ namespace AawTeam\BackendRoles\Exception;
 /**
  * RoleDefinitionException
  */
-class RoleDefinitionException extends \RuntimeException
-{
-}
+class RoleDefinitionException extends \RuntimeException {}

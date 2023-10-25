@@ -24,8 +24,7 @@ class BackendRoleSelectItemsProcessor
     public function __construct(
         private readonly Loader $loader,
         private readonly Formatter $formatter
-    ) {
-    }
+    ) {}
 
     /**
      * @param mixed[] $params

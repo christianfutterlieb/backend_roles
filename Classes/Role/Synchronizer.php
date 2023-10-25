@@ -28,8 +28,7 @@ class Synchronizer
     public function __construct(
         protected readonly Loader $loader,
         protected readonly Formatter $formatter
-    ) {
-    }
+    ) {}
 
     /**
      * @return int

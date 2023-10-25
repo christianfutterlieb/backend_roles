@@ -26,15 +26,13 @@ class RoleTitleViewHelper extends AbstractViewHelper
     public function __construct(
         protected readonly Formatter $formatter,
         protected readonly Loader $loader
-    ) {
-    }
+    ) {}
 
     /**
      * {@inheritDoc}
      * @see \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper::initializeArguments()
-     * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('backendUserGroup', 'array', 'The be_groups record', true);

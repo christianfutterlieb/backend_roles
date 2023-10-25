@@ -36,8 +36,7 @@ final class Loader
         protected readonly DefinitionFactory $definitionFactory,
         protected readonly PhpFrontend $cache,
         protected readonly YamlFileLoader $yamlFileLoader
-    ) {
-    }
+    ) {}
 
     public function getRoleDefinitions(): DefinitionCollection
     {
