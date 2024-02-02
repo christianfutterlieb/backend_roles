@@ -27,6 +27,9 @@ services:
   AawTeam\BackendRoles\FormEngine\BackendRoleSelectItemsProcessor:
     public: true
 
+  AawTeam\BackendRoles\Imaging\IconHandler:
+    public: true
+
   locker.backend_roles_synchronization:
     class: TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
     factory: ['@TYPO3\CMS\Core\Locking\LockFactory', 'createLocker']
