@@ -32,3 +32,18 @@ Configuration options reference
 
       $GLOBALS['EXTCONF']['backend_roles']['hideManagedBackendUserGroupColumnns'] = true;
 
+
+.. confval:: showSynchronizationStatus
+
+   :type: bool
+   :Default: true
+
+   If set, the synchronization status of a `be_groups` record will be shown. At
+   the moment this results in displaying an overlay to the `be_groups` record
+   icon (only if there is not yet another overlay active, like the red sign for
+   'hidden').
+
+   ..  code-block:: php
+
+      $GLOBALS['EXTCONF']['backend_roles']['showSynchronizationStatus'] = true;
+
