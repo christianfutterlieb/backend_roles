@@ -1,0 +1,34 @@
+..  include:: /Includes.rst.txt
+
+=====
+3.0.3
+=====
+
+.. only:: html
+
+   .. contents::
+        :local:
+        :depth: 3
+
+
+Breaking changes
+================
+
+No breaking changes.
+
+All Changes
+===========
+
+This is a list of all changes in this release:
+
+::
+
+    71fa3f1 [BUGFIX] Add compatibility for symfony/console v7
+    e1676a0 [TASK] Fix cgl issues
+    6b26dca [TASK] Uee GitHub CI
+    666f761 [BUGFIX] Automatically remove docker containers
+    61f5367 [TASK] Add changelog of version 2.0.2
+    0814153 [TASK] Fix version number in changelog title
+    2119492 [TASK] Raise version to 3.0.3-dev
+
+Generated with `git log 3.0.2..HEAD --oneline --no-decorate`
