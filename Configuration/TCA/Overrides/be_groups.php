@@ -9,6 +9,7 @@
  */
 
 use AawTeam\BackendRoles\FormEngine\BackendRoleSelectItemsProcessor;
+use AawTeam\BackendRoles\Imaging\IconHandler;
 
 // Add columns
 $columns = [

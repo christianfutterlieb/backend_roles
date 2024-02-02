@@ -9,6 +9,11 @@
  * The TYPO3 project - inspiring people to share!
  */
 
+use AawTeam\BackendRoles\Imaging\IconHandler;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 defined('TYPO3') or die();
 
 (function () {
@@ -22,7 +27,7 @@ defined('TYPO3') or die();
     ];
 
     // Register module icon
-    $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
+    $iconRegistry = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
     $iconRegistry->registerIcon(
         'backend_roles-module-management',
         \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
@@ -30,4 +35,12 @@ defined('TYPO3') or die();
             'source' => 'EXT:backend_roles/Resources/Public/Icons/ModuleManagement.svg',
         ]
     );
+
+    // Load extension configuration
+    $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('backend_roles');
+
+    // Show/visualize the synchronization status of be_groups records
+    if ($extConf['showSynchronizationStatus'] ?? true) {
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][IconFactory::class]['overrideIconOverlay'][] = IconHandler::class;
+    }
 })();
