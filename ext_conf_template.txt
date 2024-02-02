@@ -1,2 +1,5 @@
 # cat=basic/enable/001; type=boolean; label=Hide managed columns of be_groups records in TCA
 hideManagedBackendUserGroupColumnns = 1
+
+# cat=basic/enable/002; type=boolean; label=Show the synchronization status of be_groups records
+showSynchronizationStatus = 1

@@ -1,7 +1,10 @@
 <?php
 
+use AawTeam\BackendRoles\Imaging\IconHandler;
 use TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend;
 use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -37,6 +40,14 @@ $bootstrap = function (): void {
             'source' => 'EXT:backend_roles/Resources/Public/Icons/ModuleManagement.svg',
         ]
     );
+
+    // Load extension configuration
+    $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('backend_roles');
+
+    // Show/visualize the synchronization status of be_groups records
+    if ($extConf['showSynchronizationStatus'] ?? true) {
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][IconFactory::class]['overrideIconOverlay'][] = IconHandler::class;
+    }
 };
 $bootstrap();
 unset($bootstrap);

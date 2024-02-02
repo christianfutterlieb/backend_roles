@@ -24,3 +24,6 @@ services:
 
   AawTeam\BackendRoles\FormEngine\BackendRoleSelectItemsProcessor:
     public: true
+
+  AawTeam\BackendRoles\Imaging\IconHandler:
+    public: true
