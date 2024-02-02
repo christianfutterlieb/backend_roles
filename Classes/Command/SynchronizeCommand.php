@@ -45,7 +45,7 @@ class SynchronizeCommand extends Command
      * {@inheritDoc}
      * @see \Symfony\Component\Console\Command\Command::execute()
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Acquire lock
         try {
