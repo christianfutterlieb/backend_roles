@@ -1,23 +1,19 @@
-name: ci-main
-run-name: CI for branch main
+name: ci-21
+run-name: CI for branch 2.1
 on:
   workflow_dispatch:
   push:
-    branches-ignore:
-      - '1.0'
-      - '1.1'
-      - '2.0'
+    branches:
+      - '2.1'
   pull_request:
-    branches-ignore:
-      - '1.0'
-      - '1.1'
-      - '2.0'
+    branches:
+      - '2.1'
 jobs:
   integrity:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.1', '8.2', '8.3' ]
+        php: [ '7.4', '8.0', '8.1', '8.2', '8.3' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.1', '8.2', '8.3' ]
+        php: [ '7.4', '8.0', '8.1', '8.2', '8.3' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.1', '8.2', '8.3' ]
+        php: [ '7.4', '8.0', '8.1', '8.2', '8.3' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -55,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.1', '8.2', '8.3' ]
+        php: [ '7.4', '8.0', '8.1', '8.2', '8.3' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4

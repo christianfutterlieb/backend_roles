@@ -45,7 +45,6 @@ return (new \PhpCsFixer\Config())
                 '.Build',
             ])
     )
-    ->setCacheFile(__DIR__ . '/../../.Build/.cache/.php-cs-fixer.cache')
     ->setRiskyAllowed(true)
     ->setRules([
         '@DoctrineAnnotation' => true,
