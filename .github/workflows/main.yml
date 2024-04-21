@@ -17,47 +17,49 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.1', '8.2' ]
+        php: [ '8.1', '8.2', '8.3' ]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout  
+        uses: actions/checkout@v4
       - name: Lint PHP
-        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s lintPhp
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} lint:php
       - name: Composer validate
-        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composerValidate
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} composer:validate
   composer:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.1', '8.2' ]
+        php: [ '8.1', '8.2', '8.3' ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Composer update
-        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composerUpdate
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} composer:install
   cgl:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.1', '8.2' ]
+        php: [ '8.1', '8.2', '8.3' ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Composer update
-        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composerUpdate
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} composer:install 
       - name: CGL check
-        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -n -s cgl
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} -n test:qa:cgl
       - name: PHPStan
-        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s phpstan
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} test:qa:phpstan
+#      - name: Rector
+#        run: Build/Scripts/builder.sh -p ${{ matrix.php }} test:qa:rector
   testsuite:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.1', '8.2' ]
+        php: [ '8.1', '8.2', '8.3' ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Composer update
-        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composerUpdate
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} composer:install 
       - name: Unit testing
-        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s unit
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} test:unit
