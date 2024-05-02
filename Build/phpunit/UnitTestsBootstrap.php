@@ -56,6 +56,7 @@
     // Initialize default TYPO3_CONF_VARS
     $configurationManager = new \TYPO3\CMS\Core\Configuration\ConfigurationManager();
     $GLOBALS['TYPO3_CONF_VARS'] = $configurationManager->getDefaultConfiguration();
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] = 'encryption-key-for-phpunit-' . bin2hex(random_bytes(8));
 
     $cache = new \TYPO3\CMS\Core\Cache\Frontend\PhpFrontend(
         'core',
