@@ -1,0 +1,38 @@
+..  include:: /Includes.rst.txt
+
+=====
+2.1.0
+=====
+
+.. only:: html
+
+   .. contents::
+        :local:
+        :depth: 3
+
+
+Breaking changes
+================
+
+No breaking changes.
+
+
+All Changes
+===========
+
+This is a list of all changes in this release:
+
+::
+
+    9589c93 [FEATURE] Add synchronization status visualization
+    abcae2e [TASK] Add rector/rector
+    59234b6 [BUGFIX] Add an encryption key for phpunit runs
+    60d4419 [TASK] Normalize composer.json with ergebnis/composer-normalize
+    5dad4e6 [FEATURE] Add new project builder script
+    0c465cb [TASK] Raise version to 2.1.0-dev
+    19d2101 [TASK] Fix cgl issues
+    a763693 [TASK] Uee GitHub CI
+    7ee9e86 [BUGFIX] Automatically remove docker containers
+    8bc64b5 [TASK] Raise version to 2.0.3-dev
+
+Generated with `git log 2.0.2..HEAD --oneline --no-decorate`
