@@ -36,9 +36,6 @@ class Synchronizer
         $this->formatter = $formatter;
     }
 
-    /**
-     * @return int
-     */
     public function synchronizeAllBackendUserGroups(): int
     {
         $qb = $this->getConnectionForTable('ge_broups')->createQueryBuilder();
@@ -77,10 +74,6 @@ class Synchronizer
         );
     }
 
-    /**
-     * @param int $backendUserGroupUid
-     * @return int
-     */
     public function resetManagedFieldsToDefaults(int $backendUserGroupUid): int
     {
         $updates = $this->formatter->getManagedColumnsWithDefaultValues();
@@ -91,9 +84,6 @@ class Synchronizer
         );
     }
 
-    /**
-     * @return Connection
-     */
     protected function getConnectionForTable(string $tableName): Connection
     {
         // @phpstan-ignore-next-line

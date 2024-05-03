@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use PhpCsFixer\Config;
+use PhpCsFixer\Finder;
+
 /*
  * This file is initially copied from TYPO3 core's php-cs-fixer config.php
  * branch 11.5
@@ -34,9 +37,9 @@ if (PHP_SAPI !== 'cli') {
 //  - Remove unused use statements in the PHP source code
 //  - Ensure Concatenation to have at least one whitespace around
 //  - Remove trailing whitespace at the end of blank lines.
-return (new \PhpCsFixer\Config())
+return (new Config())
     ->setFinder(
-        (new PhpCsFixer\Finder())
+        (new Finder())
             ->ignoreVCSIgnored(true)
             ->in([
                 __DIR__ . '/../..',

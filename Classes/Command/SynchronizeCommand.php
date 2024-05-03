@@ -17,6 +17,7 @@ use AawTeam\BackendRoles\Role\Synchronizer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use TYPO3\CMS\Core\Locking\Exception\LockCreateException;
 use TYPO3\CMS\Core\Locking\LockFactory;
 use TYPO3\CMS\Core\Locking\LockingStrategyInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -26,15 +27,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class SynchronizeCommand extends Command
 {
-    /**
-     * @var Synchronizer
-     */
-    protected $synchronizer;
+    protected Synchronizer $synchronizer;
 
-    /**
-     * @param Synchronizer $synchronizer
-     * @param string $name
-     */
     public function __construct(Synchronizer $synchronizer, string $name = null)
     {
         parent::__construct($name);
@@ -60,7 +54,7 @@ class SynchronizeCommand extends Command
         try {
             $locker = $this->getLocker('backendgroups_synchronize');
             $locker->acquire();
-        } catch (\TYPO3\CMS\Core\Locking\Exception\LockCreateException $e) {
+        } catch (LockCreateException $e) {
             $output->writeln('Error: cannot create lock: ' . $e->getMessage());
             return Command::FAILURE;
         } catch (\Exception $e) {
@@ -81,9 +75,6 @@ class SynchronizeCommand extends Command
         return Command::SUCCESS;
     }
 
-    /**
-     * @return \TYPO3\CMS\Core\Locking\LockingStrategyInterface
-     */
     protected function getLocker(string $key): LockingStrategyInterface
     {
         // @phpstan-ignore-next-line

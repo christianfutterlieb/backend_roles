@@ -1,5 +1,11 @@
 <?php
 
+use TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend;
+use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
+use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
+use TYPO3\CMS\Core\Imaging\IconRegistry;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /*
  * Copyright by Agentur am Wasser | Maeder & Partner AG
  *
@@ -9,24 +15,24 @@
  * The TYPO3 project - inspiring people to share!
  */
 
-defined('TYPO3') or die();
+defined('TYPO3') || die();
 
-$bootstrap = function () {
+$bootstrap = function (): void {
     // Register cache
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['backend_roles'] = [
-        'backend' => \TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend::class,
-        'frontend' => \TYPO3\CMS\Core\Cache\Frontend\PhpFrontend::class,
+        'backend' => SimpleFileBackend::class,
+        'frontend' => PhpFrontend::class,
         'groups' => [
             'system',
         ],
     ];
 
     // Register module icon
-    /** @var \TYPO3\CMS\Core\Imaging\IconRegistry $iconRegistry */
-    $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
+    /** @var IconRegistry $iconRegistry */
+    $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
     $iconRegistry->registerIcon(
         'backend_roles-module-management',
-        \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
+        SvgIconProvider::class,
         [
             'source' => 'EXT:backend_roles/Resources/Public/Icons/ModuleManagement.svg',
         ]

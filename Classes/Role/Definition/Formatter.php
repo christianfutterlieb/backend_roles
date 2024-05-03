@@ -15,7 +15,7 @@ namespace AawTeam\BackendRoles\Role\Definition;
 
 use AawTeam\BackendRoles\Role\Definition;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
-use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Formatter
@@ -57,14 +57,11 @@ class Formatter
         return $return;
     }
 
-    /**
-     * @param Definition $definition
-     */
     public function formatTitle(Definition $definition): string
     {
         $return = trim($definition->getTitle() ?? '');
         if ($return === '') {
-            $return = $definition->getIdentifier();
+            return $definition->getIdentifier();
         }
         return $return;
     }
@@ -177,17 +174,12 @@ class Formatter
 
         // Strings
         if (is_string($dataToProcess['TSconfig'] ?? null)) {
-            $return['TSconfig'] = trim((string)$dataToProcess['TSconfig']);
+            $return['TSconfig'] = trim($dataToProcess['TSconfig']);
         }
 
         // Comma-separated to array
         if (is_string($dataToProcess['pagetypes_select'] ?? null)) {
-            $return['pagetypes_select'] = array_filter(explode(',', $dataToProcess['pagetypes_select']), function ($value) {
-                return MathUtility::canBeInterpretedAsInteger($value);
-            });
-            array_walk($return['pagetypes_select'], function (&$v) {
-                $v = (int)$v;
-            });
+            $return['pagetypes_select'] = GeneralUtility::intExplode(',', $dataToProcess['pagetypes_select'], true);
         }
         if (is_string($dataToProcess['tables_select'] ?? null)) {
             $return['tables_select'] = array_filter(explode(',', $dataToProcess['tables_select']));
@@ -202,12 +194,7 @@ class Formatter
             $return['file_permissions'] = array_filter(explode(',', $dataToProcess['file_permissions']));
         }
         if (is_string($dataToProcess['allowed_languages'] ?? null)) {
-            $return['allowed_languages'] = array_filter(explode(',', $dataToProcess['allowed_languages']), function ($value) {
-                return MathUtility::canBeInterpretedAsInteger($value);
-            });
-            array_walk($return['allowed_languages'], function (&$v) {
-                $v = (int)$v;
-            });
+            $return['allowed_languages'] = GeneralUtility::intExplode(',', $dataToProcess['allowed_languages'], true);
         }
 
         // Comma-separated to multi-array
@@ -219,7 +206,7 @@ class Formatter
                         continue;
                     }
                     if (strpos($entry, ';') !== false) {
-                        list($path, $ffPath) = explode(';', $entry, 2);
+                        [$path, $ffPath] = explode(';', $entry, 2);
                         $parts = explode(';', $ffPath);
                         $value = array_pop($parts);
                         array_unshift($parts, $path);

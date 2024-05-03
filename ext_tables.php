@@ -1,4 +1,9 @@
 <?php
+
+use AawTeam\BackendRoles\Controller\ManagementController;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+
 /*
  * Copyright by Agentur am Wasser | Maeder & Partner AG
  *
@@ -8,17 +13,17 @@
  * The TYPO3 project - inspiring people to share!
  */
 
-defined('TYPO3') or die();
+defined('TYPO3') || die();
 
-$bootstrap = function () {
+$bootstrap = function (): void {
     // Register the backend module
-    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
+    ExtensionUtility::registerModule(
         'BackendRoles',
         'tools',
         'management',
         '',
         [
-            \AawTeam\BackendRoles\Controller\ManagementController::class => 'index, synchronizeAllBackendUserGroupRoles, resetBackendUserGroupToDefaults, exportAsRole, downloadRoleDefinition',
+            ManagementController::class => 'index, synchronizeAllBackendUserGroupRoles, resetBackendUserGroupToDefaults, exportAsRole, downloadRoleDefinition',
         ],
         [
             'access' => 'admin',
@@ -26,7 +31,7 @@ $bootstrap = function () {
             'labels' => 'LLL:EXT:backend_roles/Resources/Private/Language/ModuleLabels.xlf',
         ]
     );
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup('
+    ExtensionManagementUtility::addTypoScriptSetup('
 module.tx_backendroles {
     view {
         templateRootPaths.0 = EXT:backend_roles/Resources/Private/Templates

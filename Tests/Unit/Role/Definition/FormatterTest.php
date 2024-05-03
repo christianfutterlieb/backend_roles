@@ -104,9 +104,7 @@ class FormatterTest extends UnitTestCase
     /**
      * @test
      * @dataProvider formatForDatabaseSimpleArrayValuesTestDataProvider
-     * @param string $optionName
      * @param mixed[] $optionValue
-     * @param string $expectedFormattedValue
      */
     public function formatForDatabaseSimpleArrayValuesTest(string $optionName, array $optionValue, string $expectedFormattedValue): void
     {
@@ -125,9 +123,7 @@ class FormatterTest extends UnitTestCase
     /**
      * @test
      * @dataProvider formatForDatabaseComplexArrayValuesTestDataProvider
-     * @param string $option
      * @param mixed[] $asArray
-     * @param string $asString
      */
     public function formatFromDbToArrayComplexArrayValuesTest(string $option, array $asArray, string $asString): void
     {
@@ -218,9 +214,7 @@ class FormatterTest extends UnitTestCase
     /**
      * @test
      * @dataProvider formatForDatabaseComplexArrayValuesTestDataProvider
-     * @param string $optionName
      * @param mixed[] $optionValue
-     * @param string $expectedFormattedValue
      */
     public function formatForDatabaseComplexArrayValuesTest(string $optionName, array $optionValue, string $expectedFormattedValue): void
     {
@@ -240,9 +234,7 @@ class FormatterTest extends UnitTestCase
     /**
      * @test
      * @dataProvider formatForDatabaseSimpleArrayValuesTestDataProvider
-     * @param string $optionName
      * @param mixed[] $asArray
-     * @param string $asString
      */
     public function formatFromDbToArraySimpleArrayValuesTest(string $optionName, array $asArray, string $asString): void
     {

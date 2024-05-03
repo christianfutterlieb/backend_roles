@@ -21,14 +21,8 @@ use AawTeam\BackendRoles\Role\Definition\Loader;
  */
 class BackendRoleSelectItemsProcessor
 {
-    /**
-     * @var Loader
-     */
     private Loader $loader;
 
-    /**
-     * @var Formatter
-     */
     private Formatter $formatter;
 
     public function __construct(Loader $loader, Formatter $formatter)
@@ -56,7 +50,7 @@ class BackendRoleSelectItemsProcessor
         }
 
         // Add items (if there are any)
-        if (!empty($selectItems)) {
+        if ($selectItems !== []) {
             // Create the empty item
             if (!is_array($params['items'] ?? null)) {
                 $params['items'] = [
