@@ -42,7 +42,9 @@ $bootstrap = function (): void {
     );
 
     // Load extension configuration
-    $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('backend_roles');
+    /** @var ExtensionConfiguration $extensionConfiguration */
+    $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class);
+    $extConf = $extensionConfiguration->get('backend_roles');
 
     // Show/visualize the synchronization status of be_groups records
     if ($extConf['showSynchronizationStatus'] ?? true) {
