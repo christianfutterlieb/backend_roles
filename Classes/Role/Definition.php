@@ -152,9 +152,7 @@ class Definition
             'non_exclude_fields' => $this->nonExcludeFields,
         ];
 
-        return array_filter($array, function ($value) {
-            return $value !== null;
-        });
+        return array_filter($array, fn($value): bool => $value !== null);
     }
 
     public function getIdentifier(): string
@@ -212,7 +210,7 @@ class Definition
     }
 
     /**
-     * @return ?mixed[]
+     * @phpstan-return ?mixed[]
      */
     public function getExplicitAllowdeny(): ?array
     {
@@ -220,7 +218,7 @@ class Definition
     }
 
     /**
-     * @return ?mixed[]
+     * @phpstan-return ?mixed[]
      */
     public function getNonExcludeFields(): ?array
     {

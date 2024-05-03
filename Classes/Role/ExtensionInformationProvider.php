@@ -28,10 +28,6 @@ class ExtensionInformationProvider
         return ExtensionManagementUtility::getLoadedExtensionListArray();
     }
 
-    /**
-     * @param string $extKey
-     * @return string
-     */
     public function extPath(string $extKey): string
     {
         return ExtensionManagementUtility::extPath($extKey);

@@ -127,9 +127,6 @@ class ManagementController extends ActionController
         return $this->redirect('index');
     }
 
-    /**
-     * @param int $backendUserGroupUid
-     */
     protected function resetBackendUserGroupToDefaultsAction(int $backendUserGroupUid): ResponseInterface
     {
         $affectedRows = $this->synchronizer->resetManagedFieldsToDefaults($backendUserGroupUid);
@@ -143,9 +140,6 @@ class ManagementController extends ActionController
         return $this->redirect('index');
     }
 
-    /**
-     * @param int $backendUserGroupUid
-     */
     protected function exportAsRoleAction(int $backendUserGroupUid): ResponseInterface
     {
         try {

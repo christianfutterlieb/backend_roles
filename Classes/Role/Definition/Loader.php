@@ -43,7 +43,7 @@ final class Loader
         $cacheIdentifier = $this->getRoleDefinitionCacheIdentifier();
         if ($this->cache->has($cacheIdentifier)) {
             $roleDefinitions = new DefinitionCollection();
-            array_map(function (array $definitionArray) use (&$roleDefinitions) {
+            array_map(function (array $definitionArray) use (&$roleDefinitions): void {
                 $roleDefinitions->add(
                     $this->definitionFactory->create($definitionArray)
                 );
@@ -51,9 +51,7 @@ final class Loader
         } else {
             $roleDefinitions = $this->loadRoleDefinitions();
             $roleDefinitionsArray = array_map(
-                function (Definition $definition): array {
-                    return $definition->toArray();
-                },
+                fn(Definition $definition): array => $definition->toArray(),
                 $roleDefinitions->toArray()
             );
             $this->cache->set($cacheIdentifier, 'return ' . var_export($roleDefinitionsArray, true) . ';');
@@ -67,12 +65,8 @@ final class Loader
 
         // Define config loader functions
         // @todo: move functions to service classes
-        $yamlConfigLoader = function (string $fileName): mixed {
-            return $this->yamlFileLoader->load($fileName, YamlFileLoader::PROCESS_IMPORTS)['RoleDefinitions'] ?? null;
-        };
-        $phpConfigLoader = function (string $fileName): mixed {
-            return require $fileName;
-        };
+        $yamlConfigLoader = fn(string $fileName): mixed => $this->yamlFileLoader->load($fileName, YamlFileLoader::PROCESS_IMPORTS)['RoleDefinitions'] ?? null;
+        $phpConfigLoader = fn(string $fileName): mixed => require $fileName;
 
         // Load from global configuration
         $globalConfigurationPath = rtrim(Environment::getConfigPath(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
@@ -153,7 +147,7 @@ final class Loader
                 Environment::getProjectPath(),
                 serialize($this->extensionInformationProvider->getLoadedExtensionListArray()),
             ]),
-            $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
+            (string)$GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
         );
     }
 }

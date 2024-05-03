@@ -202,9 +202,7 @@ class LoaderTest extends UnitTestCase
 
         $extensionInformationProviderMock = $this->createMock(ExtensionInformationProvider::class);
         $extensionInformationProviderMock->method('getLoadedExtensionListArray')->willReturn(['myext1', 'myext2']);
-        $extensionInformationProviderMock->method('extPath')->willReturnCallback(function ($extKey) {
-            return 'vfs://root/typo3conf/ext/' . $extKey;
-        });
+        $extensionInformationProviderMock->method('extPath')->willReturnCallback(fn($extKey): string => 'vfs://root/typo3conf/ext/' . $extKey);
 
         $loader = $this->getLoaderInstance($extensionInformationProviderMock);
         self::assertSame([], $loader->getRoleDefinitions()->toArray());

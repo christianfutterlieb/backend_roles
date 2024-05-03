@@ -1,4 +1,7 @@
 <?php
+
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
 /*
  * Copyright by Agentur am Wasser | Maeder & Partner AG
  *
@@ -8,11 +11,11 @@
  * The TYPO3 project - inspiring people to share!
  */
 
-defined('TYPO3') or die();
+defined('TYPO3') || die();
 
-(function () {
+(function (): void {
     // Register the backend module config
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup('
+    ExtensionManagementUtility::addTypoScriptSetup('
 module.tx_backendroles {
     view {
         templateRootPaths.0 = EXT:backend_roles/Resources/Private/Templates

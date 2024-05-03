@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use AawTeam\BackendRoles\Domain\Model\BackendUserGroup;
+
 /*
  * Copyright by Agentur am Wasser | Maeder & Partner AG
  *
@@ -12,7 +14,7 @@ declare(strict_types=1);
  */
 
 return [
-    \AawTeam\BackendRoles\Domain\Model\BackendUserGroup::class => [
+    BackendUserGroup::class => [
         'tableName' => 'be_groups',
         'properties' => [
             'roleIdentifier' => [

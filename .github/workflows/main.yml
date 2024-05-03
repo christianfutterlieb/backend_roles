@@ -51,8 +51,8 @@ jobs:
         run: Build/Scripts/builder.sh -p ${{ matrix.php }} -n test:qa:cgl
       - name: PHPStan
         run: Build/Scripts/builder.sh -p ${{ matrix.php }} test:qa:phpstan
-#      - name: Rector
-#        run: Build/Scripts/builder.sh -p ${{ matrix.php }} test:qa:rector
+      - name: Rector
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} -n test:qa:rector
   testsuite:
     runs-on: ubuntu-latest
     strategy:

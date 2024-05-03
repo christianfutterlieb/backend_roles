@@ -45,7 +45,7 @@ class BackendRoleSelectItemsProcessor
         }
 
         // Add items (if there are any)
-        if (!empty($selectItems)) {
+        if ($selectItems !== []) {
             // Create the empty item
             if (!is_array($params['items'] ?? null)) {
                 $params['items'] = [

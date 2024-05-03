@@ -17,6 +17,7 @@ use AawTeam\BackendRoles\Role\Synchronizer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use TYPO3\CMS\Core\Locking\Exception\LockCreateException;
 use TYPO3\CMS\Core\Locking\LockingStrategyInterface;
 
 /**
@@ -50,7 +51,7 @@ class SynchronizeCommand extends Command
         // Acquire lock
         try {
             $this->locker->acquire();
-        } catch (\TYPO3\CMS\Core\Locking\Exception\LockCreateException $e) {
+        } catch (LockCreateException $e) {
             $output->writeln('Error: cannot create lock: ' . $e->getMessage());
             return Command::FAILURE;
         } catch (\Exception $e) {
