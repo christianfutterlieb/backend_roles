@@ -1,0 +1,35 @@
+..  include:: /Includes.rst.txt
+
+=====
+3.1.0
+=====
+
+.. only:: html
+
+   .. contents::
+        :local:
+        :depth: 3
+
+
+Breaking changes
+================
+
+No breaking changes.
+
+All Changes
+===========
+
+This is a list of all changes in this release:
+
+::
+
+    61d1db3 [FEATURE] Add synchronization status visualization
+    3e062e2 [TASK] Raise version to 3.1.0-dev
+    0532e50 [TASK] Add rector/rector
+    43731b9 [TASK] Normalize composer.json with ergebnis/composer-normalize
+    404cbe1 [BUGFIX] Add an encryption key for phpunit runs
+    f8b8cfd [FEATURE] Add new project builder script
+    c0c70f2 [TASK] Add changelog of version 3.0.3
+    55f0577 [TASK] Raise version to 3.0.4-dev
+
+Generated with `git log 3.0.3..HEAD --oneline --no-decorate`
