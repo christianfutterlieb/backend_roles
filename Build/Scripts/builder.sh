@@ -118,7 +118,7 @@ createCommandList() {
     test:qa:cgl              Run php-cs-fixer. Use -n to run only the check without changing the code
     test:qa:phpstan          Run phpstan (static code analysis)
     test:qa:phpstan:baseline Generate phpstan baseline (not available in CI environment)
-#    test:qa:rector           Run rector. Use -n to run only the check without changing the code
+    test:qa:rector           Run rector. Use -n to run only the check without changing the code
     test:unit                Run unit tests
 "
 }
@@ -385,19 +385,19 @@ case ${command} in
             usedDockerImage=${dockerImagePhp}
         fi
         ;;
-#    test:qa:rector)
-#        rectorArguments="process --config Build/rector/rector.php"
-#        if [ $isCiEnvironment -eq 1 ]; then
-#            rectorArguments="${rectorArguments} --no-progress-bar"
-#        fi
-#        if [ ${isDryRun} -eq 1 ]; then
-#            rectorArguments="${rectorArguments} --dry-run"
-#        fi
-#
-#        docker run ${dockerArguments} ${dockerImagePhp} php ${rootDir}/${composerBinDir}/rector ${rectorArguments}
-#        commandExitCode=$?
-#        usedDockerImage=${dockerImagePhp}
-#        ;;
+    test:qa:rector)
+        rectorArguments="process --config Build/rector/rector.php"
+        if [ $isCiEnvironment -eq 1 ]; then
+            rectorArguments="${rectorArguments} --no-progress-bar"
+        fi
+        if [ ${isDryRun} -eq 1 ]; then
+            rectorArguments="${rectorArguments} --dry-run"
+        fi
+
+        docker run ${dockerArguments} ${dockerImagePhp} php ${rootDir}/${composerBinDir}/rector ${rectorArguments} ${@}
+        commandExitCode=$?
+        usedDockerImage=${dockerImagePhp}
+        ;;
     test:unit)
         dockerArguments="${dockerArguments} -e TYPO3_PATH_ROOT=${rootDir}/.Build/public"
         phpunitArguments="-c Build/phpunit/UnitTests.xml"

@@ -40,9 +40,8 @@ class RoleTitleViewHelper extends AbstractViewHelper
 
     /**
      * @throws \InvalidArgumentException
-     * @return string
      */
-    public function render()
+    public function render(): string
     {
         if (!is_array($this->arguments['backendUserGroup'])) {
             throw new \InvalidArgumentException('Argument "backendUserGroup" must be array');

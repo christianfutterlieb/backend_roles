@@ -131,7 +131,6 @@ class DefinitionTest extends UnitTestCase
     /**
      * @test
      * @dataProvider objectConstructorThrowsExceptionWithInvalidDataDataProvider
-     * @param string $identifier
      * @param mixed[] $options
      */
     public function objectConstructorThrowsExceptionWithInvalidData(string $identifier, array $options): void
