@@ -19,7 +19,7 @@ jobs:
       matrix:
         php: [ '8.1', '8.2', '8.3' ]
     steps:
-      - name: Checkout  
+      - name: Checkout
         uses: actions/checkout@v4
       - name: Lint PHP
         run: Build/Scripts/builder.sh -p ${{ matrix.php }} lint:php
@@ -44,7 +44,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Composer update
-        run: Build/Scripts/builder.sh -p ${{ matrix.php }} composer:install 
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} composer:install
+      - name: Composer normalize
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} -n composer:normalize
       - name: CGL check
         run: Build/Scripts/builder.sh -p ${{ matrix.php }} -n test:qa:cgl
       - name: PHPStan
@@ -60,6 +62,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Composer update
-        run: Build/Scripts/builder.sh -p ${{ matrix.php }} composer:install 
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} composer:install
       - name: Unit testing
         run: Build/Scripts/builder.sh -p ${{ matrix.php }} test:unit
