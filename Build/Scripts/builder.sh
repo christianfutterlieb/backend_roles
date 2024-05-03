@@ -108,7 +108,7 @@ createCommandList() {
 
     commands                 Show available commands
     composer:install         Run composer install (install dependencies)
-#    composer:normalize       Normalize composer.json file. Use -n to run only a test.
+    composer:normalize       Normalize composer.json file. Use -n to run only a test.
     composer:validate        Run composer validate
     documentation:render     Render the documentation
     help                     Show help text
@@ -298,16 +298,16 @@ case ${command} in
 
         usedDockerImage=${dockerImagePhp}
         ;;
-#    composer:normalize)
-#        dockerArguments="${dockerArguments} $(loadDockerArgumentsForComposer)"
-#        commandInDocker="composer normalize --no-check-lock --diff"
-#        if [ ${isDryRun} -eq 1 ]; then
-#            commandInDocker="${commandInDocker} --dry-run"
-#        fi
-#        docker run ${dockerArguments} ${dockerImagePhp} ${commandInDocker}
-#        commandExitCode=$?
-#        usedDockerImage=${dockerImagePhp}
-#        ;;
+    composer:normalize)
+        dockerArguments="${dockerArguments} $(loadDockerArgumentsForComposer)"
+        commandInDocker="composer normalize --no-check-lock --diff"
+        if [ ${isDryRun} -eq 1 ]; then
+            commandInDocker="${commandInDocker} --dry-run"
+        fi
+        docker run ${dockerArguments} ${dockerImagePhp} ${commandInDocker}
+        commandExitCode=$?
+        usedDockerImage=${dockerImagePhp}
+        ;;
     composer:validate)
         dockerArguments="${dockerArguments} $(loadDockerArgumentsForComposer)"
         docker run ${dockerArguments} ${dockerImagePhp} composer validate --no-check-lock

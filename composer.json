@@ -1,15 +1,15 @@
 {
     "name": "christianfutterlieb/backend_roles",
-    "type": "typo3-cms-extension",
     "description": "Backend user group role management for TYPO3",
-    "keywords": ["typo3", "backend", "usergroup", "group", "role"],
-    "homepage": "https://github.com/christianfutterlieb/backend_roles",
     "license": "GPL-2.0-or-later",
-    "support": {
-        "docs": "https://docs.typo3.org/p/christianfutterlieb/backend_roles/main/en-us/",
-        "issues": "https://github.com/christianfutterlieb/backend_roles/issues",
-        "source": "https://github.com/christianfutterlieb/backend_roles"
-    },
+    "type": "typo3-cms-extension",
+    "keywords": [
+        "typo3",
+        "backend",
+        "usergroup",
+        "group",
+        "role"
+    ],
     "authors": [
         {
             "name": "Agentur am Wasser Team",
@@ -23,19 +23,26 @@
             "role": "Developer"
         }
     ],
+    "homepage": "https://github.com/christianfutterlieb/backend_roles",
+    "support": {
+        "issues": "https://github.com/christianfutterlieb/backend_roles/issues",
+        "source": "https://github.com/christianfutterlieb/backend_roles",
+        "docs": "https://docs.typo3.org/p/christianfutterlieb/backend_roles/main/en-us/"
+    },
     "require": {
         "php": ">=7.4.1 || <8.3",
         "typo3/cms-core": "^11.5.24"
     },
     "require-dev": {
+        "ergebnis/composer-normalize": "^2.42",
         "friendsofphp/php-cs-fixer": "^3.14",
         "mikey179/vfsstream": "^1.6.7",
-        "typo3/testing-framework": "^7.0",
-        "phpstan/phpstan": "^1.10"
+        "phpstan/phpstan": "^1.10",
+        "typo3/testing-framework": "^7.0"
     },
     "replace": {
-        "typo3-ter/backend_roles": "self.version",
-        "aaw-team/backend_roles": "self.version"
+        "aaw-team/backend_roles": "self.version",
+        "typo3-ter/backend_roles": "self.version"
     },
     "autoload": {
         "psr-4": {
@@ -48,17 +55,19 @@
         }
     },
     "config": {
-        "vendor-dir": ".Build/vendor",
-        "bin-dir": ".Build/bin",
         "allow-plugins": {
-            "typo3/cms-composer-installers": true,
-            "typo3/class-alias-loader": true
-        }
+            "ergebnis/composer-normalize": true,
+            "typo3/class-alias-loader": true,
+            "typo3/cms-composer-installers": true
+        },
+        "bin-dir": ".Build/bin",
+        "sort-packages": true,
+        "vendor-dir": ".Build/vendor"
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "3.x-dev",
-            "dev-2": "2.x-dev"
+            "dev-2": "2.x-dev",
+            "dev-main": "3.x-dev"
         },
         "typo3/cms": {
             "extension-key": "backend_roles",
