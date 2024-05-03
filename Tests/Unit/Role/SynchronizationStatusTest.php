@@ -14,8 +14,6 @@ namespace AawTeam\BackendRoles\Tests\Unit\Role;
  */
 
 use AawTeam\BackendRoles\Role\SynchronizationStatus;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -23,7 +21,9 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  */
 class SynchronizationStatusTest extends UnitTestCase
 {
-    #[Test]
+    /**
+     * @test
+     */
     public function constructorAcceptsKnownStatusValue(): void
     {
         self::assertInstanceOf(
@@ -40,15 +40,19 @@ class SynchronizationStatusTest extends UnitTestCase
         );
     }
 
-    #[Test]
-    #[DataProvider('unknownConstructorStatesDataProvider')]
+    /**
+     * @test
+     * @dataProvider unknownConstructorStatesDataProvider
+     */
     public function constructorFailsWithUnknownStatusValue(int $status): void
     {
         self::expectException(\InvalidArgumentException::class);
         new SynchronizationStatus($status);
     }
 
-    #[Test]
+    /**
+     * @test
+     */
     public function statusConstantIsInterpretedCorrectly(): void
     {
         // NOT_SYNCED
