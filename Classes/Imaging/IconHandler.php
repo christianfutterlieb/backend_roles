@@ -52,7 +52,18 @@ final class IconHandler
             return $iconName;
         }
 
-        $syncStatus = $this->synchronizationStatusFactory->createFromBackendGroupUid((int)$row['uid']);
+        // Note: this try/catch wrap for SynchronizationStatusFactoryInterface::createFromBackendGroupUid()
+        //       can be removed when dropping support for TYPO3 <=v12.4
+        try {
+            $syncStatus = $this->synchronizationStatusFactory->createFromBackendGroupUid((int)$row['uid']);
+        } catch (\RuntimeException $runtimeException) {
+            // This exception can happen because of a bug in TYPO3, which has been fixed only for >=v12.4.9
+            // See: https://forge.typo3.org/issues/102514
+            if ($runtimeException->getCode() === 1708168047) {
+                return '';
+            }
+            throw $runtimeException;
+        }
 
         // Return incoming value ($iconName) when null was returned by mapping
         return $this->mapSynchronizationStatusToIconOverlayName($syncStatus) ?? $iconName;
