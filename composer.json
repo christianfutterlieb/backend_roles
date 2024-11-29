@@ -30,7 +30,7 @@
         "docs": "https://docs.typo3.org/p/christianfutterlieb/backend_roles/main/en-us/"
     },
     "require": {
-        "php": ">=7.4.1 || <8.3",
+        "php": ">=7.4.1 <8.4",
         "typo3/cms-core": "^11.5.24"
     },
     "require-dev": {
