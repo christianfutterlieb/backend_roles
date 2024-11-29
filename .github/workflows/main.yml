@@ -7,11 +7,13 @@ on:
       - '1.0'
       - '1.1'
       - '2.0'
+      - '2.1'
   pull_request:
     branches-ignore:
       - '1.0'
       - '1.1'
       - '2.0'
+      - '2.1'
 jobs:
   integrity:
     runs-on: ubuntu-latest
