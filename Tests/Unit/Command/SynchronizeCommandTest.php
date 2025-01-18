@@ -29,8 +29,8 @@ class SynchronizeCommandTest extends UnitTestCase
     public function canBeInstanciated(): void
     {
         new SynchronizeCommand(
-            $this->createStub(LockingStrategyInterface::class),
-            $this->createStub(Synchronizer::class)
+            self::createStub(LockingStrategyInterface::class),
+            self::createStub(Synchronizer::class)
         );
     }
 }
