@@ -40,6 +40,7 @@ defined('TYPO3') || die();
         ]
     );
 
+    // @note: this IconFactory hook registration can be removed, as soon as support for TYPO3 < v13 is dropped
     // Load extension configuration
     $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('backend_roles');
 
