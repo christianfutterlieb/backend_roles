@@ -146,11 +146,12 @@ Options:
           - test:qa:cgl
           - test:qa:rector
 
-    -p <8.1|8.2|8.3>
+    -p <8.1|8.2|8.3|8.4>
         Specifies the PHP minor version to be used:
           - 8.1 (default): use PHP 8.1
           - 8.2: use PHP 8.2
           - 8.3: use PHP 8.3
+          - 8.4: use PHP 8.4
     -v
         Show more information in output (increase verbosity)
 " "$(createCommandList)"
@@ -189,7 +190,7 @@ while getopts ":clnp:v" OPT; do
             ;;
         p)
             phpVersion=${OPTARG}
-            if [ ${phpVersion} != "8.1" ] && [ ${phpVersion} != "8.2" ] && [ ${phpVersion} != "8.3" ]; then
+            if [ ${phpVersion} != "8.1" ] && [ ${phpVersion} != "8.2" ] && [ ${phpVersion} != "8.3" ] && [ ${phpVersion} != "8.4" ]; then
                 msg_err "Invalid PHP version"
                 exit $EX_USAGE
             fi
@@ -254,7 +255,7 @@ dockerArguments="${dockerBaseArguments} -v ${rootDir}:${rootDir} -w ${rootDir}"
 #dockerArguments="${dockerArguments} --network ${dockerNetworkName}"
 
 # Setup image/version
-dockerImagePhp="docker.io/typo3/core-testing-$(echo "php${phpVersion}" | sed -e 's/\.//'):latest"
+dockerImagePhp="ghcr.io/typo3/core-testing-$(echo "php${phpVersion}" | sed -e 's/\.//'):latest"
 dockerImageDocmake="ghcr.io/t3docs/render-documentation:latest"
 
 # ------------------------------------------------------------------------------
