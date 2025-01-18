@@ -95,6 +95,8 @@ class ManagementController extends ActionController
 
     protected function initializeIndexAction(): void
     {
+        $this->moduleTemplate->setTitle('Backend Roles', 'Management');
+
         // Generate Buttons for this action
         $buttonBar = $this->moduleTemplate->getDocHeaderComponent()->getButtonBar();
 
@@ -110,10 +112,10 @@ class ManagementController extends ActionController
         $query = $this->backendUserGroupRepository->createQuery();
         $query->getQuerySettings()->setIgnoreEnableFields(true);
         $query->setOrderings(['title' => QueryInterface::ORDER_ASCENDING]);
-        $this->view->assign('backendUserGroups', $query->execute(true));
 
-        $this->moduleTemplate->setContent($this->view->render());
-        return $this->htmlResponse($this->moduleTemplate->renderContent());
+        $this->moduleTemplate->assign('backendUserGroups', $query->execute(true));
+
+        return $this->moduleTemplate->renderResponse('Management/Index');
     }
 
     protected function synchronizeAllBackendUserGroupRolesAction(): ResponseInterface
@@ -151,7 +153,7 @@ class ManagementController extends ActionController
 
         $configToExport = $this->createConfigToExportFromBackendUserGroup($backendUserGroup);
 
-        $this->view->assignMultiple([
+        $this->moduleTemplate->assignMultiple([
             'backendUserGroup' => $backendUserGroup,
             'yamlConfigAsString' => Yaml::dump(['RoleDefinitions' => [$configToExport]], 10, 2),
             'phpConfigAsString' => 'return ' . ArrayUtility::arrayExport([$configToExport]) . ';',
@@ -160,8 +162,8 @@ class ManagementController extends ActionController
         // Extend ModuleTemplate for this action
         $this->extendModuleTemplateForExportAsRoleAction();
 
-        $this->moduleTemplate->setContent($this->view->render());
-        return $this->htmlResponse($this->moduleTemplate->renderContent());
+        $this->moduleTemplate->setTitle('Backend Roles', 'Export');
+        return $this->moduleTemplate->renderResponse('Management/ExportAsRole');
     }
 
     protected function extendModuleTemplateForExportAsRoleAction(): void
