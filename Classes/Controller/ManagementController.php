@@ -28,7 +28,9 @@ use TYPO3\CMS\Core\Http\PropagateResponseException;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Information\Typo3Version;
-use TYPO3\CMS\Core\Messaging\AbstractMessage;
+use TYPO3\CMS\Core\Messaging\FlashMessageQueue;
+use TYPO3\CMS\Core\Messaging\FlashMessageService;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
@@ -42,11 +44,24 @@ class ManagementController extends ActionController
 
     public function __construct(
         protected readonly BackendUserGroupRepository $backendUserGroupRepository,
+        protected readonly FlashMessageService $flashMessageService,
         protected readonly IconFactory $iconFactory,
         protected readonly ModuleTemplateFactory $moduleTemplateFactory,
         protected readonly Synchronizer $synchronizer,
         protected readonly Typo3Version $typo3Version
     ) {}
+
+    /**
+     * Override parent method to control the MessageQueue retrieval
+     */
+    protected function getFlashMessageQueue(string $identifier = null): FlashMessageQueue
+    {
+        if ($identifier === null) {
+            //$identifier = FlashMessageQueue::FLASHMESSAGE_QUEUE;
+            $identifier = FlashMessageQueue::NOTIFICATION_QUEUE;
+        }
+        return $this->flashMessageService->getMessageQueueByIdentifier($identifier);
+    }
 
     /**
      * {@inheritDoc}
@@ -124,7 +139,7 @@ class ManagementController extends ActionController
         if ($affectedRows > 0) {
             $this->addFlashMessage('Updated ' . $affectedRows . ' backend user group(s)');
         } else {
-            $this->addFlashMessage('Apparently, everything is already synchronized.', 'No rows were updated', AbstractMessage::INFO);
+            $this->addFlashMessage('Apparently, everything is already synchronized.', 'No rows were updated', ContextualFeedbackSeverity::INFO);
         }
         return $this->redirect('index');
     }
@@ -133,11 +148,11 @@ class ManagementController extends ActionController
     {
         $affectedRows = $this->synchronizer->resetManagedFieldsToDefaults($backendUserGroupUid);
         if ($affectedRows > 1) {
-            $this->addFlashMessage('Updated ' . $affectedRows . ' backend user group(s), but it should have been only one. Please investigate this problem!', 'Something strange happened', AbstractMessage::WARNING);
+            $this->addFlashMessage('Updated ' . $affectedRows . ' backend user group(s), but it should have been only one. Please investigate this problem!', 'Something strange happened', ContextualFeedbackSeverity::WARNING);
         } elseif ($affectedRows > 0) {
             $this->addFlashMessage('Successfully updated the backend user group');
         } else {
-            $this->addFlashMessage('Apparently, everything is already synchronized.', 'Nothing was updated', AbstractMessage::INFO);
+            $this->addFlashMessage('Apparently, everything is already synchronized.', 'Nothing was updated', ContextualFeedbackSeverity::INFO);
         }
         return $this->redirect('index');
     }
@@ -147,7 +162,7 @@ class ManagementController extends ActionController
         try {
             $backendUserGroup = $this->getUnmanagedBackendUserGroupRecord($backendUserGroupUid);
         } catch (\InvalidArgumentException $e) {
-            $this->addFlashMessage($e->getMessage(), 'Error', AbstractMessage::ERROR);
+            $this->addFlashMessage($e->getMessage(), 'Error', ContextualFeedbackSeverity::ERROR);
             return $this->redirect('index');
         }
 
@@ -194,12 +209,12 @@ class ManagementController extends ActionController
         try {
             $backendUserGroup = $this->getUnmanagedBackendUserGroupRecord($backendUserGroupUid);
         } catch (\InvalidArgumentException $e) {
-            $this->addFlashMessage($e->getMessage(), 'Error', AbstractMessage::ERROR);
+            $this->addFlashMessage($e->getMessage(), 'Error', ContextualFeedbackSeverity::ERROR);
             return $this->redirect('index');
         }
 
         if (!in_array($fileFormat, ['yaml', 'php'], true)) {
-            $this->addFlashMessage('Invalid fileFormat', 'Error', AbstractMessage::ERROR);
+            $this->addFlashMessage('Invalid fileFormat', 'Error', ContextualFeedbackSeverity::ERROR);
             return $this->redirect('index');
         }
 
