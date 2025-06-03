@@ -46,7 +46,7 @@ class LoaderTest extends UnitTestCase
             $extensionInformationProviderMock,
             new DefinitionFactory(),
             $this->getCacheMock(),
-            $yamlFileLoader ?? new YamlFileLoader()
+            $yamlFileLoader ?? $this->createMock(YamlFileLoader::class)
         );
     }
 
