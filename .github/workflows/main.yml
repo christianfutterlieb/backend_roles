@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.1', '8.2', '8.3', '8.4' ]
+        php: [ '8.1', '8.2', '8.3' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -55,6 +55,23 @@ jobs:
         run: Build/Scripts/builder.sh -p ${{ matrix.php }} test:qa:phpstan
       - name: Rector
         run: Build/Scripts/builder.sh -p ${{ matrix.php }} -n test:qa:rector
+  # This job is for PHP 8.4 until friendsofphp/php-cs-fixer supports php 8.4
+  # to disable the 'test:qa:cgl' step
+  cgl-php84-tmp:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Composer update
+        run: Build/Scripts/builder.sh -p 8.4 composer:install
+      - name: Composer normalize
+        run: Build/Scripts/builder.sh -p 8.4 -n composer:normalize
+      #- name: CGL check
+      #  run: Build/Scripts/builder.sh -p 8.4 -n test:qa:cgl
+      - name: PHPStan
+        run: Build/Scripts/builder.sh -p 8.4 test:qa:phpstan
+      - name: Rector
+        run: Build/Scripts/builder.sh -p 8.4 -n test:qa:rector
   testsuite:
     runs-on: ubuntu-latest
     strategy:
