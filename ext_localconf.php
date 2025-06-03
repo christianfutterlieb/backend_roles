@@ -5,8 +5,6 @@ use TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend;
 use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Imaging\IconFactory;
-use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
-use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -30,16 +28,6 @@ defined('TYPO3') || die();
             'system',
         ],
     ];
-
-    // Register module icon
-    $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
-    $iconRegistry->registerIcon(
-        'backend_roles-module-management',
-        SvgIconProvider::class,
-        [
-            'source' => 'EXT:backend_roles/Resources/Public/Icons/ModuleManagement.svg',
-        ]
-    );
 
     // Register the backend module config
     ExtensionManagementUtility::addTypoScriptSetup('
