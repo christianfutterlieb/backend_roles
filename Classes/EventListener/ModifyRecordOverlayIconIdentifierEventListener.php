@@ -14,7 +14,6 @@ namespace AawTeam\BackendRoles\EventListener;
  */
 
 use AawTeam\BackendRoles\Imaging\IconHandler;
-use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Imaging\Event\ModifyRecordOverlayIconIdentifierEvent;
 
@@ -32,7 +31,6 @@ final class ModifyRecordOverlayIconIdentifierEventListener
         $this->enabled = (bool)($extensionConfiguration->get('backend_roles')['showSynchronizationStatus'] ?? true);
     }
 
-    #[AsEventListener('backend_roles/modify-be_groups-overlay-icon-identifier')]
     public function __invoke(ModifyRecordOverlayIconIdentifierEvent $event): void
     {
         if (!$this->enabled) {
