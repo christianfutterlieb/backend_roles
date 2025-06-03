@@ -28,7 +28,7 @@ class SynchronizeCommand extends Command
     public function __construct(
         protected readonly LockingStrategyInterface $locker,
         protected readonly Synchronizer $synchronizer,
-        string $name = null
+        ?string $name = null
     ) {
         parent::__construct($name);
     }
