@@ -48,7 +48,8 @@ dockerLabelName="org.typo3.extensions.backend_roles"
 dockerLabelValue="${projectPrefix}-${randomSuffix}"
 dockerLabel="${dockerLabelName}=${dockerLabelValue}"
 #dockerNetworkName="${projectPrefix}-${randomSuffix}"
-phpVersion="8.1"
+phpVersion="8.4"
+typo3Version="13"
 composerPreferLowest=0
 composerBinDir=".Build/bin"
 enableCoverage=0
@@ -148,10 +149,15 @@ Options:
 
     -p <8.1|8.2|8.3|8.4>
         Specifies the PHP minor version to be used:
-          - 8.1 (default): use PHP 8.1
+          - 8.1: use PHP 8.1 (only with TYPO3 12.4 LTS)
           - 8.2: use PHP 8.2
           - 8.3: use PHP 8.3
-          - 8.4: use PHP 8.4
+          - 8.4 (default): use PHP 8.4
+
+    -t <12|13>
+        Specifies the TYPO3 LTS version to be used:
+          - 12: use TYPO3 12.4 LTS
+          - 13 (default): use TYPO3 13.4 LTS
     -v
         Show more information in output (increase verbosity)
 " "$(createCommandList)"
@@ -177,7 +183,7 @@ fi
 # ------------------------------------------------------------------------------
 # Part 2: Option parsing
 # ------------------------------------------------------------------------------
-while getopts ":clnp:v" OPT; do
+while getopts ":clnp:t:v" OPT; do
     case ${OPT} in
         c)
             enableCoverage=1
@@ -195,6 +201,13 @@ while getopts ":clnp:v" OPT; do
                 exit $EX_USAGE
             fi
             ;;
+        t)
+            typo3Version=${OPTARG}
+            if [ ${typo3Version} != "12" ] && [ ${typo3Version} != "13" ]; then
+                msg_err "Invalid TYPO3 version"
+                exit $EX_USAGE
+            fi
+            ;;
         v)
             outputVerbosity=1
             ;;
@@ -209,6 +222,11 @@ while getopts ":clnp:v" OPT; do
     esac
 done
 
+# PHP/TYPO3 version compatibility check to avoid composer dependency error messages
+if [ ${typo3Version} -eq 13 ] && [ "${phpVersion}" = "8.1" ]; then
+    msg_err "TYPO3 v13.4 LTS does not support PHP 8.1. Try 'help' to get some help."
+    exit $EX_USAGE
+fi
 
 # Input option shifting:
 # 1. Skip the options parsed by getopts
@@ -280,6 +298,13 @@ case ${command} in
         dockerArguments="${dockerArguments} $(loadDockerArgumentsForComposer)"
 
         composerOptions=""
+
+        if [ ${typo3Version} -eq 12 ]; then
+            composerOptions="${composerOptions} --with=typo3/cms-core:^12.4"
+        else
+            composerOptions="${composerOptions} --with=typo3/cms-core:^13.4"
+        fi
+
         if [ ${composerPreferLowest} -eq 1 ]; then
             composerOptions="${composerOptions} --prefer-lowest"
         fi

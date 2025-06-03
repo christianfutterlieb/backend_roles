@@ -19,68 +19,122 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.1', '8.2', '8.3', '8.4' ]
+        php: [ '8.2', '8.3', '8.4' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Lint PHP
-        run: Build/Scripts/builder.sh -p ${{ matrix.php }} lint:php
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} -t 13 lint:php
       - name: Composer validate
-        run: Build/Scripts/builder.sh -p ${{ matrix.php }} composer:validate
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} -t 13 composer:validate
+  # This job is for PHP 8.1 / TYPO3 v12.4 because PHP 8.1 is not supported by TYPO3 v13.4
+  # Can be removed when support for TYPO3 <=v12.4 is dropped
+  integrity-php81-typo312:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Lint PHP
+        run: Build/Scripts/builder.sh -p 8.1 -t 12 lint:php
+      - name: Composer validate
+        run: Build/Scripts/builder.sh -p 8.1 -t 12 composer:validate
   composer:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.1', '8.2', '8.3', '8.4' ]
+        php: [ '8.2', '8.3', '8.4' ]
+        typo3: [ '12', '13' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Composer update
-        run: Build/Scripts/builder.sh -p ${{ matrix.php }} composer:install
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} -t ${{ matrix.typo3 }} composer:install
+  # This job is for PHP 8.1 / TYPO3 v12.4 because PHP 8.1 is not supported by TYPO3 v13.4
+  # Can be removed when support for TYPO3 <=v12.4 is dropped
+  composer-php81-typo312:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Composer update
+        run: Build/Scripts/builder.sh -p 8.1 -t 12 composer:install
   cgl:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.1', '8.2', '8.3' ]
+        php: [ '8.2', '8.3' ]
+        typo3: [ '12', '13' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Composer update
-        run: Build/Scripts/builder.sh -p ${{ matrix.php }} composer:install
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} -t ${{ matrix.typo3 }} composer:install
       - name: Composer normalize
-        run: Build/Scripts/builder.sh -p ${{ matrix.php }} -n composer:normalize
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} -t ${{ matrix.typo3 }} -n composer:normalize
       - name: CGL check
-        run: Build/Scripts/builder.sh -p ${{ matrix.php }} -n test:qa:cgl
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} -t ${{ matrix.typo3 }} -n test:qa:cgl
       - name: PHPStan
-        run: Build/Scripts/builder.sh -p ${{ matrix.php }} test:qa:phpstan
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} -t ${{ matrix.typo3 }} test:qa:phpstan
       - name: Rector
-        run: Build/Scripts/builder.sh -p ${{ matrix.php }} -n test:qa:rector
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} -t ${{ matrix.typo3 }} -n test:qa:rector
   # This job is for PHP 8.4 until friendsofphp/php-cs-fixer supports php 8.4
   # to disable the 'test:qa:cgl' step
   cgl-php84-tmp:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        typo3: [ '12', '13' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Composer update
-        run: Build/Scripts/builder.sh -p 8.4 composer:install
+        run: Build/Scripts/builder.sh -p 8.4 -t ${{ matrix.typo3 }} composer:install
       - name: Composer normalize
-        run: Build/Scripts/builder.sh -p 8.4 -n composer:normalize
+        run: Build/Scripts/builder.sh -p 8.4 -t ${{ matrix.typo3 }} -n composer:normalize
       #- name: CGL check
-      #  run: Build/Scripts/builder.sh -p 8.4 -n test:qa:cgl
+      #  run: Build/Scripts/builder.sh -p 8.4 -t ${{ matrix.typo3 }} -n test:qa:cgl
       - name: PHPStan
-        run: Build/Scripts/builder.sh -p 8.4 test:qa:phpstan
+        run: Build/Scripts/builder.sh -p 8.4 -t ${{ matrix.typo3 }} test:qa:phpstan
       - name: Rector
-        run: Build/Scripts/builder.sh -p 8.4 -n test:qa:rector
+        run: Build/Scripts/builder.sh -p 8.4 -t ${{ matrix.typo3 }} -n test:qa:rector
+  # This job is for PHP 8.1 / TYPO3 v12.4 because PHP 8.1 is not supported by TYPO3 v13.4
+  # Can be removed when support for TYPO3 <=v12.4 is dropped
+  cgl-php81-typo312:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Composer update
+        run: Build/Scripts/builder.sh -p 8.1 -t 12 composer:install
+      - name: Composer normalize
+        run: Build/Scripts/builder.sh -p 8.1 -t 12 -n composer:normalize
+      - name: CGL check
+        run: Build/Scripts/builder.sh -p 8.1 -t 12 -n test:qa:cgl
+      - name: PHPStan
+        run: Build/Scripts/builder.sh -p 8.1 -t 12 test:qa:phpstan
+      - name: Rector
+        run: Build/Scripts/builder.sh -p 8.1 -t 12 -n test:qa:rector
   testsuite:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.1', '8.2', '8.3', '8.4' ]
+        php: [ '8.2', '8.3', '8.4' ]
+        typo3: [ '12', '13' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Composer update
-        run: Build/Scripts/builder.sh -p ${{ matrix.php }} composer:install
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} -t ${{ matrix.typo3 }} composer:install
       - name: Unit testing
-        run: Build/Scripts/builder.sh -p ${{ matrix.php }} test:unit
+        run: Build/Scripts/builder.sh -p ${{ matrix.php }} -t ${{ matrix.typo3 }} test:unit
+  # This job is for PHP 8.1 / TYPO3 v12.4 because PHP 8.1 is not supported by TYPO3 v13.4
+  # Can be removed when support for TYPO3 <=v12.4 is dropped
+  testsuite-php81-typo312:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Composer update
+        run: Build/Scripts/builder.sh -p 8.1 -t 12 composer:install
+      - name: Unit testing
+        run: Build/Scripts/builder.sh -p 8.1 -t 12 test:unit
