@@ -54,7 +54,7 @@ class ManagementController extends ActionController
     /**
      * Override parent method to control the MessageQueue retrieval
      */
-    protected function getFlashMessageQueue(string $identifier = null): FlashMessageQueue
+    protected function getFlashMessageQueue(?string $identifier = null): FlashMessageQueue
     {
         if ($identifier === null) {
             //$identifier = FlashMessageQueue::FLASHMESSAGE_QUEUE;

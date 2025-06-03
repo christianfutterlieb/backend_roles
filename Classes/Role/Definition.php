@@ -41,9 +41,9 @@ class Definition
     protected ?array $nonExcludeFields = null;
 
     /**
-     * @param mixed[] $array
+     * @param mixed[]|null $array
      */
-    public function __construct(string $identifier, array $array = null)
+    public function __construct(string $identifier, ?array $array = null)
     {
         if (!static::isValidIdentifier($identifier)) {
             throw new RoleDefinitionException('$identifier must be not empty string');
