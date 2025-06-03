@@ -35,7 +35,7 @@ class Synchronizer
         $qb = $this->getConnectionForTable('ge_broups')->createQueryBuilder();
         $qb->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
         $qb->select('*')->from('be_groups')->where(
-            $qb->expr()->neq('tx_backendroles_role_identifier', $qb->createNamedParameter('', \PDO::PARAM_STR))
+            $qb->expr()->neq('tx_backendroles_role_identifier', $qb->createNamedParameter('', Connection::PARAM_STR))
         );
         $affectedRows = 0;
         foreach ($qb->executeQuery()->fetchAllAssociative() as $backendUserGroup) {
