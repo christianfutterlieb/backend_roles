@@ -15,3 +15,5 @@ parameters:
     # phpstan cannot ignore the error "Anonymous function should return array<string, array<int, array<string, string>>> but return statement is missing."
     # we need to exclude the file for the moment
     - ../../Tests/Unit/Role/Definition/LoaderTest.php
+  bootstrapFiles:
+    - ClassAliasesForTypo3v12.php
