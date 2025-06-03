@@ -15,6 +15,7 @@ namespace AawTeam\BackendRoles\Tests\Unit\Command;
 
 use AawTeam\BackendRoles\Command\SynchronizeCommand;
 use AawTeam\BackendRoles\Role\Synchronizer;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Locking\LockingStrategyInterface;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -23,9 +24,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  */
 class SynchronizeCommandTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeInstanciated(): void
     {
         new SynchronizeCommand(

@@ -15,6 +15,8 @@ namespace AawTeam\BackendRoles\Tests\Unit\Role;
 
 use AawTeam\BackendRoles\Exception\RoleDefinitionException;
 use AawTeam\BackendRoles\Role\Definition;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -22,9 +24,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  */
 class DefinitionTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function objectIdentificationTest(): void
     {
         $identifier = 'test';
@@ -33,9 +33,7 @@ class DefinitionTest extends UnitTestCase
         self::assertSame($identifier, $definition->getIdentifier());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function defaultOptionValuesAreAlwaysNull(): void
     {
         $identifier = 'test';
@@ -53,9 +51,7 @@ class DefinitionTest extends UnitTestCase
         self::assertNull($definition->getNonExcludeFields());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function optionValuesAreSetCorrectlyByConstructor(): void
     {
         $identifier = 'test';
@@ -88,9 +84,7 @@ class DefinitionTest extends UnitTestCase
         self::assertSame($definition->getNonExcludeFields(), $options['non_exclude_fields']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function toArrayDoesNotCreateOffsetsForNotSetOptions(): void
     {
         $identifier = 'test';
@@ -104,9 +98,7 @@ class DefinitionTest extends UnitTestCase
         self::assertSame($definition->toArray(), $options);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function toArrayReturnsAllTheCorrectValues(): void
     {
         $identifier = 'test';
@@ -129,10 +121,10 @@ class DefinitionTest extends UnitTestCase
     }
 
     /**
-     * @test
-     * @dataProvider objectConstructorThrowsExceptionWithInvalidDataDataProvider
      * @param mixed[] $options
      */
+    #[Test]
+    #[DataProvider('objectConstructorThrowsExceptionWithInvalidDataDataProvider')]
     public function objectConstructorThrowsExceptionWithInvalidData(string $identifier, array $options): void
     {
         $this->expectException(RoleDefinitionException::class);
