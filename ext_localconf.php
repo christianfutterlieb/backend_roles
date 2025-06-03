@@ -7,6 +7,7 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -39,6 +40,19 @@ defined('TYPO3') || die();
             'source' => 'EXT:backend_roles/Resources/Public/Icons/ModuleManagement.svg',
         ]
     );
+
+    // Register the backend module config
+    ExtensionManagementUtility::addTypoScriptSetup('
+module.tx_backendroles {
+    view {
+        templateRootPaths.0 = EXT:backend_roles/Resources/Private/Templates
+        layoutRootPaths.0 = EXT:aawskin_template_h/Resources/Private/Layouts
+        partialRootPaths.0 = EXT:aawskin_template_h/Resources/Private/Partials
+    }
+    settings {
+    }
+}
+    ');
 
     // @note: this IconFactory hook registration can be removed, as soon as support for TYPO3 < v13 is dropped
     // Load extension configuration
