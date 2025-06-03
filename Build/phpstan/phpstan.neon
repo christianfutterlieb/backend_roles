@@ -9,7 +9,6 @@ parameters:
     - ../../Tests
     - ../../Configuration
     - ../../ext_localconf.php
-    - ../../ext_tables.php
   excludePaths:
     - ../../ext_emconf.php
     # phpstan cannot ignore the error "Anonymous function should return array<string, array<int, array<string, string>>> but return statement is missing."
