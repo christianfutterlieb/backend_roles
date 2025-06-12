@@ -12,6 +12,17 @@ This TYPO3 extension allows the text-based definition and synchronization of (pa
 
 ## Installation
 
+### System requirements
+
+| Backend roles for TYPO3 | TYPO3 | PHP |
+| --- | --- | --- |
+| `4.x` (dev) | `13.4`<br>`12.4` | `8.2` - `8.4`<br>`8.1` - `8.4` |
+| `3.x` (stable) | `12.4` | `8.1` - `8.2` |
+| `2.x` (old stable) | `11.5` | `7.4` - `8.2` |
+| `1.x` (legacy) | `9.5`, `10.4` | `7.2` - `7.3` |
+
+### Install package
+
 ```
 composer require christianfutterlieb/backend_roles
 ```
