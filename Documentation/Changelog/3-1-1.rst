@@ -1,0 +1,35 @@
+..  include:: /Includes.rst.txt
+
+=====
+3.1.1
+=====
+
+.. only:: html
+
+   .. contents::
+        :local:
+        :depth: 3
+
+
+Breaking changes
+================
+
+No breaking changes.
+
+All Changes
+===========
+
+This is a list of all changes in this release:
+
+::
+
+    f6aa5af [TASK] Satisfy CGL check
+    050c4b0 [TASK] Add CI config for version branch 3.1
+    c96f577 [TASK] Update workflow configs to reflect current branches
+    9726400 [BUGFIX] Correct php version dependency constraints
+    253cffb [TASK] Update configuration files to comply with CGL
+    8fe4edb [BUGFIX] Prevent error when tablename/uid combination leads to exception
+    10fbd1e [TASK] Add changelog for version 2.1.0
+    b42ff49 [TASK] Raise version to 3.1.1-dev
+
+Generated with `git log 3.1.0..HEAD --oneline --no-decorate`
