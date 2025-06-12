@@ -12,14 +12,14 @@ This TYPO3 extension allows the text-based definition and synchronization of (pa
 
 ## Installation
 
-### System requirements
+### System requirements / compatibility
 
-| Backend roles for TYPO3 | TYPO3 | PHP |
-| --- | --- | --- |
-| `4.x` (dev) | `13.4`<br>`12.4` | `8.2` - `8.4`<br>`8.1` - `8.4` |
-| `3.x` (stable) | `12.4` | `8.1` - `8.2` |
-| `2.x` (old stable) | `11.5` | `7.4` - `8.2` |
-| `1.x` (legacy) | `9.5`, `10.4` | `7.2` - `7.3` |
+| Backend roles for TYPO3 | TYPO3 | PHP | Support / Development |
+| --- | --- | --- | --- |
+| `4.x` | `12.4` - `13.4` | `8.1` - `8.4` | active development |
+| `3.x` | `12.4` | `8.1` - `8.2` | security, priority bugfixes |
+| `2.x` | `11.5` | `7.4` - `8.2` | security |
+| `1.x` | `9.5` - `10.4` | `7.2` - `7.3` | none |
 
 ### Install package
 
