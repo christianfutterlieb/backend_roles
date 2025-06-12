@@ -1,0 +1,61 @@
+..  include:: /Includes.rst.txt
+
+=====
+4.0.0
+=====
+
+.. only:: html
+
+   .. contents::
+        :local:
+        :depth: 3
+
+
+Breaking changes
+================
+
+No breaking changes.
+
+Support for TYPO3 12.4 and 13.4
+===============================
+
+This version supports both TYPO3 LTS versions: 12.4 and 13.4, with their
+respective PHP versions.
+
+All Changes
+===========
+
+This is a list of all changes in this release:
+
+::
+
+    a2a78ef [DOCS] Update current system requirements / compatibility
+    8630fc2 [DOCS] Add system requirements to installation section
+    b12c2e4 [BUGFIX] Do not look for the removed ext_tables.php
+    eaa0e75 [FEATURE] Register iocons via service container
+    38086f5 [TASK] Re-set version to 4.0.0-dev
+    7393b6a [RELEASE] Release release candidate 4.0.0-rc1
+    692b81d [TASK] Get rid of ext_tables.php
+    3961e5c [BUGFIX] Add a class alias while running phpstan
+    513d7a5 [BUGFIX] Do not use AsEventListener attribute yet
+    6b2f33f [FEATURE] Reflect support for TYPO3/PHP versions
+    2eb826f [BUGFIX] Use the explicit nullable type
+    9e47745 [TASK] Add a temporary 'cgl-php84-tmp' job for PHP 8.4
+    a5cee46 [BUGFIX] Use the explicit nullable type
+    4bde270 [TASK] Replace PHPDoc annotations with PHP attributes in unit tests
+    6960a7d [BUGFIX] Use mock object for YamlFileLoader
+    fe3a735 [TASK] Replace unsupported usage of PDO::PARAM_ constants
+    e5e9a30 [FEATURE] Move IconFactory overrideIconOverlay hook to PSR-14 event
+    a418e2a [FEATURE] Move flash messaging to notification queue
+    88872c1 [FEATURE] Adopt simplified ext:backend ModuleTemplate API
+    22ffe39 [TASK] Satisfy CGL check
+    a1baa9d [TASK] Declare support for TYPO3 v12.4 and v13.4
+    3bdfe8e [TASK] Raise version to v4.0.0-dev
+    c96f577 [TASK] Update workflow configs to reflect current branches
+    9726400 [BUGFIX] Correct php version dependency constraints
+    253cffb [TASK] Update configuration files to comply with CGL
+    8fe4edb [BUGFIX] Prevent error when tablename/uid combination leads to exception
+    10fbd1e [TASK] Add changelog for version 2.1.0
+    b42ff49 [TASK] Raise version to 3.1.1-dev
+
+Generated with `git log 3.1.0..HEAD --oneline --no-decorate`
