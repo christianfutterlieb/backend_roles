@@ -352,10 +352,10 @@ class FormatterTest extends UnitTestCase
                         ],
                     ],
                 ],
-                'tt_content:pi_flexform;login;sDEF;settings.pages,' .
-                'tt_content:pi_flexform;teams_person;appearance;settings.centered,' .
-                'tt_content:pi_flexform;teams_person;appearance;settings.roundImage,' .
-                'tx_teams_person:options;sDEF;myoption',
+                'tt_content:pi_flexform;login;sDEF;settings.pages,'
+                . 'tt_content:pi_flexform;teams_person;appearance;settings.centered,'
+                . 'tt_content:pi_flexform;teams_person;appearance;settings.roundImage,'
+                . 'tx_teams_person:options;sDEF;myoption',
             ],
         ];
     }
