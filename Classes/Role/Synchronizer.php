@@ -32,7 +32,7 @@ class Synchronizer
 
     public function synchronizeAllBackendUserGroups(): int
     {
-        $qb = $this->getConnectionForTable('ge_broups')->createQueryBuilder();
+        $qb = $this->getConnectionForTable('be_groups')->createQueryBuilder();
         $qb->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
         $qb->select('*')->from('be_groups')->where(
             $qb->expr()->neq('tx_backendroles_role_identifier', $qb->createNamedParameter('', Connection::PARAM_STR))
