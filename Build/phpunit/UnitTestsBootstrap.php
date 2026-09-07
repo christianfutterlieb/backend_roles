@@ -42,10 +42,10 @@ use TYPO3\TestingFramework\Core\Testbase;
     // is called to run the tests since the 'relative to entry script' path calculation within
     // SystemEnvironmentBuilder is not used. However, the binary must be called from the document
     // root since getWebRoot() uses 'getcwd()'.
-    if (getenv('TYPO3_PATH_ROOT') === '' || getenv('TYPO3_PATH_ROOT') === '0' || getenv('TYPO3_PATH_ROOT') === [] || getenv('TYPO3_PATH_ROOT') === false) {
+    if (in_array(getenv('TYPO3_PATH_ROOT'), ['', '0', [], false], true)) {
         putenv('TYPO3_PATH_ROOT=' . rtrim($testbase->getWebRoot(), '/'));
     }
-    if (getenv('TYPO3_PATH_WEB') === '' || getenv('TYPO3_PATH_WEB') === '0' || getenv('TYPO3_PATH_WEB') === [] || getenv('TYPO3_PATH_WEB') === false) {
+    if (in_array(getenv('TYPO3_PATH_WEB'), ['', '0', [], false], true)) {
         putenv('TYPO3_PATH_WEB=' . rtrim($testbase->getWebRoot(), '/'));
     }
 

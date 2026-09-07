@@ -1,11 +1,26 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Dead catch \\- TYPO3\\\\CMS\\\\Core\\\\Locking\\\\Exception\\\\LockCreateException is never thrown in the try block\\.$#"
+			message: '#^Dead catch \- TYPO3\\CMS\\Core\\Locking\\Exception\\LockCreateException is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
 			count: 1
 			path: ../../Classes/Command/SynchronizeCommand.php
+			reportUnmatched: false
 
 		-
-			message: "#^Class AawTeam\\\\BackendRoles\\\\Domain\\\\Repository\\\\BackendUserGroupRepository extends generic class TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Repository but does not specify its types\\: T$#"
+			message: '#^Class AawTeam\\BackendRoles\\Domain\\Repository\\BackendUserGroupRepository extends generic class TYPO3\\CMS\\Extbase\\Persistence\\Repository but does not specify its types\: T$#'
+			identifier: missingType.generics
 			count: 1
 			path: ../../Classes/Domain/Repository/BackendUserGroupRepository.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between non\-empty\-string and '''' will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: ../../Classes/Role/Definition.php
+
+		-
+			message: '#^Method AawTeam\\BackendRoles\\Role\\DefinitionCollection\:\:offsetGet\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: ../../Classes/Role/DefinitionCollection.php

@@ -56,10 +56,7 @@ class ManagementController extends ActionController
      */
     protected function getFlashMessageQueue(?string $identifier = null): FlashMessageQueue
     {
-        if ($identifier === null) {
-            //$identifier = FlashMessageQueue::FLASHMESSAGE_QUEUE;
-            $identifier = FlashMessageQueue::NOTIFICATION_QUEUE;
-        }
+        $identifier ??= FlashMessageQueue::NOTIFICATION_QUEUE; // FlashMessageQueue::FLASHMESSAGE_QUEUE
         return $this->flashMessageService->getMessageQueueByIdentifier($identifier);
     }
 

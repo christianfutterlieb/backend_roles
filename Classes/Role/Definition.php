@@ -118,7 +118,7 @@ class Definition
     {
         return is_string($identifier)
             && trim($identifier) !== ''
-            && strlen($identifier) > 0;
+            && $identifier !== '';
     }
 
     /**
@@ -152,7 +152,7 @@ class Definition
             'non_exclude_fields' => $this->nonExcludeFields,
         ];
 
-        return array_filter($array, fn($value): bool => $value !== null);
+        return array_filter($array, fn(string|array|null $value): bool => $value !== null);
     }
 
     public function getIdentifier(): string

@@ -37,8 +37,10 @@
         "ergebnis/composer-normalize": "^2.42",
         "friendsofphp/php-cs-fixer": "^3.17",
         "mikey179/vfsstream": "^1.6.7",
-        "phpstan/phpstan": "^1.10",
-        "rector/rector": "^1.0",
+        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "rector/rector": "^2.0",
         "typo3/testing-framework": "^8.0 || ^9.0"
     },
     "replace": {

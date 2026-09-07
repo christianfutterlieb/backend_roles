@@ -4,6 +4,7 @@ includes:
 parameters:
   tmpDir: ../../.Build/.cache/phpstan
   level: 8
+  treatPhpDocTypesAsCertain: false
   paths:
     - ../../Classes
     - ../../Tests

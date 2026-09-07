@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright by Agentur am Wasser | Maeder & Partner AG
  *

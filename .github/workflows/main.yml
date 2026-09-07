@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.2', '8.3' ]
+        php: [ '8.2', '8.3', '8.4' ]
         typo3: [ '12', '13' ]
     steps:
       - name: Checkout
@@ -77,26 +77,6 @@ jobs:
         run: Build/Scripts/builder.sh -p ${{ matrix.php }} -t ${{ matrix.typo3 }} test:qa:phpstan
       - name: Rector
         run: Build/Scripts/builder.sh -p ${{ matrix.php }} -t ${{ matrix.typo3 }} -n test:qa:rector
-  # This job is for PHP 8.4 until friendsofphp/php-cs-fixer supports php 8.4
-  # to disable the 'test:qa:cgl' step
-  cgl-php84-tmp:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        typo3: [ '12', '13' ]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Composer update
-        run: Build/Scripts/builder.sh -p 8.4 -t ${{ matrix.typo3 }} composer:install
-      - name: Composer normalize
-        run: Build/Scripts/builder.sh -p 8.4 -t ${{ matrix.typo3 }} -n composer:normalize
-      #- name: CGL check
-      #  run: Build/Scripts/builder.sh -p 8.4 -t ${{ matrix.typo3 }} -n test:qa:cgl
-      - name: PHPStan
-        run: Build/Scripts/builder.sh -p 8.4 -t ${{ matrix.typo3 }} test:qa:phpstan
-      - name: Rector
-        run: Build/Scripts/builder.sh -p 8.4 -t ${{ matrix.typo3 }} -n test:qa:rector
   # This job is for PHP 8.1 / TYPO3 v12.4 because PHP 8.1 is not supported by TYPO3 v13.4
   # Can be removed when support for TYPO3 <=v12.4 is dropped
   cgl-php81-typo312:

@@ -307,7 +307,7 @@ class Formatter
      */
     private static function sortStringIndexedArrayForFormat(array $array): array
     {
-        uksort($array, 'strnatcmp');
+        uksort($array, strnatcmp(...));
         return $array;
     }
 }

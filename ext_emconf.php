@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright by Agentur am Wasser | Maeder & Partner AG
  *
@@ -8,7 +10,6 @@
  *
  * The TYPO3 project - inspiring people to share!
  */
-
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Backend Roles',
     'description' => 'Backend user group role management for TYPO3',

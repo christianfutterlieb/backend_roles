@@ -25,10 +25,9 @@ return RectorConfig::configure()
         php83: true,
     )
     ->withPreparedSets(
-        codeQuality: true,
         deadCode: true,
-        earlyReturn: true,
-        instanceOf: true,
-        strictBooleans: true,
+        codeQuality: true,
         typeDeclarations: true,
+        instanceOf: true,
+        earlyReturn: true,
     );
