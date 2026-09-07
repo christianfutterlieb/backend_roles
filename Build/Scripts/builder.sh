@@ -300,11 +300,11 @@ case ${command} in
         composerOptions=""
 
         if [ ${typo3Version} -eq 12 ]; then
-            composerOptions="${composerOptions} --with=typo3/cms-core:^12.4"
+            composerOptions="${composerOptions} --with=typo3/cms-core:^12.4 --no-blocking"
         else
             composerOptions="${composerOptions} --with=typo3/cms-core:^13.4"
         fi
-
+    
         if [ ${composerPreferLowest} -eq 1 ]; then
             composerOptions="${composerOptions} --prefer-lowest"
         fi
